@@ -10,11 +10,15 @@ This skill is designed for AI coding agents that support `SKILL.md`-based skills
 
 ## Purpose
 
-This skill helps an AI agent design, review, refactor, document, or implement architecture decisions without treating every DDD-related pattern as one canonical "Clean + DDD + Hexagonal + CQRS" model.
+This skill helps an AI agent design, review, refactor, document, or implement architecture decisions by correctly applying Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS without treating them as one canonical combined model.
 
 The main practical reference for this skill is [jMolecules](https://github.com/xmolecules/jmolecules), an established Java project for expressing DDD building blocks and architectural styles in code. This skill uses jMolecules as a strong reference for Java/Kotlin and as a conceptual reference for other ecosystems, while still asking the agent to translate concepts into the target language instead of copying one framework's structure everywhere.
 
 It also prioritizes original or broadly recognized sources when making architecture claims.
+
+This does not mean weakening architecture constraints. If a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS, the skill should enforce that architecture's dependency, boundary, and responsibility rules. The point is to attribute each rule to the right architectural context instead of presenting all rules as DDD requirements.
+
+DDD is treated as a domain modeling methodology, not as the owner of those architectures. Layered, Onion, Hexagonal / Ports and Adapters, and CQRS can be excellent ways to implement and protect domain models in domain-heavy systems, but each has its own constraints that must be followed when chosen.
 
 ## Scope
 
@@ -50,7 +54,7 @@ This skill intentionally organizes practical guidance by language/ecosystem and 
 
 The reason is that the goal is not to restate architecture concepts as fixed templates. The goal is to help agents make source-aware backend decisions and translate those decisions into idiomatic Java/Kotlin, C#/.NET, Go, Python, or client-side code when justified.
 
-Architecture patterns overlap in practice. Organizing examples by ecosystem keeps the guidance closer to real implementation choices and reduces the risk of treating DDD, Layered, Onion, Hexagonal, Clean, CQRS, or Event Sourcing as one mandatory combined structure.
+Architecture patterns overlap in practice. Organizing examples by ecosystem keeps the guidance closer to real implementation choices and reduces the risk of treating DDD, Layered, Onion, Hexagonal, CQRS, or Event Sourcing as one mandatory combined structure.
 
 ## Source Policy
 
@@ -58,19 +62,19 @@ The skill separates sources into three levels.
 
 Foundational sources:
 
-- Eric Evans on Domain-Driven Design
-- Alistair Cockburn on Hexagonal Architecture / Ports and Adapters
-- Martin Fowler on enterprise application architecture and CQRS
+- Eric Evans on Domain-Driven Design: https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
+- Alistair Cockburn on Hexagonal Architecture / Ports and Adapters: https://alistair.cockburn.us/hexagonal-architecture/
+- Martin Fowler on enterprise application architecture and CQRS: https://martinfowler.com/ and https://martinfowler.com/bliki/CQRS.html
 - Greg Young on CQRS
-- Jeffrey Palermo on Onion Architecture
-- Robert C. Martin on Clean Architecture, used cautiously for dependency direction and independence principles
+- Jeffrey Palermo on Onion Architecture: https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/
+- Robert C. Martin on Clean Architecture, used cautiously for dependency direction and independence principles: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
 Widely used implementation guidance:
 
 - [jMolecules](https://github.com/xmolecules/jmolecules)
 - [Microsoft Learn .NET DDD-oriented microservice guidance](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)
 - Microsoft Learn / Azure Architecture Center / .NET architecture guides
-- Spring Modulith
+- [Spring Modulith](https://spring.io/projects/spring-modulith)
 - [ArchUnit](https://www.archunit.org/) / [ArchUnit Java repository](https://github.com/TNG/ArchUnit)
 - [ArchUnitNET](https://github.com/TNG/ArchUnitNET)
 - microservices.io
@@ -216,7 +220,8 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 ## Files
 
 - `SKILL.md`: trigger description and core workflow
-- `references/source-policy.md`: authority levels, citation policy, Explicit Architecture and Clean Architecture cautions
+- `references/source-policy.md`: authority levels, citation policy, Explicit Architecture caution, and Clean Architecture as cautious secondary synthesis
+- `references/architecture-constraints.md`: dependency, call-path, and boundary constraints by architecture style
 - `references/backend-guidance.md`: language and architecture guidance for backend-first business systems
 - `references/examples-java-kotlin.md`: jMolecules-oriented Java/Kotlin examples
 - `references/examples-csharp-dotnet.md`: C#/.NET examples

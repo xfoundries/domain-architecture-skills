@@ -10,11 +10,15 @@
 
 ## 目的
 
-这个 skill 用来帮助 AI agent 在设计、评审、重构、文档化或实现架构决策时，避免把所有 DDD 相关模式都混成一个所谓的 “Clean + DDD + Hexagonal + CQRS” 标准模型。
+这个 skill 用来帮助 AI agent 在设计、评审、重构、文档化或实现架构决策时，正确运用 Domain-Driven Design、Layered Architecture、Onion Architecture、Hexagonal Architecture / Ports and Adapters 以及 CQRS，同时避免把它们混成一个所谓的标准组合模型。
 
 这个 skill 的主要实践参考是 [jMolecules](https://github.com/xmolecules/jmolecules)。jMolecules 是 Java 生态中用于在代码中表达 DDD building blocks 和架构风格的成熟开源项目。这个 skill 把 jMolecules 作为 Java/Kotlin 的强参考，也把它作为其它语言生态的概念参考，但仍然要求 agent 根据目标语言做生态化翻译，而不是把某个框架的结构复制到所有项目里。
 
 在做架构论断时，它也优先参考原始资料或被广泛认可的资料。
+
+这并不意味着削弱架构约束。如果一个项目明确选择了 Layered、Onion、Hexagonal / Ports and Adapters 或 CQRS，这个 skill 应该严格执行该架构的依赖方向、边界和职责规则。重点是把每条规则归属到正确的架构语境，而不是把所有规则都说成 DDD 本身的要求。
+
+DDD 在这里被视为领域建模方法论，而不是这些架构的拥有者。Layered、Onion、Hexagonal / Ports and Adapters 和 CQRS 可以是在复杂业务系统中实现和保护领域模型的优秀方式，但一旦选择了某种架构，就应该遵循该架构自身的约束。
 
 ## 适用范围
 
@@ -50,7 +54,7 @@
 
 原因是，这个 skill 的目标不是把架构概念复述成固定模板，而是帮助 agent 基于资料来源做后端实践判断，并把这些判断翻译成符合 Java/Kotlin、C#/.NET、Go、Python，或有必要时客户端代码的生态习惯。
 
-这些架构模式在实践中经常重叠。按生态组织示例更贴近真实实现选择，也能降低把 DDD、Layered、Onion、Hexagonal、Clean、CQRS、Event Sourcing 误解成一个强制组合结构的风险。
+这些架构模式在实践中经常重叠。按生态组织示例更贴近真实实现选择，也能降低把 DDD、Layered、Onion、Hexagonal、CQRS、Event Sourcing 误解成一个强制组合结构的风险。
 
 ## 资料来源策略
 
@@ -58,19 +62,19 @@
 
 基础来源：
 
-- Eric Evans 关于 Domain-Driven Design 的资料
-- Alistair Cockburn 关于 Hexagonal Architecture / Ports and Adapters 的资料
-- Martin Fowler 关于企业应用架构和 CQRS 的资料
+- Eric Evans 关于 Domain-Driven Design 的资料：https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
+- Alistair Cockburn 关于 Hexagonal Architecture / Ports and Adapters 的资料：https://alistair.cockburn.us/hexagonal-architecture/
+- Martin Fowler 关于企业应用架构和 CQRS 的资料：https://martinfowler.com/ 和 https://martinfowler.com/bliki/CQRS.html
 - Greg Young 关于 CQRS 的资料
-- Jeffrey Palermo 关于 Onion Architecture 的资料
-- Robert C. Martin 关于 Clean Architecture 的资料，但只谨慎用于依赖方向和独立性原则
+- Jeffrey Palermo 关于 Onion Architecture 的资料：https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/
+- Robert C. Martin 关于 Clean Architecture 的资料，但只谨慎用于依赖方向和独立性原则：https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
 广泛使用的实现指导：
 
 - [jMolecules](https://github.com/xmolecules/jmolecules)
 - [Microsoft Learn 的 .NET DDD-oriented microservice 指南](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)
 - Microsoft Learn / Azure Architecture Center / .NET architecture guides
-- Spring Modulith
+- [Spring Modulith](https://spring.io/projects/spring-modulith)
 - [ArchUnit](https://www.archunit.org/) / [ArchUnit Java 仓库](https://github.com/TNG/ArchUnit)
 - [ArchUnitNET](https://github.com/TNG/ArchUnitNET)
 - microservices.io
@@ -216,7 +220,8 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 ## 文件说明
 
 - `SKILL.md`：触发描述和核心工作流
-- `references/source-policy.md`：资料权威性分层、引用策略、Explicit Architecture 和 Clean Architecture 的谨慎使用说明
+- `references/source-policy.md`：资料权威性分层、引用策略、Explicit Architecture 的谨慎使用说明，以及 Clean Architecture 作为二次综合资料的谨慎参考说明
+- `references/architecture-constraints.md`：按架构风格组织的依赖、调用路径和边界约束
 - `references/backend-guidance.md`：后端优先的语言和架构指导
 - `references/examples-java-kotlin.md`：面向 jMolecules 的 Java/Kotlin 示例
 - `references/examples-csharp-dotnet.md`：C#/.NET 示例

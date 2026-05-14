@@ -17,6 +17,8 @@ This skill provides source-aware architecture guidance for business-domain syste
 
 It is backend-first, with primary attention to Java/Kotlin, C#/.NET, Go, and Python. Apply it to Dart/Flutter, Swift/iOS, or other client applications only when the client owns substantial domain behavior such as offline workflows, sync conflict handling, local persistence boundaries, or complex business rules.
 
+The core purpose is to help agents and developers apply DDD and the listed architecture styles correctly. DDD is a domain modeling methodology; Layered, Onion, Hexagonal / Ports and Adapters, and CQRS are architecture styles or patterns with their own constraints. Do not collapse them into a single DDD-centric model.
+
 ## Source Policy
 
 Keep `references/source-policy.md` authoritative for source hierarchy.
@@ -43,6 +45,7 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 - Organize practical examples by language/ecosystem or validation tool, not by architecture label. Prefer `examples-java-kotlin.md`, `examples-csharp-dotnet.md`, `examples-go.md`, `examples-python.md`, and `architecture-testing.md` over `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
 - Keep examples short and labeled as sketches. They should demonstrate translation choices, not prescribe a full project template.
 - Preserve the distinction between foundational sources, implementation guidance, and opinionated synthesis.
+- Preserve architecture constraints when a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS. Do not soften a real boundary violation by saying the rule is "not DDD"; attribute it to the correct architecture.
 - Do not introduce universal rules such as mandatory CQRS, mandatory Event Sourcing, mandatory repository abstractions, or mandatory folder structures.
 - Use "usually", "when justified", or "in this architecture" for context-dependent guidance.
 - Keep guidance language-neutral where possible, then translate into ecosystem-specific advice.
@@ -68,7 +71,8 @@ Before publishing, check:
 
 - `SKILL.md` has valid YAML frontmatter with `name` and `description`.
 - `references/source-policy.md` explains why Explicit Architecture and Clean Architecture require caution.
+- `references/architecture-constraints.md` exists and clearly separates DDD modeling rules from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
 - `references/backend-guidance.md` covers Java/Kotlin, C#/.NET, Go, Python, and conditional mobile/client usage.
 - Example files exist for Java/Kotlin, C#/.NET, Go, Python, and architecture testing when the README mentions them.
 - `README.md` and `README_ZH.md` mention jMolecules, ArchUnit, and ArchUnitNET.
-- The skill does not imply that DDD, Clean, Onion, Hexagonal, CQRS, and Event Sourcing form one canonical architecture.
+- The skill does not imply that DDD, Layered, Onion, Hexagonal, CQRS, and Event Sourcing form one canonical architecture.

@@ -4,17 +4,19 @@
 
 Use this hierarchy when explaining, reviewing, or implementing architecture guidance.
 
+Do not collapse the source hierarchy into "DDD plus implementation details." DDD, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS have distinct origins and purposes. Use DDD sources for domain modeling concepts; use the architecture-specific sources for dependency direction, ports/adapters, rings, layers, and command/query separation.
+
 ### Foundational sources
 
 Prefer these for definitions and first-principles claims:
 
-- Eric Evans, *Domain-Driven Design* and DDD reference material: ubiquitous language, bounded context, entity, value object, aggregate, repository, domain service.
-- Alistair Cockburn, Hexagonal Architecture / Ports and Adapters: inside/outside separation, ports, adapters, technology independence.
-- Martin Fowler: enterprise application patterns, CQRS discussion, repository/unit of work context, anemic domain model critique.
-- Bertrand Meyer command-query separation, as the predecessor idea for CQRS.
-- Greg Young's CQRS materials where CQRS-specific claims are needed.
-- Robert C. Martin's Clean Architecture article only for dependency direction and independence principles. Treat it as a synthesis and popularization of related ideas such as Hexagonal Architecture, Onion Architecture, BCE, and similar boundary-focused approaches, not as a wholly new or independently authoritative architecture.
-- Jeffrey Palermo's Onion Architecture for onion-specific dependency and ring terminology.
+- Eric Evans, *Domain-Driven Design* and DDD reference material, especially https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf: ubiquitous language, bounded context, entity, value object, aggregate, repository, domain service.
+- Alistair Cockburn, Hexagonal Architecture / Ports and Adapters, https://alistair.cockburn.us/hexagonal-architecture/: inside/outside separation, ports, adapters, technology independence.
+- Martin Fowler, https://martinfowler.com/: enterprise application patterns, repository/unit of work context, anemic domain model critique, and CQRS discussion at https://martinfowler.com/bliki/CQRS.html.
+- Bertrand Meyer, command-query separation, as the predecessor idea for CQRS. Prefer primary book/source references when available; use this only as historical context unless directly citing a source.
+- Greg Young's CQRS materials where CQRS-specific claims are needed. Prefer original CQRS documents or talks when available.
+- Robert C. Martin's Clean Architecture article, https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html, only for dependency direction and independence principles. Treat it as a synthesis and popularization of related ideas such as Hexagonal Architecture, Onion Architecture, BCE, and similar boundary-focused approaches, not as a wholly new or independently authoritative architecture.
+- Jeffrey Palermo's Onion Architecture series, starting with https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/: onion-specific dependency and ring terminology.
 
 ### Widely used implementation and guidance sources
 

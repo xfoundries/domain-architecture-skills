@@ -17,6 +17,8 @@ Conditional client targets:
 
 Prefer existing codebase conventions over textbook layouts.
 
+Before judging a dependency or call path, identify whether the project has explicitly chosen Layered, Onion, Hexagonal / Ports and Adapters, CQRS, or a simpler CRUD style. If an architecture has been chosen, enforce that architecture's boundary rules consistently. Simplicity is not a reason to silently bypass an explicit architectural constraint.
+
 ## Java and jMolecules
 
 Use jMolecules when the project wants architecture concepts to be explicit in Java/Kotlin code and validated by tools.
@@ -92,17 +94,23 @@ Use when the system benefits from a conventional separation of interface/API, ap
 
 Be careful: layer names alone do not guarantee dependency direction. Verify actual imports/references.
 
+In strict layered designs, controllers should usually call application services rather than repositories directly. This keeps use-case orchestration, transaction boundaries, authorization decisions, and domain interaction out of delivery adapters.
+
 ### Onion Architecture
 
 Use when the team wants an explicit domain core surrounded by application and infrastructure rings. Dependencies should point inward.
 
 Avoid treating every ring as a physical project unless the codebase benefits from stronger compile-time boundaries.
 
+In Onion Architecture, infrastructure belongs outside the domain core. Domain model code should not depend on persistence frameworks, web frameworks, messaging frameworks, or adapter implementations.
+
 ### Hexagonal Architecture / Ports and Adapters
 
 Use when the domain/application needs to be isolated from delivery mechanisms and external systems. Model primary adapters as inbound drivers and secondary adapters as outbound integrations.
 
 Prefer ports for real variability, testing value, or boundary protection. Avoid one-interface-per-class abstractions that only mirror a single implementation.
+
+In strict Hexagonal Architecture, primary adapters call primary ports or application services, not secondary adapters or repositories directly. Application code depends on secondary ports for outbound needs; secondary adapters implement those ports.
 
 ### CQRS
 
