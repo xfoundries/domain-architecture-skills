@@ -1,6 +1,6 @@
 # DDD Architecture Guidance
 
-中文 ｜ [English](README.md)
+English ｜ [中文](README_ZH.md)
 
 ---
 
