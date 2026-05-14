@@ -35,3 +35,8 @@ Do not present DDD, Layered, Onion, Hexagonal, Clean, CQRS, or Event Sourcing as
 
 - Read `references/source-policy.md` when deciding what sources are authoritative, how to handle Explicit Architecture, or how to cite architecture claims.
 - Read `references/backend-guidance.md` when implementing or reviewing Java, Kotlin, C#, .NET, Go, Python, Dart, Swift, or similar business-domain code.
+- Read `references/examples-java-kotlin.md` for jMolecules-oriented Java/Kotlin snippets.
+- Read `references/examples-csharp-dotnet.md` for idiomatic C#/.NET examples.
+- Read `references/examples-go.md` for Go package and port/adapters examples.
+- Read `references/examples-python.md` for Python/FastAPI/Django guidance examples.
+- Read `references/architecture-testing.md` for ArchUnit, ArchUnitNET, and lightweight architecture test examples.

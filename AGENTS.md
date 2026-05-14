@@ -30,7 +30,7 @@ Prefer foundational and broadly recognized sources for architecture claims:
 - Jeffrey Palermo for Onion Architecture
 - Robert C. Martin's Clean Architecture article only for dependency direction and independence principles
 - jMolecules as the main practical Java/Kotlin reference
-- Microsoft architecture guidance for pragmatic .NET/backend implementation
+- Microsoft architecture guidance, especially https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice, for pragmatic .NET/backend implementation
 - ArchUnit and ArchUnitNET as architecture validation tools
 
 Do not treat Herberto Graca's "Explicit Architecture" as an authoritative model. It may be mentioned only as an opinionated synthesis.
@@ -40,6 +40,8 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 ## Editing Rules
 
 - Keep `SKILL.md` concise. Put detailed guidance in `references/`.
+- Organize practical examples by language/ecosystem or validation tool, not by architecture label. Prefer `examples-java-kotlin.md`, `examples-csharp-dotnet.md`, `examples-go.md`, `examples-python.md`, and `architecture-testing.md` over `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
+- Keep examples short and labeled as sketches. They should demonstrate translation choices, not prescribe a full project template.
 - Preserve the distinction between foundational sources, implementation guidance, and opinionated synthesis.
 - Do not introduce universal rules such as mandatory CQRS, mandatory Event Sourcing, mandatory repository abstractions, or mandatory folder structures.
 - Use "usually", "when justified", or "in this architecture" for context-dependent guidance.
@@ -67,5 +69,6 @@ Before publishing, check:
 - `SKILL.md` has valid YAML frontmatter with `name` and `description`.
 - `references/source-policy.md` explains why Explicit Architecture and Clean Architecture require caution.
 - `references/backend-guidance.md` covers Java/Kotlin, C#/.NET, Go, Python, and conditional mobile/client usage.
+- Example files exist for Java/Kotlin, C#/.NET, Go, Python, and architecture testing when the README mentions them.
 - `README.md` and `README_ZH.md` mention jMolecules, ArchUnit, and ArchUnitNET.
 - The skill does not imply that DDD, Clean, Onion, Hexagonal, CQRS, and Event Sourcing form one canonical architecture.

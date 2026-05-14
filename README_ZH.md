@@ -4,9 +4,13 @@
 
 ---
 
+[![skills.sh](https://skills.sh/b/OWNER/ddd-architecture-guidance)](https://skills.sh/OWNER/ddd-architecture-guidance)
+
 面向业务领域系统的、重视资料来源层级的架构指导 skill，覆盖 Domain-Driven Design、Layered Architecture、Onion Architecture、Hexagonal Architecture / Ports and Adapters，以及 CQRS。
 
 这个 skill 适用于支持 `SKILL.md` 结构的 AI 编程 agent，包括 Codex 风格的 skill 环境，以及 Claude Code 风格的本地 skills。
+
+> 发布到 GitHub 后，请把 badge 和安装命令里的 `OWNER` 替换为你的 GitHub 用户名或组织名。
 
 ## 目的
 
@@ -44,6 +48,14 @@
 - C#/.NET、Go、Python、Dart、Swift 中的生态化翻译
 - 架构论断的资料来源层级和引用纪律
 
+## Reference 组织方式
+
+这个 skill 有意按照语言/生态和验证工具来组织实践指导，而不是按 `DDD.md`、`HEXAGONAL.md`、`CQRS.md` 这类架构标签拆分。
+
+原因是，这个 skill 的目标不是把架构概念复述成固定模板，而是帮助 agent 基于资料来源做后端实践判断，并把这些判断翻译成符合 Java/Kotlin、C#/.NET、Go、Python，或有必要时客户端代码的生态习惯。
+
+这些架构模式在实践中经常重叠。按生态组织示例更贴近真实实现选择，也能降低把 DDD、Layered、Onion、Hexagonal、Clean、CQRS、Event Sourcing 误解成一个强制组合结构的风险。
+
 ## 资料来源策略
 
 这个 skill 把资料分为三层。
@@ -60,6 +72,7 @@
 广泛使用的实现指导：
 
 - [jMolecules](https://github.com/xmolecules/jmolecules)
+- [Microsoft Learn 的 .NET DDD-oriented microservice 指南](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)
 - Microsoft Learn / Azure Architecture Center / .NET architecture guides
 - Spring Modulith
 - [ArchUnit](https://www.archunit.org/) / [ArchUnit Java 仓库](https://github.com/TNG/ArchUnit)
@@ -73,6 +86,8 @@
 - 规定固定目录结构或通用规则的博客文章
 
 带有个人观点的综合模型可以作为参考，但不应该被当成权威标准。
+
+Microsoft 的资料在这里被视为务实的实现参考，尤其适用于 .NET 微服务。它适合参考何时使用 DDD、何时简单 CRUD 就够、如何保持 domain entities 独立于 infrastructure、以及如何组织 .NET layers/projects 等取舍。但它不是 DDD、Hexagonal Architecture、Onion Architecture 或 CQRS 的原始定义来源。
 
 ## 重要提醒
 
@@ -93,6 +108,29 @@
 当某个概念更直接属于 DDD、Hexagonal Architecture 或 Onion Architecture 时，这个 skill 要求 agent 优先回到对应的原始来源。
 
 ## 安装
+
+### skills.sh / skills CLI
+
+发布到 GitHub 后，用户可以通过 `skills` CLI 安装：
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance
+```
+
+安装到指定 agent：
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance -a claude-code
+npx skills add OWNER/ddd-architecture-guidance -a codex
+npx skills add OWNER/ddd-architecture-guidance -a cursor
+npx skills add OWNER/ddd-architecture-guidance -a opencode
+```
+
+查看仓库中可用的 skills：
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance --list
+```
 
 ### Codex 风格 skill 目录
 
@@ -128,6 +166,31 @@ cp -R ddd-architecture-guidance .claude/skills/
 
 Claude Code 不需要 `agents/openai.yaml`；可以保留，也可以删除。
 
+## 发布说明
+
+这个仓库适合作为单 skill GitHub 仓库发布，因为 `SKILL.md` 位于仓库根目录。
+
+建议添加的 GitHub topics：
+
+```text
+agent-skills
+skill-md
+skills-sh
+claude-code
+codex
+cursor
+opencode
+ddd
+domain-driven-design
+hexagonal-architecture
+cqrs
+architecture-testing
+jmolecules
+archunit
+```
+
+发布后，请把 README 中的 `OWNER` 替换为 GitHub 用户名或组织名。
+
 ## 使用示例
 
 可以这样让 agent 使用：
@@ -153,6 +216,11 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 - `SKILL.md`：触发描述和核心工作流
 - `references/source-policy.md`：资料权威性分层、引用策略、Explicit Architecture 和 Clean Architecture 的谨慎使用说明
 - `references/backend-guidance.md`：后端优先的语言和架构指导
+- `references/examples-java-kotlin.md`：面向 jMolecules 的 Java/Kotlin 示例
+- `references/examples-csharp-dotnet.md`：C#/.NET 示例
+- `references/examples-go.md`：Go 示例
+- `references/examples-python.md`：Python 示例
+- `references/architecture-testing.md`：ArchUnit、ArchUnitNET 和轻量架构测试示例
 - `agents/openai.yaml`：Codex/OpenAI 风格 skill 环境的可选 UI 元数据
 
 ## 架构单元测试

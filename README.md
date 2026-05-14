@@ -4,9 +4,13 @@
 
 ---
 
+[![skills.sh](https://skills.sh/b/OWNER/ddd-architecture-guidance)](https://skills.sh/OWNER/ddd-architecture-guidance)
+
 Source-aware architecture guidance for business-domain systems using Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS.
 
 This skill is designed for AI coding agents that support `SKILL.md`-based skills, including Codex-style skill environments and Claude Code-style local skills.
+
+> Replace `OWNER` in the badge and install commands after publishing this repository to GitHub.
 
 ## Purpose
 
@@ -44,6 +48,14 @@ This skill should not be used to force DDD, ports/adapters, CQRS, repositories, 
 - Language-specific translation for C#/.NET, Go, Python, Dart, and Swift
 - Source hierarchy and citation discipline for architecture claims
 
+## Reference Organization
+
+This skill intentionally organizes practical guidance by language/ecosystem and validation tooling, not by architecture labels such as `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
+
+The reason is that the goal is not to restate architecture concepts as fixed templates. The goal is to help agents make source-aware backend decisions and translate those decisions into idiomatic Java/Kotlin, C#/.NET, Go, Python, or client-side code when justified.
+
+Architecture patterns overlap in practice. Organizing examples by ecosystem keeps the guidance closer to real implementation choices and reduces the risk of treating DDD, Layered, Onion, Hexagonal, Clean, CQRS, or Event Sourcing as one mandatory combined structure.
+
 ## Source Policy
 
 The skill separates sources into three levels.
@@ -60,6 +72,7 @@ Foundational sources:
 Widely used implementation guidance:
 
 - [jMolecules](https://github.com/xmolecules/jmolecules)
+- [Microsoft Learn .NET DDD-oriented microservice guidance](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)
 - Microsoft Learn / Azure Architecture Center / .NET architecture guides
 - Spring Modulith
 - [ArchUnit](https://www.archunit.org/) / [ArchUnit Java repository](https://github.com/TNG/ArchUnit)
@@ -73,6 +86,8 @@ Opinionated synthesis and examples:
 - Blog posts that prescribe exact folder structures or universal rules
 
 Opinionated synthesis can be useful, but it should not be treated as canonical authority.
+
+Microsoft guidance is treated as a pragmatic implementation reference, especially for .NET microservices. It is useful for tradeoffs such as when to apply DDD, when simpler CRUD is enough, how to keep domain entities independent from infrastructure, and how to structure .NET layers or projects. It is not treated as the original definition of DDD, Hexagonal Architecture, Onion Architecture, or CQRS.
 
 ## Important Cautions
 
@@ -93,6 +108,29 @@ The reason is that Clean Architecture intentionally synthesizes ideas already pr
 When a concept belongs more directly to DDD, Hexagonal Architecture, or Onion Architecture, this skill asks the agent to prefer the original source.
 
 ## Installation
+
+### skills.sh / skills CLI
+
+After publishing this repository to GitHub, users can install it with the `skills` CLI:
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance
+```
+
+Install for a specific agent:
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance -a claude-code
+npx skills add OWNER/ddd-architecture-guidance -a codex
+npx skills add OWNER/ddd-architecture-guidance -a cursor
+npx skills add OWNER/ddd-architecture-guidance -a opencode
+```
+
+List available skills from the repository:
+
+```bash
+npx skills add OWNER/ddd-architecture-guidance --list
+```
 
 ### Codex-style skill directory
 
@@ -128,6 +166,31 @@ cp -R ddd-architecture-guidance .claude/skills/
 
 Claude Code does not need `agents/openai.yaml`; it can be left in place or removed.
 
+## Publishing Notes
+
+This repository is intended to work as a single-skill GitHub repository because `SKILL.md` lives at the repository root.
+
+Recommended GitHub topics:
+
+```text
+agent-skills
+skill-md
+skills-sh
+claude-code
+codex
+cursor
+opencode
+ddd
+domain-driven-design
+hexagonal-architecture
+cqrs
+architecture-testing
+jmolecules
+archunit
+```
+
+After publishing, replace `OWNER` in this README with the GitHub owner or organization name.
+
 ## Usage Examples
 
 Ask your agent:
@@ -153,6 +216,11 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 - `SKILL.md`: trigger description and core workflow
 - `references/source-policy.md`: authority levels, citation policy, Explicit Architecture and Clean Architecture cautions
 - `references/backend-guidance.md`: language and architecture guidance for backend-first business systems
+- `references/examples-java-kotlin.md`: jMolecules-oriented Java/Kotlin examples
+- `references/examples-csharp-dotnet.md`: C#/.NET examples
+- `references/examples-go.md`: Go examples
+- `references/examples-python.md`: Python examples
+- `references/architecture-testing.md`: ArchUnit, ArchUnitNET, and lightweight architecture tests
 - `agents/openai.yaml`: optional UI metadata for Codex/OpenAI-style skill environments
 
 ## Architecture Tests
