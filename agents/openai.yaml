@@ -1,0 +1,4 @@
+interface:
+  display_name: "DDD Architecture Guidance"
+  short_description: "Source-aware DDD architecture guidance"
+  default_prompt: "Use $ddd-architecture-guidance to evaluate a Java, C#, Go, Python, Dart, Swift, or backend architecture decision using DDD, layered, onion, hexagonal, and CQRS sources."
