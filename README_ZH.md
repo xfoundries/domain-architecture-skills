@@ -4,13 +4,11 @@
 
 ---
 
-[![skills.sh](https://skills.sh/b/OWNER/ddd-architecture-guidance)](https://skills.sh/OWNER/ddd-architecture-guidance)
+[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
 
 面向业务领域系统的、重视资料来源层级的架构指导 skill，覆盖 Domain-Driven Design、Layered Architecture、Onion Architecture、Hexagonal Architecture / Ports and Adapters，以及 CQRS。
 
 这个 skill 适用于支持 `SKILL.md` 结构的 AI 编程 agent，包括 Codex 风格的 skill 环境，以及 Claude Code 风格的本地 skills。
-
-> 发布到 GitHub 后，请把 badge 和安装命令里的 `OWNER` 替换为你的 GitHub 用户名或组织名。
 
 ## 目的
 
@@ -114,22 +112,22 @@ Microsoft 的资料在这里被视为务实的实现参考，尤其适用于 .NE
 发布到 GitHub 后，用户可以通过 `skills` CLI 安装：
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance
+npx skills add youngledo/ddd-architecture-guidance
 ```
 
 安装到指定 agent：
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance -a claude-code
-npx skills add OWNER/ddd-architecture-guidance -a codex
-npx skills add OWNER/ddd-architecture-guidance -a cursor
-npx skills add OWNER/ddd-architecture-guidance -a opencode
+npx skills add youngledo/ddd-architecture-guidance -a claude-code
+npx skills add youngledo/ddd-architecture-guidance -a codex
+npx skills add youngledo/ddd-architecture-guidance -a cursor
+npx skills add youngledo/ddd-architecture-guidance -a opencode
 ```
 
 查看仓库中可用的 skills：
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance --list
+npx skills add youngledo/ddd-architecture-guidance --list
 ```
 
 ### Codex 风格 skill 目录
@@ -188,8 +186,6 @@ architecture-testing
 jmolecules
 archunit
 ```
-
-发布后，请把 README 中的 `OWNER` 替换为 GitHub 用户名或组织名。
 
 ## 使用示例
 

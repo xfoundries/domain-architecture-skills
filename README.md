@@ -4,13 +4,11 @@
 
 ---
 
-[![skills.sh](https://skills.sh/b/OWNER/ddd-architecture-guidance)](https://skills.sh/OWNER/ddd-architecture-guidance)
+[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
 
 Source-aware architecture guidance for business-domain systems using Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS.
 
 This skill is designed for AI coding agents that support `SKILL.md`-based skills, including Codex-style skill environments and Claude Code-style local skills.
-
-> Replace `OWNER` in the badge and install commands after publishing this repository to GitHub.
 
 ## Purpose
 
@@ -114,22 +112,22 @@ When a concept belongs more directly to DDD, Hexagonal Architecture, or Onion Ar
 After publishing this repository to GitHub, users can install it with the `skills` CLI:
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance
+npx skills add youngledo/ddd-architecture-guidance
 ```
 
 Install for a specific agent:
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance -a claude-code
-npx skills add OWNER/ddd-architecture-guidance -a codex
-npx skills add OWNER/ddd-architecture-guidance -a cursor
-npx skills add OWNER/ddd-architecture-guidance -a opencode
+npx skills add youngledo/ddd-architecture-guidance -a claude-code
+npx skills add youngledo/ddd-architecture-guidance -a codex
+npx skills add youngledo/ddd-architecture-guidance -a cursor
+npx skills add youngledo/ddd-architecture-guidance -a opencode
 ```
 
 List available skills from the repository:
 
 ```bash
-npx skills add OWNER/ddd-architecture-guidance --list
+npx skills add youngledo/ddd-architecture-guidance --list
 ```
 
 ### Codex-style skill directory
@@ -188,8 +186,6 @@ architecture-testing
 jmolecules
 archunit
 ```
-
-After publishing, replace `OWNER` in this README with the GitHub owner or organization name.
 
 ## Usage Examples
 
