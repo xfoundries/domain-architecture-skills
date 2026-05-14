@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This repository contains the `ddd-architecture-guidance` skill.
+This repository contains software architecture skills. The current skill is `ddd-architecture-guidance` under `skills/ddd-architecture-guidance/`.
 
 Follow these instructions when editing, reviewing, or publishing this skill.
 
@@ -21,7 +21,7 @@ The core purpose is to help agents and developers apply DDD and the listed archi
 
 ## Source Policy
 
-Keep `references/source-policy.md` authoritative for source hierarchy.
+Keep `skills/ddd-architecture-guidance/references/source-policy.md` authoritative for source hierarchy.
 
 Prefer foundational and broadly recognized sources for architecture claims:
 
@@ -41,7 +41,7 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 
 ## Editing Rules
 
-- Keep `SKILL.md` concise. Put detailed guidance in `references/`.
+- Keep each skill's `SKILL.md` concise. Put detailed guidance in that skill's `references/`.
 - Organize practical examples by language/ecosystem or validation tool, not by architecture label. Prefer `examples-java-kotlin.md`, `examples-csharp-dotnet.md`, `examples-go.md`, `examples-python.md`, and `architecture-testing.md` over `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
 - Keep examples short and labeled as sketches. They should demonstrate translation choices, not prescribe a full project template.
 - Preserve the distinction between foundational sources, implementation guidance, and opinionated synthesis.
@@ -61,18 +61,18 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 
 ## Validation
 
-After editing skill metadata or `SKILL.md`, run:
+After editing skill metadata or `SKILL.md`, validate the checked-in skill path:
 
 ```bash
-python3 /Users/huangxiao/.codex/skills/.system/skill-creator/scripts/quick_validate.py /Users/huangxiao/.agents/skills/ddd-architecture-guidance
+python3 /Users/huangxiao/.codex/skills/.system/skill-creator/scripts/quick_validate.py /Users/huangxiao/Workspace/mine/software-architecture-skills/skills/ddd-architecture-guidance
 ```
 
 Before publishing, check:
 
-- `SKILL.md` has valid YAML frontmatter with `name` and `description`.
-- `references/source-policy.md` explains why Explicit Architecture and Clean Architecture require caution.
-- `references/architecture-constraints.md` exists and clearly separates DDD modeling rules from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
-- `references/backend-guidance.md` covers Java/Kotlin, C#/.NET, Go, Python, and conditional mobile/client usage.
+- `skills/ddd-architecture-guidance/SKILL.md` has valid YAML frontmatter with `name` and `description`.
+- `skills/ddd-architecture-guidance/references/source-policy.md` explains why Explicit Architecture and Clean Architecture require caution.
+- `skills/ddd-architecture-guidance/references/architecture-constraints.md` exists and clearly separates DDD modeling rules from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
+- `skills/ddd-architecture-guidance/references/backend-guidance.md` covers Java/Kotlin, C#/.NET, Go, Python, and conditional mobile/client usage.
 - Example files exist for Java/Kotlin, C#/.NET, Go, Python, and architecture testing when the README mentions them.
 - `README.md` and `README_ZH.md` mention jMolecules, ArchUnit, and ArchUnitNET.
 - The skill does not imply that DDD, Layered, Onion, Hexagonal, CQRS, and Event Sourcing form one canonical architecture.

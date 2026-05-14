@@ -111,25 +111,31 @@ When a concept belongs more directly to DDD, Hexagonal Architecture, or Onion Ar
 
 ### skills.sh / skills CLI
 
-After publishing this repository to GitHub, users can install it with the `skills` CLI:
+Users can install it with the `skills` CLI:
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance
+npx skills add youngledo/software-architecture-skills
 ```
 
 Install for a specific agent:
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance -a claude-code
-npx skills add youngledo/ddd-architecture-guidance -a codex
-npx skills add youngledo/ddd-architecture-guidance -a cursor
-npx skills add youngledo/ddd-architecture-guidance -a opencode
+npx skills add youngledo/software-architecture-skills -a claude-code
+npx skills add youngledo/software-architecture-skills -a codex
+npx skills add youngledo/software-architecture-skills -a cursor
+npx skills add youngledo/software-architecture-skills -a opencode
+```
+
+Install this skill explicitly from the repository:
+
+```bash
+npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance
 ```
 
 List available skills from the repository:
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance --list
+npx skills add youngledo/software-architecture-skills --list
 ```
 
 ### Codex-style skill directory
@@ -138,14 +144,14 @@ Copy the skill folder into your local skills directory:
 
 ```bash
 mkdir -p ~/.agents/skills
-cp -R ddd-architecture-guidance ~/.agents/skills/
+cp -R skills/ddd-architecture-guidance ~/.agents/skills/
 ```
 
 If your environment uses `~/.codex/skills`, use that path instead:
 
 ```bash
 mkdir -p ~/.codex/skills
-cp -R ddd-architecture-guidance ~/.codex/skills/
+cp -R skills/ddd-architecture-guidance ~/.codex/skills/
 ```
 
 ### Claude Code-style skill directory
@@ -154,14 +160,14 @@ For a user-level skill:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -R ddd-architecture-guidance ~/.claude/skills/
+cp -R skills/ddd-architecture-guidance ~/.claude/skills/
 ```
 
 For a project-level skill:
 
 ```bash
 mkdir -p .claude/skills
-cp -R ddd-architecture-guidance .claude/skills/
+cp -R skills/ddd-architecture-guidance .claude/skills/
 ```
 
 Claude Code does not need `agents/openai.yaml`; it can be left in place or removed.
@@ -188,9 +194,9 @@ npx skills update ddd-architecture-guidance -p
 
 ## Publishing Notes
 
-This repository is intended to work as a single-skill GitHub repository because `SKILL.md` lives at the repository root.
+This repository is organized as a multi-skill repository. The current skill lives at `skills/ddd-architecture-guidance/`, and additional software architecture skills can be added under `skills/` later.
 
-The skill can be installed directly from GitHub with `npx skills add youngledo/ddd-architecture-guidance`. The skills.sh detail page and badge behavior may vary while the repository is being indexed, so this README intentionally uses the direct GitHub install command as the source of truth.
+The skill can be installed directly from GitHub with `npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance`. The skills.sh detail page and badge behavior may vary while the repository is being indexed, so this README intentionally uses the direct GitHub install command as the source of truth.
 
 Recommended GitHub topics:
 
@@ -233,16 +239,16 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 
 ## Files
 
-- `SKILL.md`: trigger description and core workflow
-- `references/source-policy.md`: authority levels, citation policy, Explicit Architecture caution, and Clean Architecture as cautious secondary synthesis
-- `references/architecture-constraints.md`: dependency, call-path, and boundary constraints by architecture style
-- `references/backend-guidance.md`: language and architecture guidance for backend-first business systems
-- `references/examples-java-kotlin.md`: jMolecules-oriented Java/Kotlin examples
-- `references/examples-csharp-dotnet.md`: C#/.NET examples
-- `references/examples-go.md`: Go examples
-- `references/examples-python.md`: Python examples
-- `references/architecture-testing.md`: ArchUnit, ArchUnitNET, and lightweight architecture tests
-- `agents/openai.yaml`: optional UI metadata for Codex/OpenAI-style skill environments
+- `skills/ddd-architecture-guidance/SKILL.md`: trigger description and core workflow
+- `skills/ddd-architecture-guidance/references/source-policy.md`: authority levels, citation policy, Explicit Architecture caution, and Clean Architecture as cautious secondary synthesis
+- `skills/ddd-architecture-guidance/references/architecture-constraints.md`: dependency, call-path, and boundary constraints by architecture style
+- `skills/ddd-architecture-guidance/references/backend-guidance.md`: language and architecture guidance for backend-first business systems
+- `skills/ddd-architecture-guidance/references/examples-java-kotlin.md`: jMolecules-oriented Java/Kotlin examples
+- `skills/ddd-architecture-guidance/references/examples-csharp-dotnet.md`: C#/.NET examples
+- `skills/ddd-architecture-guidance/references/examples-go.md`: Go examples
+- `skills/ddd-architecture-guidance/references/examples-python.md`: Python examples
+- `skills/ddd-architecture-guidance/references/architecture-testing.md`: ArchUnit, ArchUnitNET, and lightweight architecture tests
+- `skills/ddd-architecture-guidance/agents/openai.yaml`: optional UI metadata for Codex/OpenAI-style skill environments
 
 ## Architecture Tests
 

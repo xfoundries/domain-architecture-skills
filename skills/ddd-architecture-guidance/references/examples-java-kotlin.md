@@ -91,6 +91,100 @@ package com.example.orders.infrastructure;
 
 Prefer class-level annotations only during migration or when packages intentionally mix roles.
 
+## Onion Architecture Rings
+
+Use Onion Architecture when the domain model should be the explicit center and dependencies should point inward. jMolecules provides both classical and simplified Onion annotations. This sketch uses the classical rings.
+
+Package-level annotations are usually clearer than class-level annotations when packages map cleanly to rings:
+
+```java
+@org.jmolecules.architecture.onion.classical.DomainModelRing
+package com.example.orders.domain.model;
+```
+
+```java
+@org.jmolecules.architecture.onion.classical.DomainServiceRing
+package com.example.orders.domain.service;
+```
+
+```java
+@org.jmolecules.architecture.onion.classical.ApplicationServiceRing
+package com.example.orders.application;
+```
+
+```java
+@org.jmolecules.architecture.onion.classical.InfrastructureRing
+package com.example.orders.infrastructure;
+```
+
+The domain model ring should not depend on application or infrastructure code:
+
+```java
+package com.example.orders.domain.model;
+
+import org.jmolecules.ddd.annotation.AggregateRoot;
+import org.jmolecules.ddd.annotation.ValueObject;
+
+@AggregateRoot
+public class Order {
+    private final OrderId id;
+    private OrderStatus status = OrderStatus.DRAFT;
+
+    public Order(OrderId id) {
+        this.id = id;
+    }
+
+    public void submit() {
+        if (status != OrderStatus.DRAFT) {
+            throw new IllegalStateException("Only draft orders can be submitted");
+        }
+        status = OrderStatus.SUBMITTED;
+    }
+}
+
+@ValueObject
+public record OrderId(UUID value) {}
+```
+
+Application services orchestrate use cases and depend inward on the domain model and domain service rings:
+
+```java
+package com.example.orders.application;
+
+import org.jmolecules.architecture.onion.classical.ApplicationServiceRing;
+
+@ApplicationServiceRing
+public final class SubmitOrderService {
+
+    private final Orders orders;
+
+    public SubmitOrderService(Orders orders) {
+        this.orders = orders;
+    }
+
+    public void submit(OrderId id) {
+        var order = orders.findById(id).orElseThrow();
+        order.submit();
+        orders.save(order);
+    }
+}
+```
+
+Infrastructure implements persistence, messaging, or framework integration. It depends on inner rings, not the other way around:
+
+```java
+package com.example.orders.infrastructure.jpa;
+
+import org.jmolecules.architecture.onion.classical.InfrastructureRing;
+
+@InfrastructureRing
+final class JpaOrders implements Orders {
+    // Translate between JPA persistence details and the domain model here.
+}
+```
+
+Use the simplified Onion annotations (`DomainRing`, `ApplicationRing`, `InfrastructureRing`) when the extra domain service ring does not add clarity.
+
 ## Hexagonal / Ports and Adapters
 
 Use primary ports for operations exposed to driving adapters. Use secondary ports for dependencies the application core needs from the outside.
@@ -193,4 +287,3 @@ public record OrderSummary(String id, String status, String customerName) {}
 ```
 
 Do not introduce CQRS if commands and queries use the same data shape and the extra split adds only ceremony.
-

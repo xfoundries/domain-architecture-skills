@@ -111,25 +111,31 @@ Microsoft 的资料在这里被视为务实的实现参考，尤其适用于 .NE
 
 ### skills.sh / skills CLI
 
-发布到 GitHub 后，用户可以通过 `skills` CLI 安装：
+用户可以通过 `skills` CLI 安装：
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance
+npx skills add youngledo/software-architecture-skills
 ```
 
 安装到指定 agent：
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance -a claude-code
-npx skills add youngledo/ddd-architecture-guidance -a codex
-npx skills add youngledo/ddd-architecture-guidance -a cursor
-npx skills add youngledo/ddd-architecture-guidance -a opencode
+npx skills add youngledo/software-architecture-skills -a claude-code
+npx skills add youngledo/software-architecture-skills -a codex
+npx skills add youngledo/software-architecture-skills -a cursor
+npx skills add youngledo/software-architecture-skills -a opencode
+```
+
+从仓库中明确安装这个 skill：
+
+```bash
+npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance
 ```
 
 查看仓库中可用的 skills：
 
 ```bash
-npx skills add youngledo/ddd-architecture-guidance --list
+npx skills add youngledo/software-architecture-skills --list
 ```
 
 ### Codex 风格 skill 目录
@@ -138,14 +144,14 @@ npx skills add youngledo/ddd-architecture-guidance --list
 
 ```bash
 mkdir -p ~/.agents/skills
-cp -R ddd-architecture-guidance ~/.agents/skills/
+cp -R skills/ddd-architecture-guidance ~/.agents/skills/
 ```
 
 如果你的环境使用 `~/.codex/skills`，则使用这个路径：
 
 ```bash
 mkdir -p ~/.codex/skills
-cp -R ddd-architecture-guidance ~/.codex/skills/
+cp -R skills/ddd-architecture-guidance ~/.codex/skills/
 ```
 
 ### Claude Code 风格 skill 目录
@@ -154,14 +160,14 @@ cp -R ddd-architecture-guidance ~/.codex/skills/
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -R ddd-architecture-guidance ~/.claude/skills/
+cp -R skills/ddd-architecture-guidance ~/.claude/skills/
 ```
 
 项目级 skill：
 
 ```bash
 mkdir -p .claude/skills
-cp -R ddd-architecture-guidance .claude/skills/
+cp -R skills/ddd-architecture-guidance .claude/skills/
 ```
 
 Claude Code 不需要 `agents/openai.yaml`；可以保留，也可以删除。
@@ -188,9 +194,9 @@ npx skills update ddd-architecture-guidance -p
 
 ## 发布说明
 
-这个仓库适合作为单 skill GitHub 仓库发布，因为 `SKILL.md` 位于仓库根目录。
+这个仓库现在按照多 skill 仓库组织。当前 skill 位于 `skills/ddd-architecture-guidance/`，后续可以继续在 `skills/` 目录下增加其它软件架构相关 skills。
 
-这个 skill 已经可以通过 GitHub 直接安装：`npx skills add youngledo/ddd-architecture-guidance`。skills.sh 的详情页和 badge 在仓库索引期间可能表现不稳定，所以本文档以直接 GitHub 安装命令作为准确信息来源。
+这个 skill 已经可以通过 GitHub 直接安装：`npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance`。skills.sh 的详情页和 badge 在仓库索引期间可能表现不稳定，所以本文档以直接 GitHub 安装命令作为准确信息来源。
 
 建议添加的 GitHub topics：
 
@@ -233,16 +239,16 @@ Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in
 
 ## 文件说明
 
-- `SKILL.md`：触发描述和核心工作流
-- `references/source-policy.md`：资料权威性分层、引用策略、Explicit Architecture 的谨慎使用说明，以及 Clean Architecture 作为二次综合资料的谨慎参考说明
-- `references/architecture-constraints.md`：按架构风格组织的依赖、调用路径和边界约束
-- `references/backend-guidance.md`：后端优先的语言和架构指导
-- `references/examples-java-kotlin.md`：面向 jMolecules 的 Java/Kotlin 示例
-- `references/examples-csharp-dotnet.md`：C#/.NET 示例
-- `references/examples-go.md`：Go 示例
-- `references/examples-python.md`：Python 示例
-- `references/architecture-testing.md`：ArchUnit、ArchUnitNET 和轻量架构测试示例
-- `agents/openai.yaml`：Codex/OpenAI 风格 skill 环境的可选 UI 元数据
+- `skills/ddd-architecture-guidance/SKILL.md`：触发描述和核心工作流
+- `skills/ddd-architecture-guidance/references/source-policy.md`：资料权威性分层、引用策略、Explicit Architecture 的谨慎使用说明，以及 Clean Architecture 作为二次综合资料的谨慎参考说明
+- `skills/ddd-architecture-guidance/references/architecture-constraints.md`：按架构风格组织的依赖、调用路径和边界约束
+- `skills/ddd-architecture-guidance/references/backend-guidance.md`：后端优先的语言和架构指导
+- `skills/ddd-architecture-guidance/references/examples-java-kotlin.md`：面向 jMolecules 的 Java/Kotlin 示例
+- `skills/ddd-architecture-guidance/references/examples-csharp-dotnet.md`：C#/.NET 示例
+- `skills/ddd-architecture-guidance/references/examples-go.md`：Go 示例
+- `skills/ddd-architecture-guidance/references/examples-python.md`：Python 示例
+- `skills/ddd-architecture-guidance/references/architecture-testing.md`：ArchUnit、ArchUnitNET 和轻量架构测试示例
+- `skills/ddd-architecture-guidance/agents/openai.yaml`：Codex/OpenAI 风格 skill 环境的可选 UI 元数据
 
 ## 架构单元测试
 

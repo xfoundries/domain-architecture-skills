@@ -31,6 +31,112 @@ tests/
 
 Keep this simpler for CRUD-heavy services. A vertical slice can be better than four projects with no real boundary value.
 
+## Onion-Style Project Boundary
+
+Onion Architecture can be expressed with .NET projects or namespaces. The important rule is dependency direction, not the exact project names.
+
+```text
+Ordering.Domain        # innermost ring: model, invariants, domain services
+Ordering.Application   # use cases, application services, ports
+Ordering.Infrastructure# EF Core, messaging, external APIs, adapters
+Ordering.Api           # controllers, endpoints, delivery concerns
+```
+
+Typical project references:
+
+```text
+Ordering.Domain        -> no project references
+Ordering.Application   -> Ordering.Domain
+Ordering.Infrastructure-> Ordering.Application, Ordering.Domain
+Ordering.Api           -> Ordering.Application
+```
+
+The domain project should not reference ASP.NET Core, EF Core, messaging clients, or infrastructure adapters:
+
+```csharp
+namespace Ordering.Domain;
+
+public sealed class Order
+{
+    public OrderId Id { get; }
+    public OrderStatus Status { get; private set; } = OrderStatus.Draft;
+
+    public Order(OrderId id)
+    {
+        Id = id;
+    }
+
+    public void Submit()
+    {
+        if (Status != OrderStatus.Draft)
+        {
+            throw new InvalidOperationException("Only draft orders can be submitted.");
+        }
+
+        Status = OrderStatus.Submitted;
+    }
+}
+```
+
+Application code coordinates use cases and defines outbound abstractions when needed:
+
+```csharp
+namespace Ordering.Application;
+
+using Ordering.Domain;
+
+public interface IOrders
+{
+    Task<Order?> FindById(OrderId id, CancellationToken cancellationToken);
+    Task Save(Order order, CancellationToken cancellationToken);
+}
+
+public sealed class SubmitOrder
+{
+    private readonly IOrders _orders;
+
+    public SubmitOrder(IOrders orders)
+    {
+        _orders = orders;
+    }
+
+    public async Task Execute(OrderId id, CancellationToken cancellationToken)
+    {
+        var order = await _orders.FindById(id, cancellationToken)
+            ?? throw new InvalidOperationException("Order not found.");
+
+        order.Submit();
+        await _orders.Save(order, cancellationToken);
+    }
+}
+```
+
+Infrastructure implements application ports:
+
+```csharp
+namespace Ordering.Infrastructure.Persistence;
+
+using Ordering.Application;
+using Ordering.Domain;
+
+public sealed class EfOrders : IOrders
+{
+    public Task<Order?> FindById(OrderId id, CancellationToken cancellationToken)
+    {
+        // Load and map using EF Core here.
+        throw new NotImplementedException();
+    }
+
+    public Task Save(Order order, CancellationToken cancellationToken)
+    {
+        // Persist using EF Core here.
+        throw new NotImplementedException();
+    }
+}
+```
+
+If the project chooses Onion Architecture, an API controller bypassing `Ordering.Application` to call `Ordering.Infrastructure` directly is usually a boundary violation.
+
 ## Aggregate and Value Object
 
 ```csharp
