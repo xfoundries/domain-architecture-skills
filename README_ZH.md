@@ -190,13 +190,7 @@ npx skills update ddd-architecture-guidance -p
 
 这个仓库适合作为单 skill GitHub 仓库发布，因为 `SKILL.md` 位于仓库根目录。
 
-这个 skill 已经可以通过 GitHub 直接安装：`npx skills add youngledo/ddd-architecture-guidance`。skills.sh 的详情页和 badge 可能要等仓库被 skills.sh 索引后才会正常显示。
-
-skills.sh 索引后，可以选择再加回 badge：
-
-```md
-[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
-```
+这个 skill 已经可以通过 GitHub 直接安装：`npx skills add youngledo/ddd-architecture-guidance`。skills.sh 的详情页和 badge 在仓库索引期间可能表现不稳定，所以本文档以直接 GitHub 安装命令作为准确信息来源。
 
 建议添加的 GitHub topics：
 

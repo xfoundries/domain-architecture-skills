@@ -190,13 +190,7 @@ npx skills update ddd-architecture-guidance -p
 
 This repository is intended to work as a single-skill GitHub repository because `SKILL.md` lives at the repository root.
 
-The skill can be installed directly from GitHub with `npx skills add youngledo/ddd-architecture-guidance`. The skills.sh detail page and badge may not appear until the repository has been indexed by skills.sh.
-
-Optional badge after skills.sh indexing:
-
-```md
-[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
-```
+The skill can be installed directly from GitHub with `npx skills add youngledo/ddd-architecture-guidance`. The skills.sh detail page and badge behavior may vary while the repository is being indexed, so this README intentionally uses the direct GitHub install command as the source of truth.
 
 Recommended GitHub topics:
 
