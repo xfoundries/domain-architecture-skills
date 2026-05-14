@@ -166,6 +166,26 @@ cp -R ddd-architecture-guidance .claude/skills/
 
 Claude Code 不需要 `agents/openai.yaml`；可以保留，也可以删除。
 
+## 更新
+
+通过 `skills` CLI 安装的 skill 不会被 Claude Code、Codex、Cursor 或 OpenCode 自动更新。仓库发布新版本后，用户需要执行：
+
+```bash
+npx skills update ddd-architecture-guidance
+```
+
+如果是全局安装：
+
+```bash
+npx skills update ddd-architecture-guidance -g
+```
+
+如果是项目级安装：
+
+```bash
+npx skills update ddd-architecture-guidance -p
+```
+
 ## 发布说明
 
 这个仓库适合作为单 skill GitHub 仓库发布，因为 `SKILL.md` 位于仓库根目录。

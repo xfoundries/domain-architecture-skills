@@ -166,6 +166,26 @@ cp -R ddd-architecture-guidance .claude/skills/
 
 Claude Code does not need `agents/openai.yaml`; it can be left in place or removed.
 
+## Updating
+
+Skills installed through the `skills` CLI are not updated automatically by Claude Code, Codex, Cursor, or OpenCode. After this repository is updated, users should run:
+
+```bash
+npx skills update ddd-architecture-guidance
+```
+
+For global installs:
+
+```bash
+npx skills update ddd-architecture-guidance -g
+```
+
+For project-local installs:
+
+```bash
+npx skills update ddd-architecture-guidance -p
+```
+
 ## Publishing Notes
 
 This repository is intended to work as a single-skill GitHub repository because `SKILL.md` lives at the repository root.
