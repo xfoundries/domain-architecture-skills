@@ -4,8 +4,6 @@
 
 ---
 
-[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
-
 Source-aware architecture guidance for business-domain systems using Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS.
 
 This skill is designed for AI coding agents that support `SKILL.md`-based skills, including Codex-style skill environments and Claude Code-style local skills.
@@ -167,6 +165,14 @@ Claude Code does not need `agents/openai.yaml`; it can be left in place or remov
 ## Publishing Notes
 
 This repository is intended to work as a single-skill GitHub repository because `SKILL.md` lives at the repository root.
+
+The skill can be installed directly from GitHub with `npx skills add youngledo/ddd-architecture-guidance`. The skills.sh detail page and badge may not appear until the repository has been indexed by skills.sh.
+
+Optional badge after skills.sh indexing:
+
+```md
+[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
+```
 
 Recommended GitHub topics:
 

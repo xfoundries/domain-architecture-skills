@@ -4,8 +4,6 @@
 
 ---
 
-[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
-
 面向业务领域系统的、重视资料来源层级的架构指导 skill，覆盖 Domain-Driven Design、Layered Architecture、Onion Architecture、Hexagonal Architecture / Ports and Adapters，以及 CQRS。
 
 这个 skill 适用于支持 `SKILL.md` 结构的 AI 编程 agent，包括 Codex 风格的 skill 环境，以及 Claude Code 风格的本地 skills。
@@ -167,6 +165,14 @@ Claude Code 不需要 `agents/openai.yaml`；可以保留，也可以删除。
 ## 发布说明
 
 这个仓库适合作为单 skill GitHub 仓库发布，因为 `SKILL.md` 位于仓库根目录。
+
+这个 skill 已经可以通过 GitHub 直接安装：`npx skills add youngledo/ddd-architecture-guidance`。skills.sh 的详情页和 badge 可能要等仓库被 skills.sh 索引后才会正常显示。
+
+skills.sh 索引后，可以选择再加回 badge：
+
+```md
+[![skills.sh](https://skills.sh/b/youngledo/ddd-architecture-guidance)](https://skills.sh/youngledo/ddd-architecture-guidance)
+```
 
 建议添加的 GitHub topics：
 
