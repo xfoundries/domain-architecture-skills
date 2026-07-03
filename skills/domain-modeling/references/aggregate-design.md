@@ -29,13 +29,17 @@ Put validation close to the value object when the rule defines the value itself.
 
 Use a domain service only for domain decisions that do not naturally belong to one aggregate or value object.
 
-Do not move orchestration, transactions, security checks, logging, framework calls, or persistence access into a domain service. Those belong in application services or adapters.
+Do not move application orchestration, transaction demarcation, security checks, logging, framework calls, or concrete persistence concerns into a domain service. Those belong in application services or adapters.
+
+A domain service may depend on domain-level abstractions, including repository contracts, only when a domain decision genuinely needs them and the chosen architecture allows that dependency. Do not use this as a shortcut for moving use-case workflow or persistence-shaped queries into the domain layer.
 
 ## Repositories
 
 Use repositories for aggregate lifecycle and command-side aggregate loading. Repository methods should express domain intent, not SQL condition shape.
 
 Queries for pages, reports, dashboards, projections, lookup context, or maintenance scans are usually read-side concerns, not aggregate repository responsibilities.
+
+Prefer modifying one aggregate per transaction because aggregates are consistency boundaries. If a use case appears to require immediate consistency across multiple aggregates, first re-check the aggregate boundary; if the boundary is still valid, document the business reason and consistency tradeoff instead of hiding the exception.
 
 ## Aggregate Boundary Checks
 

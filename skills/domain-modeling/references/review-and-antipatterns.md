@@ -36,9 +36,9 @@ Fix: split around invariants and immediate consistency. Use events or policies f
 
 ### Fake Domain Service
 
-Symptom: a service is called domain service but handles transactions, persistence, HTTP calls, security, or logging.
+Symptom: a service is called domain service but handles application workflow, transaction demarcation, concrete persistence APIs, HTTP calls, security, or logging.
 
-Fix: move orchestration to application services and infrastructure calls to adapters.
+Fix: move technical workflow to application services or adapters. Keep only domain decisions that do not fit an entity, value object, or aggregate. Depending on a domain repository contract can be acceptable when the domain decision requires it; depending on ORM, mapper, query wrapper, HTTP client, or transaction APIs is not.
 
 ### Event As Command
 

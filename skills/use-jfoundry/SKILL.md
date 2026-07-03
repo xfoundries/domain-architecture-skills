@@ -31,7 +31,7 @@ Default to a new Java 21 Maven project using Hexagonal Architecture unless the u
 - Put Spring Boot starters only in the boot/runtime assembly module, never in domain or application modules.
 - Put use case orchestration and transaction-facing workflow in the application layer.
 - Express outbound needs as secondary ports. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
-- Primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly.
+- In jfoundry Hexagonal or Onion projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/read-model/maintenance roles only when that distinction helps the project.
 - Keep persistence data converters infrastructure-local. Prefer MapStruct `@Mapper` interfaces with `INSTANCE`; keep `toEntity(...)` explicit and call aggregate `restore(...)`.
 - Enable Outbox only for reliable publication to an external process or broker. Use local domain event dispatch when events stay in-process.

@@ -63,6 +63,7 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 - Preserve the distinction between foundational sources, implementation guidance, opinionated synthesis, and framework conventions.
 - Preserve architecture constraints when a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS.
 - Do not introduce universal rules such as mandatory CQRS, mandatory Event Sourcing, mandatory repository abstractions, mandatory folder structures, or mandatory jfoundry adoption.
+- Distinguish DDD core discipline from optional implementation preferences. Once a project chooses DDD, ubiquitous language, bounded-context meaning, invariant protection, identity/value distinction, and domain behavior placement should be treated as real design constraints.
 - Use "usually", "when justified", or "in this architecture" for context-dependent guidance.
 - Keep guidance language-neutral where possible, then translate into ecosystem-specific advice.
 - Do not make jMolecules a cross-language implementation mandate.

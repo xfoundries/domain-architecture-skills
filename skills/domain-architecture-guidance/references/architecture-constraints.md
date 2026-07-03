@@ -8,10 +8,20 @@ Do not describe DDD as the "best practice" of those architectures. A more accura
 
 Clean Architecture is intentionally not modeled here as a separate supported architecture because this skill is aligned with jMolecules concepts, which provide Layered, Onion, Hexagonal / Ports and Adapters, and CQRS modules. Treat Clean Architecture as a synthesis and terminology bridge discussed in `source-policy.md`, not as a separate first-class architecture for this skill.
 
+## Rule Source Levels
+
+Use strong language only after identifying the source of the rule:
+
+- **DDD core discipline**: strong once the project chooses DDD. Keep ubiquitous language, bounded-context meaning, invariant-protecting aggregates, identity/value distinction, and domain behavior placement coherent.
+- **Architecture constraints**: strong only inside the chosen architecture. Layered, Onion, Hexagonal / Ports and Adapters, and CQRS each add their own dependency and responsibility rules.
+- **Framework conventions**: strong only for projects using that framework or rule set, such as jfoundry annotations, starter placement, or ArchUnit rule groups.
+- **Heuristics**: default recommendations that need context, such as keeping aggregates small, preferring one aggregate per transaction, or splitting read ports by responsibility.
+- **Project policy**: strong inside that codebase when documented, but do not present it as a universal DDD rule.
+
 ## Decision Order
 
 1. Identify the architecture the project claims or already implements.
-2. Check whether the rule follows from that architecture.
+2. Identify whether the rule comes from DDD core discipline, the chosen architecture, framework convention, heuristic guidance, or project policy.
 3. Check whether the project has documented a local exception.
 4. Only then decide whether simplification is appropriate.
 
@@ -99,3 +109,5 @@ Use precise wording:
 - "This is not a DDD requirement, but it is a Layered or Hexagonal application boundary in this project."
 - "This direct repository call could be acceptable in simple CRUD, but it conflicts with the layered architecture documented here."
 - "This abstraction is optional because no architecture in this project requires a port at this boundary."
+- "This is a DDD modeling problem because the aggregate no longer protects the invariant it owns."
+- "This is a project policy, not an industry-wide DDD rule; enforce it here but label it correctly."

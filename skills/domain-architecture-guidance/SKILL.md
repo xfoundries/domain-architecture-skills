@@ -27,7 +27,9 @@ DDD is a domain modeling methodology and language for business concepts, boundar
 ## Core Rules
 
 - Prefer original and broadly recognized sources over blog-style synthesis.
+- When a project chooses DDD, enforce its core modeling discipline: ubiquitous language, explicit bounded-context meaning, invariant-protecting aggregates, identity/value distinction, and behavior placed where it best protects rules. Do not treat DDD as optional decoration after that choice is made.
 - Do not weaken explicit architecture constraints. If the project has chosen strict Layered, Onion, Hexagonal / Ports and Adapters, or CQRS, controller-to-repository calls, infrastructure dependencies in the domain, bypassed application/use-case boundaries, and mixed command/query responsibilities are usually violations unless the project documents an exception.
+- Do not upgrade implementation preferences into universal DDD rules. Repository naming, read-port suffixes, CQRS, Event Sourcing, package layout, jMolecules annotations, and ArchUnit tests become strict only when selected by the architecture, framework, or project policy.
 - Use jMolecules primarily for Java/Kotlin code annotation, architecture expression, validation, and documentation.
 - For C#/.NET, Go, Python, Dart, and Swift, translate concepts into idiomatic modules, packages, namespaces, protocols/interfaces, tests, and dependency rules.
 - Apply this skill to mobile or frontend clients only when the client has real domain behavior. For thin UI clients, prefer simpler state management and API integration patterns.
