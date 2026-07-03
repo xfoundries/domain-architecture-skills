@@ -1,0 +1,20 @@
+{
+  "name": "domain-architecture",
+  "owner": {
+    "name": "Huang Xiao",
+    "email": "youngledo@qq.com"
+  },
+  "metadata": {
+    "description": "Domain modeling and architecture workflow plugins for business software systems.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "domain-architecture",
+      "source": "./",
+      "description": "Domain modeling and architecture workflow plugin for business software systems.",
+      "version": "0.1.0",
+      "strict": true
+    }
+  ]
+}

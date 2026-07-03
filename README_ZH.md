@@ -1,25 +1,25 @@
-# Software Architecture Skills
+# Domain Architecture Plugin
 
 中文 ｜ [English](README.md)
 
 ---
 
-面向业务领域软件架构的多 skill 方法论包。它帮助 AI 编程 agent 从业务需求走到领域模型、架构决策和框架落地，同时避免把 DDD、Hexagonal Architecture、Onion Architecture、CQRS 或某个框架约定混成一套强制组合模型。
+面向业务领域软件系统的插件优先架构指导包。它帮助 AI 编程 agent 从业务需求走到领域模型、架构决策和框架落地，同时避免把 DDD、Hexagonal Architecture、Onion Architecture、CQRS 或某个框架约定混成一套强制组合模型。
 
-这个仓库适用于支持 `SKILL.md` 结构的 agent，包括 Codex 风格的 skill 环境和 Claude Code 风格的本地 skills。
+分发单元是 `domain-architecture` 插件。`skills/` 目录是插件内部能力，安装插件后由 Codex、Claude Code 和其它兼容 agent 暴露出来。
 
-## Skills
+## 插件能力
 
-| Skill                         | 作用 |
-|-------------------------------|---|
-| `domain-architecture-workflow` | 端到端业务领域架构入口工作流，编排建模、架构判断和可选框架落地。 |
-| `domain-modeling`             | 框架无关的领域建模流程，覆盖统一语言、命令、事件、限界上下文、聚合、不变量、值对象、领域服务、仓储和读模型。 |
-| `domain-architecture-guidance` | 来源感知的架构指导，覆盖 DDD、Layered、Onion、Hexagonal / Ports and Adapters、CQRS、jMolecules 风格注解和架构测试。 |
-| `use-jfoundry`               | [jfoundry](https://github.com/xfoundries/jfoundry) 专用业务项目指导，覆盖依赖、包结构、注解、Repository/Port 边界、持久化适配器、Outbox/Inbox 和 ArchUnit 规则。 |
+| Skill                         | 作用                                                                                                                                                                   |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `domain-architecture-workflow` | 端到端业务领域架构入口工作流，编排建模、架构判断和可选框架落地。                                                                                                       |
+| `domain-modeling`             | 框架无关的领域建模流程，覆盖统一语言、命令、事件、限界上下文、聚合、不变量、值对象、领域服务、仓储和读模型。                                                           |
+| `domain-architecture-guidance` | 来源感知的架构指导，覆盖 DDD、Layered、Onion、Hexagonal / Ports and Adapters、CQRS、jMolecules 风格注解和架构测试。                                                    |
+| `use-jfoundry`               | [jfoundry](https://github.com/xfoundries/jfoundry) 专用 Java 业务项目指导，覆盖依赖、包结构、注解、Repository/Port 边界、持久化适配器、Outbox/Inbox 和 ArchUnit 规则。 |
 
 ## 推荐工作流
 
-使用 `domain-architecture-workflow` 作为通用入口：
+使用插件内的 `domain-architecture-workflow` 能力作为通用入口：
 
 1. 理解业务目标、参与者、流程、约束和不确定性。
 2. 对非平凡业务行为使用 `domain-modeling` 先建模。
@@ -27,7 +27,7 @@
 4. 领域和架构假设清楚后，再使用框架专用指导。只有 [jfoundry](https://github.com/xfoundries/jfoundry) 项目才使用 `use-jfoundry`。
 5. 当实现触及边界时，用架构测试、代码评审或明确风险说明做验证。
 
-这个 skill 包不依赖任何外部工作流系统。它可以和 planning、TDD、code review 或 superpowers 风格工作流一起使用：如果另一个流程 skill 已经激活，只在其中的领域和架构决策节点使用这些 skills。
+这个插件不依赖任何外部工作流系统。它可以和 planning、TDD、code review 或 superpowers 风格工作流一起使用：如果另一个流程插件或 skill 已经激活，只在其中的领域和架构决策节点使用本插件。
 
 ## 适用范围
 
@@ -54,75 +54,73 @@
 - 广泛使用的实现指导：jMolecules、Microsoft .NET architecture guidance、Spring Modulith、ArchUnit、ArchUnitNET、microservices.io。
 - 带个人观点的综合模型和示例：可以参考，但不能作为权威标准。
 
-这些 skills 区分 DDD 建模概念、架构风格约束和框架约定，不会把 DDD、Layered、Onion、Hexagonal、CQRS 和 Event Sourcing 表述成一个标准架构。
+这个插件区分 DDD 建模概念、架构风格约束和框架约定，不会把 DDD、Layered、Onion、Hexagonal、CQRS 和 Event Sourcing 表述成一个标准架构。
 
 ## 安装
 
-### skills.sh / skills CLI
+### Codex 与 `.agents/plugins` 兼容 agent
 
-安装整个仓库：
-
-```bash
-npx skills add youngledo/software-architecture-skills
-```
-
-安装到指定 agent：
+本仓库内置 `.agents/plugins/marketplace.json`，因此可以直接作为本地或 Git marketplace 添加：
 
 ```bash
-npx skills add youngledo/software-architecture-skills -a claude-code
-npx skills add youngledo/software-architecture-skills -a codex
-npx skills add youngledo/software-architecture-skills -a cursor
-npx skills add youngledo/software-architecture-skills -a opencode
+codex plugin marketplace add xfoundries/software-architecture-skills
+codex plugin add domain-architecture@domain-architecture
 ```
 
-安装单个 skill：
+如果从当前 checkout 做本地开发：
 
 ```bash
-npx skills add youngledo/software-architecture-skills --skill domain-architecture-workflow
-npx skills add youngledo/software-architecture-skills --skill domain-modeling
-npx skills add youngledo/software-architecture-skills --skill domain-architecture-guidance
-npx skills add youngledo/software-architecture-skills --skill use-jfoundry
+codex plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+codex plugin add domain-architecture@domain-architecture
 ```
 
-查看可用 skills：
+兼容 `.agents/plugins/marketplace.json` 的其它 agent 也可以使用同样形态。marketplace 条目指向仓库根目录：
+
+```json
+{
+  "name": "domain-architecture",
+  "interface": {
+    "displayName": "Domain Architecture"
+  },
+  "plugins": [
+    {
+      "name": "domain-architecture",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
+```
+
+如果需要使用 `~/.agents/plugins` 下的个人 marketplace，也可以让 `~/plugins/domain-architecture` 指向本仓库并添加个人 marketplace 条目。但仓库内置 marketplace 是更推荐的项目自带分发形态。
+
+### Claude Code
+
+Claude Code 可以通过插件系统校验和安装同一个插件源码。本仓库包含 `.claude-plugin/plugin.json`、`.claude-plugin/marketplace.json`，并复用同一份 `skills/` 能力。
 
 ```bash
-npx skills add youngledo/software-architecture-skills --list
+claude plugin validate /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin marketplace add xfoundries/software-architecture-skills
+claude plugin install domain-architecture@domain-architecture
 ```
 
-### Codex 风格目录
-
-复制全部 skills：
+如果从当前 checkout 做本地开发：
 
 ```bash
-mkdir -p ~/.agents/skills
-cp -R skills/* ~/.agents/skills/
+claude plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin install domain-architecture@domain-architecture
 ```
 
-如果环境使用 `~/.codex/skills`，改用该路径：
+### 原始 skill 兼容
 
-```bash
-mkdir -p ~/.codex/skills
-cp -R skills/* ~/.codex/skills/
-```
-
-### Claude Code 风格目录
-
-用户级：
-
-```bash
-mkdir -p ~/.claude/skills
-cp -R skills/* ~/.claude/skills/
-```
-
-项目级：
-
-```bash
-mkdir -p .claude/skills
-cp -R skills/* .claude/skills/
-```
-
-Claude Code 不需要 `agents/openai.yaml`，保留即可。
+不支持插件的 agent 仍然可以把 `skills/` 下的目录当作普通 `SKILL.md` skills 使用。这是兼容兜底，不是推荐安装形态。
 
 ## 使用示例
 
@@ -145,6 +143,13 @@ Use $use-jfoundry to implement the confirmed model in a Java 21 jfoundry project
 ## 仓库结构
 
 ```text
+.codex-plugin/
+  plugin.json
+.claude-plugin/
+  marketplace.json
+  plugin.json
+.agents/plugins/
+  marketplace.json
 skills/
   domain-architecture-workflow/
   domain-modeling/
@@ -154,14 +159,9 @@ skills/
 
 ## 更新
 
-通过 `skills` CLI 安装的 skills 不会被 Claude Code、Codex、Cursor 或 OpenCode 自动更新。仓库更新后，用户应运行：
+本地开发时，保持目标 agent 的 marketplace source 指向本仓库即可。修改插件元数据后，在目标 agent 中重新安装或更新插件，让它刷新缓存。
 
-```bash
-npx skills update domain-architecture-workflow
-npx skills update domain-modeling
-npx skills update domain-architecture-guidance
-npx skills update use-jfoundry
-```
+对 Codex 来说，必要时更新 `.codex-plugin/plugin.json` 的 cachebuster，然后从 `domain-architecture@domain-architecture` 重新安装。
 
 ## 设计原则
 

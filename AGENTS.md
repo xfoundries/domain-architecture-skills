@@ -1,8 +1,8 @@
 # Agent Instructions
 
-This repository contains a multi-skill methodology pack for business-domain software architecture.
+This repository contains the `domain-architecture` plugin for business-domain software architecture.
 
-Current skills:
+The plugin exposes these internal skills:
 
 - `domain-architecture-workflow`: entry-point workflow and routing.
 - `domain-modeling`: framework-neutral domain modeling.
@@ -13,7 +13,7 @@ Current skills:
 
 The repository helps agents and developers move from business requirements to domain models, architecture decisions, and optional framework-specific implementation guidance.
 
-The skills cover:
+The plugin covers:
 
 - Domain-Driven Design concepts and modeling workflow.
 - Layered Architecture.
@@ -28,11 +28,14 @@ Do not collapse DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, Event
 
 ## Skill Boundaries
 
+- Treat the plugin as the installation and distribution unit. The `skills/` directories are plugin-internal capabilities and compatibility assets, not independent products.
+- Keep `.agents/plugins/marketplace.json` as the repo-owned marketplace entry for Codex and other compatible agents. It should point at the repository root plugin with `source.url: "./"`.
+- Keep `.claude-plugin/marketplace.json` as the repo-owned marketplace entry for Claude Code. Do not force Claude Code to consume the Codex marketplace schema.
 - Keep `domain-architecture-workflow` as a coordinator. It should route to other skills and define phase order, not duplicate their detailed references.
 - Keep `domain-modeling` framework-neutral. It should not assume jfoundry, Spring, .NET, Go, Python, or a specific architecture style.
 - Keep `domain-architecture-guidance` source-aware. `references/source-policy.md` remains authoritative for source hierarchy.
 - Keep `use-jfoundry` jfoundry-specific. Do not move general DDD methodology into it.
-- Do not make this repository depend on superpowers or any other external process framework. It may mention that these skills can be used alongside planning, TDD, or review workflows.
+- Do not make this repository depend on superpowers or any other external process framework. It may mention that this plugin can be used alongside planning, TDD, or review workflows.
 
 ## Source Policy
 
@@ -69,7 +72,9 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 
 - Update both `README.md` and `README_ZH.md` for user-facing changes.
 - Keep English and Chinese READMEs aligned in meaning, even if not line-by-line translations.
-- Keep installation instructions compatible with Codex-style and Claude Code-style skill directories.
+- Keep installation instructions plugin-first and compatible with Codex `.agents/plugins` and Claude Code plugin workflows.
+- Prefer the repo-local marketplace workflow over loose user-level skill copying.
+- Mention raw `skills/` installation only as a fallback for agents without plugin support.
 - Avoid marketing claims. State scope and limits clearly.
 
 ## Validation
@@ -84,6 +89,10 @@ done
 
 Before publishing, check:
 
+- `.codex-plugin/plugin.json` validates with the Codex plugin validator.
+- `.claude-plugin/plugin.json` validates with `claude plugin validate`.
+- `.agents/plugins/marketplace.json` remains present and points at the repository root plugin.
+- `.claude-plugin/marketplace.json` remains present and validates with `claude plugin validate --strict`.
 - Every `skills/*/SKILL.md` has valid YAML frontmatter with `name` and `description`.
 - `domain-architecture-workflow` does not hard-depend on superpowers or any other external workflow skill.
 - `domain-modeling` contains modeling workflow and output protocol guidance without framework assumptions.

@@ -1,0 +1,20 @@
+{
+  "name": "domain-architecture",
+  "interface": {
+    "displayName": "Domain Architecture"
+  },
+  "plugins": [
+    {
+      "name": "domain-architecture",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
