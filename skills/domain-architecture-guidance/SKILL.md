@@ -1,9 +1,9 @@
 ---
-name: ddd-architecture-guidance
-description: Authoritative architecture guidance for Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS. Use when Codex is asked to design, review, refactor, document, or implement business-domain systems, especially backend services in Java, Kotlin, C#, .NET, Go, or Python, using DDD concepts, jMolecules-style architectural annotations, package/project boundaries, repositories, aggregates, application services, ports/adapters, layered/onion/hexagonal structures, CQRS, or architecture tests. Also use for Dart/Flutter, Swift/iOS, or other client applications only when they contain substantial offline domain logic, sync workflows, complex business rules, or local persistence boundaries.
+name: domain-architecture-guidance
+description: Authoritative architecture guidance for business-domain systems using Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS. Use when designing, reviewing, refactoring, documenting, or implementing domain-heavy systems with package/project boundaries, repositories, aggregates, application services, ports/adapters, CQRS, jMolecules-style annotations, or architecture tests.
 ---
 
-# DDD Architecture Guidance
+# Domain Architecture Guidance
 
 ## Purpose
 

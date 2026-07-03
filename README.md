@@ -1,24 +1,33 @@
-# DDD Architecture Guidance
+# Software Architecture Skills
 
 English ｜ [中文](README_ZH.md)
 
 ---
 
-Source-aware architecture guidance for business-domain systems using Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS.
+A multi-skill methodology pack for business-domain software architecture. It helps AI coding agents move from business requirements to domain models, architecture decisions, and framework-specific implementation guidance without treating DDD, Hexagonal Architecture, Onion Architecture, CQRS, or any framework convention as one mandatory combined model.
 
-This skill is designed for AI coding agents that support `SKILL.md`-based skills, including Codex-style skill environments and Claude Code-style local skills.
+This repository is designed for agents that support `SKILL.md`-based skills, including Codex-style skill environments and Claude Code-style local skills.
 
-## Purpose
+## Skills
 
-This skill helps an AI agent design, review, refactor, document, or implement architecture decisions by correctly applying Domain-Driven Design, Layered Architecture, Onion Architecture, Hexagonal Architecture / Ports and Adapters, and CQRS without treating them as one canonical combined model.
+| Skill | Purpose |
+|---|---|
+| `domain-architecture-workflow` | Entry-point workflow for end-to-end business-domain architecture work. Coordinates modeling, architecture decisions, and optional framework-specific landing. |
+| `domain-modeling` | Framework-neutral DDD/domain modeling workflow for ubiquitous language, commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read models. |
+| `domain-architecture-guidance` | Source-aware architecture guidance for DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, jMolecules-style annotations, and architecture tests. |
+| `use-jfoundry` | JFoundry-specific application guidance for Java business projects using [jfoundry](https://github.com/xfoundries/jfoundry) dependencies, package layout, annotations, Repository/Port boundaries, persistence adapters, Outbox/Inbox, and ArchUnit rules. |
 
-The main practical reference for this skill is [jMolecules](https://github.com/xmolecules/jmolecules), an established Java project for expressing DDD building blocks and architectural styles in code. This skill uses jMolecules as a strong reference for Java/Kotlin and as a conceptual reference for other ecosystems, while still asking the agent to translate concepts into the target language instead of copying one framework's structure everywhere.
+## Recommended Workflow
 
-It also prioritizes original or broadly recognized sources when making architecture claims.
+Use `domain-architecture-workflow` as the general entry point:
 
-This does not mean weakening architecture constraints. If a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS, the skill should enforce that architecture's dependency, boundary, and responsibility rules. The point is to attribute each rule to the right architectural context instead of presenting all rules as DDD requirements.
+1. Understand the business goal, actors, workflows, constraints, and uncertainty.
+2. Use `domain-modeling` for non-trivial business behavior before implementation.
+3. Use `domain-architecture-guidance` to decide whether DDD, Hexagonal, Onion, CQRS, ports/adapters, or simpler CRUD is appropriate.
+4. Use framework-specific guidance only after the domain and architecture assumptions are clear. Use `use-jfoundry` only for [jfoundry](https://github.com/xfoundries/jfoundry) projects.
+5. Verify the result with architecture tests, code review, or explicit risk notes when the implementation touches boundaries.
 
-DDD is treated as a domain modeling methodology, not as the owner of those architectures. Layered, Onion, Hexagonal / Ports and Adapters, and CQRS can be excellent ways to implement and protect domain models in domain-heavy systems, but each has its own constraints that must be followed when chosen.
+This pack does not depend on any external workflow system. It can run alongside planning, TDD, code-review, or "superpowers"-style workflows: when another process workflow is active, use these skills only for the domain and architecture decisions inside that process.
 
 ## Scope
 
@@ -35,83 +44,23 @@ Conditional targets:
 - Swift / iOS
 - Other client applications with substantial offline domain logic, sync workflows, local persistence boundaries, or complex business rules
 
-This skill should not be used to force DDD, ports/adapters, CQRS, repositories, or layered projects into simple CRUD applications, thin mobile clients, or small scripts.
-
-## What It Covers
-
-- DDD building blocks: bounded contexts, aggregates, entities, value objects, repositories, domain services, domain events
-- Layered Architecture
-- Onion Architecture
-- Hexagonal Architecture / Ports and Adapters
-- CQRS, without assuming Event Sourcing
-- jMolecules-style architectural expression for Java/Kotlin
-- Language-specific translation for C#/.NET, Go, Python, Dart, and Swift
-- Source hierarchy and citation discipline for architecture claims
-
-## Reference Organization
-
-This skill intentionally organizes practical guidance by language/ecosystem and validation tooling, not by architecture labels such as `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
-
-The reason is that the goal is not to restate architecture concepts as fixed templates. The goal is to help agents make source-aware backend decisions and translate those decisions into idiomatic Java/Kotlin, C#/.NET, Go, Python, or client-side code when justified.
-
-Architecture patterns overlap in practice. Organizing examples by ecosystem keeps the guidance closer to real implementation choices and reduces the risk of treating DDD, Layered, Onion, Hexagonal, CQRS, or Event Sourcing as one mandatory combined structure.
+Do not use these skills to force DDD, ports/adapters, CQRS, repositories, or layered projects into simple CRUD applications, thin mobile clients, or small scripts.
 
 ## Source Policy
 
-The skill separates sources into three levels.
+The architecture guidance separates sources into three levels:
 
-Foundational sources:
+- Foundational sources: Eric Evans for DDD, Alistair Cockburn for Hexagonal Architecture, Martin Fowler for enterprise patterns and CQRS discussion, Greg Young for CQRS, Jeffrey Palermo for Onion Architecture, and Clean Architecture only as a cautious dependency-direction synthesis.
+- Widely used implementation guidance: jMolecules, Microsoft .NET architecture guidance, Spring Modulith, ArchUnit, ArchUnitNET, and microservices.io.
+- Opinionated synthesis and examples: useful for inspiration, but not canonical authority.
 
-- Eric Evans on Domain-Driven Design: https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
-- Alistair Cockburn on Hexagonal Architecture / Ports and Adapters: https://alistair.cockburn.us/hexagonal-architecture/
-- Martin Fowler on enterprise application architecture and CQRS: https://martinfowler.com/ and https://martinfowler.com/bliki/CQRS.html
-- Greg Young on CQRS
-- Jeffrey Palermo on Onion Architecture: https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/
-- Robert C. Martin on Clean Architecture, used cautiously for dependency direction and independence principles: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-
-Widely used implementation guidance:
-
-- [jMolecules](https://github.com/xmolecules/jmolecules)
-- [Microsoft Learn .NET DDD-oriented microservice guidance](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)
-- Microsoft Learn / Azure Architecture Center / .NET architecture guides
-- [Spring Modulith](https://spring.io/projects/spring-modulith)
-- [ArchUnit](https://www.archunit.org/) / [ArchUnit Java repository](https://github.com/TNG/ArchUnit)
-- [ArchUnitNET](https://github.com/TNG/ArchUnitNET)
-- microservices.io
-
-Opinionated synthesis and examples:
-
-- Herberto Graca's Explicit Architecture articles
-- Example repositories that combine multiple architecture styles
-- Blog posts that prescribe exact folder structures or universal rules
-
-Opinionated synthesis can be useful, but it should not be treated as canonical authority.
-
-Microsoft guidance is treated as a pragmatic implementation reference, especially for .NET microservices. It is useful for tradeoffs such as when to apply DDD, when simpler CRUD is enough, how to keep domain entities independent from infrastructure, and how to structure .NET layers or projects. It is not treated as the original definition of DDD, Hexagonal Architecture, Onion Architecture, or CQRS.
-
-## Important Cautions
-
-### Explicit Architecture
-
-This skill does not treat "Explicit Architecture" as an authoritative architecture model.
-
-The reason is that it is mainly a personal synthesis: it combines DDD, Hexagonal Architecture, Onion Architecture, Clean Architecture, CQRS, and related patterns into one named model. That can be useful as a practitioner reference, but it is not a broadly recognized foundation comparable to DDD, Hexagonal Architecture / Ports and Adapters, Onion Architecture, or CQRS.
-
-Using it as a primary source can make a local composition appear to be an industry standard.
-
-### Clean Architecture
-
-This skill uses Clean Architecture cautiously.
-
-The reason is that Clean Architecture intentionally synthesizes ideas already present in Hexagonal Architecture, Onion Architecture, BCE, and related boundary-focused approaches. Its dependency rule and independence goals are valuable, but it should not be treated as a wholly new, standalone architecture or as a mandatory four-ring folder structure.
-
-When a concept belongs more directly to DDD, Hexagonal Architecture, or Onion Architecture, this skill asks the agent to prefer the original source.
+The skills distinguish DDD modeling concepts from architecture style constraints and framework conventions. They do not present DDD, Layered, Onion, Hexagonal, CQRS, and Event Sourcing as one canonical architecture.
 
 ## Installation
 
 ### skills.sh / skills CLI
 
-Users can install it with the `skills` CLI:
+Install the repository:
 
 ```bash
 npx skills add youngledo/software-architecture-skills
@@ -126,13 +75,16 @@ npx skills add youngledo/software-architecture-skills -a cursor
 npx skills add youngledo/software-architecture-skills -a opencode
 ```
 
-Install this skill explicitly from the repository:
+Install one skill explicitly:
 
 ```bash
-npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance
+npx skills add youngledo/software-architecture-skills --skill domain-architecture-workflow
+npx skills add youngledo/software-architecture-skills --skill domain-modeling
+npx skills add youngledo/software-architecture-skills --skill domain-architecture-guidance
+npx skills add youngledo/software-architecture-skills --skill use-jfoundry
 ```
 
-List available skills from the repository:
+List available skills:
 
 ```bash
 npx skills add youngledo/software-architecture-skills --list
@@ -140,123 +92,76 @@ npx skills add youngledo/software-architecture-skills --list
 
 ### Codex-style skill directory
 
-Copy the skill folder into your local skills directory:
+Copy all skills:
 
 ```bash
 mkdir -p ~/.agents/skills
-cp -R skills/ddd-architecture-guidance ~/.agents/skills/
+cp -R skills/* ~/.agents/skills/
 ```
 
 If your environment uses `~/.codex/skills`, use that path instead:
 
 ```bash
 mkdir -p ~/.codex/skills
-cp -R skills/ddd-architecture-guidance ~/.codex/skills/
+cp -R skills/* ~/.codex/skills/
 ```
 
 ### Claude Code-style skill directory
 
-For a user-level skill:
+For user-level skills:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -R skills/ddd-architecture-guidance ~/.claude/skills/
+cp -R skills/* ~/.claude/skills/
 ```
 
-For a project-level skill:
+For project-level skills:
 
 ```bash
 mkdir -p .claude/skills
-cp -R skills/ddd-architecture-guidance .claude/skills/
+cp -R skills/* .claude/skills/
 ```
 
-Claude Code does not need `agents/openai.yaml`; it can be left in place or removed.
+Claude Code does not need `agents/openai.yaml`; it can be left in place.
+
+## Usage Examples
+
+```text
+Use $domain-architecture-workflow to guide this order-management project from requirements to architecture decisions.
+```
+
+```text
+Use $domain-modeling to turn these billing requirements into commands, events, aggregates, invariants, and open questions.
+```
+
+```text
+Use $domain-architecture-guidance to review this Java service and tell me whether the aggregate boundaries and Hexagonal dependencies are justified.
+```
+
+```text
+Use $use-jfoundry to implement the confirmed model in a Java 21 jfoundry project with Hexagonal Architecture and ArchUnit tests.
+```
+
+## Repository Layout
+
+```text
+skills/
+  domain-architecture-workflow/
+  domain-modeling/
+  domain-architecture-guidance/
+  use-jfoundry/
+```
 
 ## Updating
 
 Skills installed through the `skills` CLI are not updated automatically by Claude Code, Codex, Cursor, or OpenCode. After this repository is updated, users should run:
 
 ```bash
-npx skills update ddd-architecture-guidance
+npx skills update domain-architecture-workflow
+npx skills update domain-modeling
+npx skills update domain-architecture-guidance
+npx skills update use-jfoundry
 ```
-
-For global installs:
-
-```bash
-npx skills update ddd-architecture-guidance -g
-```
-
-For project-local installs:
-
-```bash
-npx skills update ddd-architecture-guidance -p
-```
-
-## Publishing Notes
-
-This repository is organized as a multi-skill repository. The current skill lives at `skills/ddd-architecture-guidance/`, and additional software architecture skills can be added under `skills/` later.
-
-The skill can be installed directly from GitHub with `npx skills add youngledo/software-architecture-skills --skill ddd-architecture-guidance`. The skills.sh detail page and badge behavior may vary while the repository is being indexed, so this README intentionally uses the direct GitHub install command as the source of truth.
-
-Recommended GitHub topics:
-
-```text
-agent-skills
-skill-md
-skills-sh
-claude-code
-codex
-cursor
-opencode
-ddd
-domain-driven-design
-hexagonal-architecture
-cqrs
-architecture-testing
-jmolecules
-archunit
-```
-
-## Usage Examples
-
-Ask your agent:
-
-```text
-Use $ddd-architecture-guidance to review this Java service and tell me whether the aggregate boundaries are justified.
-```
-
-```text
-Use $ddd-architecture-guidance to evaluate whether this .NET API should use CQRS or a simpler layered design.
-```
-
-```text
-Use $ddd-architecture-guidance to propose an idiomatic Go package structure for this domain-heavy backend service.
-```
-
-```text
-Use $ddd-architecture-guidance to decide whether DDD concepts are appropriate in this Flutter app with offline sync.
-```
-
-## Files
-
-- `skills/ddd-architecture-guidance/SKILL.md`: trigger description and core workflow
-- `skills/ddd-architecture-guidance/references/source-policy.md`: authority levels, citation policy, Explicit Architecture caution, and Clean Architecture as cautious secondary synthesis
-- `skills/ddd-architecture-guidance/references/architecture-constraints.md`: dependency, call-path, and boundary constraints by architecture style
-- `skills/ddd-architecture-guidance/references/backend-guidance.md`: language and architecture guidance for backend-first business systems
-- `skills/ddd-architecture-guidance/references/examples-java-kotlin.md`: jMolecules-oriented Java/Kotlin examples
-- `skills/ddd-architecture-guidance/references/examples-csharp-dotnet.md`: C#/.NET examples
-- `skills/ddd-architecture-guidance/references/examples-go.md`: Go examples
-- `skills/ddd-architecture-guidance/references/examples-python.md`: Python examples
-- `skills/ddd-architecture-guidance/references/architecture-testing.md`: ArchUnit, ArchUnitNET, and lightweight architecture tests
-- `skills/ddd-architecture-guidance/agents/openai.yaml`: optional UI metadata for Codex/OpenAI-style skill environments
-
-## Architecture Tests
-
-For Java/Kotlin projects, this skill treats [ArchUnit](https://www.archunit.org/) and its [Java repository](https://github.com/TNG/ArchUnit) as preferred tools for architecture unit tests. Use it to verify dependency direction, package boundaries, layer rules, adapter isolation, and jMolecules-based architectural annotations.
-
-For C#/.NET projects, this skill treats [ArchUnitNET](https://github.com/TNG/ArchUnitNET) as the corresponding architecture unit testing tool.
-
-ArchUnit and ArchUnitNET are validation tools, not the source of the architecture model itself. The model should still come from the chosen architecture and source policy.
 
 ## Design Principle
 

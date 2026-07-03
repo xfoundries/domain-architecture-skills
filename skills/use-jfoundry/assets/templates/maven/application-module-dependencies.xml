@@ -1,0 +1,6 @@
+<dependencies>
+    <dependency>
+        <groupId>io.github.xfoundries</groupId>
+        <artifactId>jfoundry-application-starter</artifactId>
+    </dependency>
+</dependencies>

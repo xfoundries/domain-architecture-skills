@@ -1,39 +1,52 @@
 # Agent Instructions
 
-This repository contains software architecture skills. The current skill is `ddd-architecture-guidance` under `skills/ddd-architecture-guidance/`.
+This repository contains a multi-skill methodology pack for business-domain software architecture.
 
-Follow these instructions when editing, reviewing, or publishing this skill.
+Current skills:
+
+- `domain-architecture-workflow`: entry-point workflow and routing.
+- `domain-modeling`: framework-neutral domain modeling.
+- `domain-architecture-guidance`: source-aware architecture guidance.
+- `use-jfoundry`: jfoundry-specific application guidance.
 
 ## Scope
 
-This skill provides source-aware architecture guidance for business-domain systems using:
+The repository helps agents and developers move from business requirements to domain models, architecture decisions, and optional framework-specific implementation guidance.
 
-- Domain-Driven Design
-- Layered Architecture
-- Onion Architecture
-- Hexagonal Architecture / Ports and Adapters
-- CQRS
-- Architecture unit tests such as ArchUnit and ArchUnitNET
+The skills cover:
 
-It is backend-first, with primary attention to Java/Kotlin, C#/.NET, Go, and Python. Apply it to Dart/Flutter, Swift/iOS, or other client applications only when the client owns substantial domain behavior such as offline workflows, sync conflict handling, local persistence boundaries, or complex business rules.
+- Domain-Driven Design concepts and modeling workflow.
+- Layered Architecture.
+- Onion Architecture.
+- Hexagonal Architecture / Ports and Adapters.
+- CQRS, without assuming Event Sourcing.
+- Architecture unit tests such as ArchUnit and ArchUnitNET.
+- jMolecules-style expression for Java/Kotlin.
+- jfoundry-specific business project guidance.
 
-The core purpose is to help agents and developers apply DDD and the listed architecture styles correctly. DDD is a domain modeling methodology; Layered, Onion, Hexagonal / Ports and Adapters, and CQRS are architecture styles or patterns with their own constraints. Do not collapse them into a single DDD-centric model.
+Do not collapse DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, Event Sourcing, jMolecules, or jfoundry into one canonical model. Attribute every recommendation to the right level: domain modeling, architecture style, implementation guidance, framework convention, or project-local decision.
+
+## Skill Boundaries
+
+- Keep `domain-architecture-workflow` as a coordinator. It should route to other skills and define phase order, not duplicate their detailed references.
+- Keep `domain-modeling` framework-neutral. It should not assume jfoundry, Spring, .NET, Go, Python, or a specific architecture style.
+- Keep `domain-architecture-guidance` source-aware. `references/source-policy.md` remains authoritative for source hierarchy.
+- Keep `use-jfoundry` jfoundry-specific. Do not move general DDD methodology into it.
+- Do not make this repository depend on superpowers or any other external process framework. It may mention that these skills can be used alongside planning, TDD, or review workflows.
 
 ## Source Policy
 
-Keep `skills/ddd-architecture-guidance/references/source-policy.md` authoritative for source hierarchy.
-
 Prefer foundational and broadly recognized sources for architecture claims:
 
-- Eric Evans for DDD concepts
-- Alistair Cockburn for Hexagonal Architecture / Ports and Adapters
-- Martin Fowler for enterprise application patterns and CQRS discussion
-- Greg Young for CQRS-specific material
-- Jeffrey Palermo for Onion Architecture
-- Robert C. Martin's Clean Architecture article only for dependency direction and independence principles
-- jMolecules as the main practical Java/Kotlin reference
-- Microsoft architecture guidance, especially https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice, for pragmatic .NET/backend implementation
-- ArchUnit and ArchUnitNET as architecture validation tools
+- Eric Evans for DDD concepts.
+- Alistair Cockburn for Hexagonal Architecture / Ports and Adapters.
+- Martin Fowler for enterprise application patterns and CQRS discussion.
+- Greg Young for CQRS-specific material.
+- Jeffrey Palermo for Onion Architecture.
+- Robert C. Martin's Clean Architecture article only for dependency direction and independence principles.
+- jMolecules as the main practical Java/Kotlin reference.
+- Microsoft architecture guidance for pragmatic .NET/backend implementation.
+- ArchUnit and ArchUnitNET as architecture validation tools.
 
 Do not treat Herberto Graca's "Explicit Architecture" as an authoritative model. It may be mentioned only as an opinionated synthesis.
 
@@ -42,37 +55,39 @@ Do not treat Clean Architecture as a wholly new, standalone architecture. Use it
 ## Editing Rules
 
 - Keep each skill's `SKILL.md` concise. Put detailed guidance in that skill's `references/`.
-- Organize practical examples by language/ecosystem or validation tool, not by architecture label. Prefer `examples-java-kotlin.md`, `examples-csharp-dotnet.md`, `examples-go.md`, `examples-python.md`, and `architecture-testing.md` over `DDD.md`, `HEXAGONAL.md`, or `CQRS.md`.
-- Keep examples short and labeled as sketches. They should demonstrate translation choices, not prescribe a full project template.
-- Preserve the distinction between foundational sources, implementation guidance, and opinionated synthesis.
-- Preserve architecture constraints when a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS. Do not soften a real boundary violation by saying the rule is "not DDD"; attribute it to the correct architecture.
-- Do not introduce universal rules such as mandatory CQRS, mandatory Event Sourcing, mandatory repository abstractions, or mandatory folder structures.
+- Keep references one level below the skill directory and link them directly from `SKILL.md`.
+- Keep examples short and labeled as sketches. They should demonstrate translation choices, not prescribe a universal project template.
+- Preserve the distinction between foundational sources, implementation guidance, opinionated synthesis, and framework conventions.
+- Preserve architecture constraints when a project explicitly chooses Layered, Onion, Hexagonal / Ports and Adapters, or CQRS.
+- Do not introduce universal rules such as mandatory CQRS, mandatory Event Sourcing, mandatory repository abstractions, mandatory folder structures, or mandatory jfoundry adoption.
 - Use "usually", "when justified", or "in this architecture" for context-dependent guidance.
 - Keep guidance language-neutral where possible, then translate into ecosystem-specific advice.
-- Do not make jMolecules a cross-language implementation mandate. It is a strong Java/Kotlin reference and a conceptual reference elsewhere.
-- Do not make ArchUnit or ArchUnitNET sources of architecture rules. They validate rules chosen from the architecture and codebase context.
+- Do not make jMolecules a cross-language implementation mandate.
+- Do not make ArchUnit or ArchUnitNET sources of architecture rules; they validate rules chosen from architecture and codebase context.
 
 ## Documentation Rules
 
 - Update both `README.md` and `README_ZH.md` for user-facing changes.
 - Keep English and Chinese READMEs aligned in meaning, even if not line-by-line translations.
-- Keep installation instructions compatible with both Codex-style and Claude Code-style skill directories.
+- Keep installation instructions compatible with Codex-style and Claude Code-style skill directories.
 - Avoid marketing claims. State scope and limits clearly.
 
 ## Validation
 
-After editing skill metadata or `SKILL.md`, validate the checked-in skill path:
+After editing skill metadata or `SKILL.md`, validate every checked-in skill:
 
 ```bash
-python3 /Users/huangxiao/.codex/skills/.system/skill-creator/scripts/quick_validate.py /Users/huangxiao/Workspace/mine/software-architecture-skills/skills/ddd-architecture-guidance
+for skill in skills/*; do
+  python3 /Users/huangxiao/.codex/skills/.system/skill-creator/scripts/quick_validate.py "$skill"
+done
 ```
 
 Before publishing, check:
 
-- `skills/ddd-architecture-guidance/SKILL.md` has valid YAML frontmatter with `name` and `description`.
-- `skills/ddd-architecture-guidance/references/source-policy.md` explains why Explicit Architecture and Clean Architecture require caution.
-- `skills/ddd-architecture-guidance/references/architecture-constraints.md` exists and clearly separates DDD modeling rules from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
-- `skills/ddd-architecture-guidance/references/backend-guidance.md` covers Java/Kotlin, C#/.NET, Go, Python, and conditional mobile/client usage.
-- Example files exist for Java/Kotlin, C#/.NET, Go, Python, and architecture testing when the README mentions them.
-- `README.md` and `README_ZH.md` mention jMolecules, ArchUnit, and ArchUnitNET.
-- The skill does not imply that DDD, Layered, Onion, Hexagonal, CQRS, and Event Sourcing form one canonical architecture.
+- Every `skills/*/SKILL.md` has valid YAML frontmatter with `name` and `description`.
+- `domain-architecture-workflow` does not hard-depend on superpowers or any other external workflow skill.
+- `domain-modeling` contains modeling workflow and output protocol guidance without framework assumptions.
+- `domain-architecture-guidance/references/source-policy.md` explains source hierarchy and cautions around Explicit Architecture and Clean Architecture.
+- `domain-architecture-guidance/references/architecture-constraints.md` separates DDD modeling concepts from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
+- `use-jfoundry` remains a downstream business project skill, not a framework-maintenance skill.
+- `README.md` and `README_ZH.md` mention all shipped skills.

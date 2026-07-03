@@ -1,0 +1,4 @@
+interface:
+  display_name: "Domain Architecture Guidance"
+  short_description: "Source-aware domain architecture guidance"
+  default_prompt: "Use $domain-architecture-guidance to evaluate this business-domain architecture decision using DDD, layered, onion, hexagonal, and CQRS sources."
