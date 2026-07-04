@@ -6,7 +6,7 @@ Prefer Hexagonal Architecture for new business projects because it gives AI agen
 
 ```text
 primary adapter -> primary port / application service -> domain
-application service -> secondary port
+inside core consumer -> secondary port
 secondary adapter -> secondary port
 ```
 
@@ -20,11 +20,22 @@ Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope. 
 
 ## Hexagonal Roles
 
-- `@Application`: application core. It can include use cases, application services, and domain-facing orchestration.
-- `@PrimaryPort`: inbound API contract exposed by the application core. It should be an interface and live under `port.in`, `ports.in`, `port.inbound`, `ports.inbound`, `usecase`, or `usecases`.
+- `@Application`: application core role. It can include use cases, application services, and domain-facing orchestration. Do not confuse this with a Maven module named `application`; a multi-module project may split the Hexagonal inside/core across domain and application modules. Do not mark an entire domain root package as `@Application`.
+- `@PrimaryPort`: inbound API contract exposed by the application/use-case layer to driving adapters. It should be an interface and live under `port.in`, `ports.in`, `port.inbound`, `ports.inbound`, `usecase`, or `usecases`. Domain modules do not normally expose primary ports.
 - `@PrimaryAdapter`: inbound driver such as REST controller, message listener, CLI command, scheduler, or batch trigger.
-- `@SecondaryPort`: outbound need expressed by the application core. It should be an interface and live under `port.out`, `ports.out`, `port.outbound`, or `ports.outbound`.
+- `@SecondaryPort`: outbound need expressed by an inside/core consumer. It should be an interface and live under `port.out`, `ports.out`, `port.outbound`, or `ports.outbound` near the code that owns the need.
 - `@SecondaryAdapter`: implementation of a secondary port, such as MyBatis/JPA persistence, Redis, HTTP clients, broker senders, file storage, or external SDK adapters.
+
+## Secondary Port Ownership
+
+Place a secondary port by consumer ownership, not by the word `Application` in Hexagonal Architecture:
+
+- If an application service needs workflow context, command enrichment, a read model, or a query shape, put the port in the application module.
+- If a domain service or policy needs an external fact to make a domain decision, put a narrow domain-facing port in the domain module.
+- Keep domain-facing ports small and named by domain meaning, such as `EmcAvailabilityPort`, `CreditLimitPolicyPort`, or `EnvAppDependencyPort`.
+- Do not move broad read/query ports into the domain module just because one domain service needs one method. Split a narrow domain-facing port instead.
+
+Aggregate repositories are DDD repository contracts for aggregate lifecycle and command-side loading. In Hexagonal implementations they are outbound contracts implemented by infrastructure, but keep them under the domain repository package instead of duplicating them as application `port.out` interfaces.
 
 ## Package Defaults
 
@@ -35,9 +46,10 @@ Recommended package shape:
 ```text
 PACKAGE_NAME
   domain
+    port.out        # optional: narrow ports consumed by domain services or policies
   application
     port.in
-    port.out
+    port.out        # workflow/read ports consumed by application services
     service
   adapter.in
   adapter.out
@@ -45,7 +57,7 @@ PACKAGE_NAME
   boot
 ```
 
-Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters call application services or primary ports. Secondary adapters implement secondary ports.
+Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters call application services or primary ports. Secondary adapters implement secondary ports from either the domain or application module.
 
 ## Annotation Placement
 
@@ -66,6 +78,13 @@ package PACKAGE_NAME.application.port.in;
 ```java
 @org.jfoundry.architecture.hexagonal.SecondaryPort
 package PACKAGE_NAME.application.port.out;
+```
+
+For a narrow domain-facing port:
+
+```java
+@org.jfoundry.architecture.hexagonal.SecondaryPort
+package PACKAGE_NAME.domain.port.out;
 ```
 
 ```java

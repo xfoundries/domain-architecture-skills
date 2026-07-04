@@ -5,6 +5,7 @@ PACKAGE_NAME
 │   ├── model
 │   ├── event
 │   ├── service
+│   ├── port
 │   └── repository
 ├── application
 │   ├── command
@@ -21,5 +22,6 @@ PACKAGE_NAME
 Rules:
 - dependencies point inward toward the domain.
 - domain does not depend on application or infrastructure.
-- application orchestrates use cases and depends on domain plus outbound ports.
+- application orchestrates use cases and may depend on domain plus application-owned outbound ports.
+- domain may define narrow outbound ports for external facts needed by domain policies/services.
 - infrastructure implements persistence, messaging, web, scheduler, client, and framework details.

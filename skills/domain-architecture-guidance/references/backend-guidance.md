@@ -56,7 +56,7 @@ Use ArchUnitNET for architecture unit tests when C#/.NET boundaries should be en
 Translate architecture concepts into package boundaries and dependency direction. Do not copy Java-style class hierarchies.
 
 - Keep domain packages small and behavior-oriented when the domain is rich.
-- Put interfaces near the consumer when practical, especially for outbound ports used by application/domain services.
+- Put interfaces near the consumer when practical, especially for outbound ports used by application or domain services.
 - Use application/usecase packages for orchestration, transaction boundaries, and coordination with adapters.
 - Keep database, HTTP, queue, and framework code in adapters or infrastructure packages.
 - Avoid a repository interface for every table. Add interfaces where they protect domain/application code from volatile infrastructure or improve testing of business logic.
@@ -110,7 +110,7 @@ Use when the domain/application needs to be isolated from delivery mechanisms an
 
 Prefer ports for real variability, testing value, or boundary protection. Avoid one-interface-per-class abstractions that only mirror a single implementation.
 
-In strict Hexagonal Architecture, primary adapters call primary ports or application services, not secondary adapters or repositories directly. Application code depends on secondary ports for outbound needs; secondary adapters implement those ports.
+In strict Hexagonal Architecture, primary adapters call primary ports or application services, not secondary adapters or repositories directly. Core code expresses outbound needs as secondary ports; place each port near the application or domain code that consumes it. Secondary adapters implement those ports.
 
 ### CQRS
 

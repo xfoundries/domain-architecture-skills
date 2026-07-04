@@ -11,7 +11,7 @@ Copy `assets/templates/maven/dependency-management-core.xml` or `assets/template
 
 ## Starter Selection
 
-Choose starters by Maven module or layer. In a serious DDD project, prefer multi-module Maven because dependency boundaries become physical build boundaries. A small project may start as a single application module, but it must still preserve package boundaries and ArchUnit tests.
+Choose starters by Maven module or layer. In a serious DDD project, prefer multi-module Maven because dependency boundaries become physical build boundaries. A small project may start as a single Maven module/application artifact, but it must still preserve package boundaries and ArchUnit tests.
 
 | Module / layer | Add | Never add |
 |---|---|---|

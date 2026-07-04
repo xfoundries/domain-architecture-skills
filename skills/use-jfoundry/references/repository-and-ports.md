@@ -13,9 +13,11 @@ Use an aggregate repository for aggregate lifecycle and command-side aggregate l
 
 Name methods by domain intent, not SQL shape. Prefer `findCurrentOperation(...)` over condition-list method names.
 
+An aggregate repository is a DDD repository contract. In Hexagonal/JFoundry applications it is an outbound contract implemented by infrastructure, but it should remain focused on aggregate lifecycle rather than being duplicated as a generic read port.
+
 ## LookupPort
 
-Consider a lookup-style read port when an application service needs context for a workflow but will not modify the loaded object. `LookupPort` is the recommended suffix when the project has no existing name:
+Consider a lookup-style read port when core code needs context for a workflow or domain decision but will not modify the loaded object. `LookupPort` is the recommended suffix when the project has no existing name:
 
 - Tenant, environment, account, or application key lookup.
 - Existence checks for related objects.
@@ -23,11 +25,20 @@ Consider a lookup-style read port when an application service needs context for 
 
 Return lightweight records or DTOs, not MyBatis/JPA data objects.
 
+Place the port near the consumer:
+
+- Application workflow/read context belongs in the application module.
+- Domain-decision context may belong in the domain module, but keep it narrow and domain-named.
+- Avoid placing broad list, page, reporting, or UI-shaped lookup ports in the domain module.
+- In domain modules, prefer names that describe the external fact or policy input over generic `*LookupPort` names.
+
 ## ReadModelPort
 
 Consider a read-model port for query use cases, page views, dashboards, reports, list screens, projections, and read shapes that differ from write aggregates. `ReadModelPort` is the recommended suffix; `QueryPort`, `ReadPort`, `ReadRepository`, or `ProjectionPort` can also be reasonable project-local names.
 
 CQRS is useful when commands and reads have different models, performance needs, or consistency expectations. Do not introduce CQRS just because a method is read-only.
+
+`ReadModelPort` and `QueryPort` are application-owned read-side contracts by default. Do not place page, report, dashboard, or UI-shaped read ports in the domain module.
 
 ## MaintenancePort
 
@@ -45,10 +56,11 @@ When replacing Active Record, MyBatis-Plus `IService`, generic `Wrapper`, or spe
 
 1. Ask whether the query exists to modify an aggregate.
 2. If yes, load by aggregate ID or stable business identity when possible.
-3. If the result prepares workflow context, prefer a lookup-style read port such as `LookupPort`.
+3. If the result prepares workflow context, prefer an application-owned lookup-style read port such as `LookupPort`.
 4. If the result serves UI, reporting, list, or page reads, prefer a read-model/query port such as `ReadModelPort` or `QueryPort`.
 5. If the result serves background scan, cleanup, or repair, prefer a maintenance-style port such as `MaintenancePort` or `Scanner`.
-6. If one old method serves commands and queries, split it.
+6. If a domain rule needs an external fact, create a narrow domain-facing secondary port instead of reusing a broad application lookup port.
+7. If one old method serves commands and queries, split it.
 
 ## Gradual Adoption
 

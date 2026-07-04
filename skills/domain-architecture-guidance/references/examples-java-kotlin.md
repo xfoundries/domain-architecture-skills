@@ -33,6 +33,10 @@ public class Order {
         this.id = id;
     }
 
+    public OrderId id() {
+        return id;
+    }
+
     public void addLine(String sku, Money price, int quantity) {
         if (status != OrderStatus.DRAFT) {
             throw new IllegalStateException("Only draft orders can be changed");
@@ -46,12 +50,31 @@ public class Order {
         }
         status = OrderStatus.SUBMITTED;
     }
+
+    public Money total() {
+        return lines.stream()
+                .map(line -> line.price().multiply(line.quantity()))
+                .reduce(new Money(BigDecimal.ZERO, "USD"), Money::add);
+    }
 }
 
 public record OrderId(UUID value) {}
 
+public record OrderLine(String sku, Money price, int quantity) {}
+
 @ValueObject
-public record Money(BigDecimal amount, String currency) {}
+public record Money(BigDecimal amount, String currency) {
+    Money multiply(int quantity) {
+        return new Money(amount.multiply(BigDecimal.valueOf(quantity)), currency);
+    }
+
+    Money add(Money other) {
+        if (!currency.equals(other.currency)) {
+            throw new IllegalArgumentException("Currency mismatch");
+        }
+        return new Money(amount.add(other.amount), currency);
+    }
+}
 ```
 
 Use a repository abstraction when it protects application/domain code from persistence details. Keep persistence APIs out of the repository contract.
@@ -187,7 +210,7 @@ Use the simplified Onion annotations (`DomainRing`, `ApplicationRing`, `Infrastr
 
 ## Hexagonal / Ports and Adapters
 
-Use primary ports for operations exposed to driving adapters. Use secondary ports for dependencies the application core needs from the outside.
+Use primary ports for operations exposed to driving adapters. Use secondary ports for dependencies inside/core code needs from the outside. Place each secondary port near the consumer: application workflow ports near application services, and narrow domain-decision ports near the domain service or policy that consumes them.
 
 ```java
 package com.example.orders.application;
@@ -208,6 +231,8 @@ public interface PaymentGateway {
     PaymentResult authorize(OrderId orderId, Money amount);
 }
 
+public record PaymentResult(String authorizationId) {}
+
 @Application
 final class SubmitOrderService implements SubmitOrderUseCase {
 
@@ -222,9 +247,23 @@ final class SubmitOrderService implements SubmitOrderUseCase {
     @Override
     public void submit(SubmitOrder command) {
         var order = orders.findById(command.orderId()).orElseThrow();
+        payments.authorize(order.id(), order.total());
         order.submit();
         orders.save(order);
     }
+}
+```
+
+`Orders` is an aggregate repository contract from the domain model. `PaymentGateway` is an application-owned secondary port because the submit use case needs it to coordinate payment authorization. If a domain policy needs an external fact to make a domain decision, define a narrow domain-facing secondary port instead of reusing a broad query/read port:
+
+```java
+package com.example.orders.domain;
+
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
+
+@SecondaryPort
+public interface CustomerCreditLimit {
+    boolean canReserve(CustomerId customerId, Money amount);
 }
 ```
 

@@ -31,7 +31,7 @@ Use a domain service only for domain decisions that do not naturally belong to o
 
 Do not move application orchestration, transaction demarcation, security checks, logging, framework calls, or concrete persistence concerns into a domain service. Those belong in application services or adapters.
 
-A domain service may depend on domain-level abstractions, including repository contracts, only when a domain decision genuinely needs them and the chosen architecture allows that dependency. Do not use this as a shortcut for moving use-case workflow or persistence-shaped queries into the domain layer.
+A domain service may depend on domain-level abstractions, including repository contracts or narrow outbound ports, only when a domain decision genuinely needs them and the chosen architecture allows that dependency. Prefer application services loading aggregates and passing facts into domain behavior when that is enough. Do not use domain services as a shortcut for moving use-case workflow, pagination, reporting, wrappers, specifications, or other persistence-shaped queries into the domain layer.
 
 ## Repositories
 

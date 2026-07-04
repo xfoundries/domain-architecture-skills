@@ -13,7 +13,7 @@ Default to a new Java 21 Maven project using Hexagonal Architecture unless the u
 
 ## First-Time Workflow
 
-1. Identify the project shape: single application module, multi-module Maven app, or separate domain/application/infrastructure modules. Prefer multi-module Maven for normal DDD projects.
+1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects.
 2. Choose one primary architecture style. Prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. Read `references/dependencies.md`, choose the BOM by runtime, and copy the matching Maven template snippets from `assets/templates/maven/`.
 4. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
@@ -27,11 +27,11 @@ Default to a new Java 21 Maven project using Hexagonal Architecture unless the u
 
 - Keep domain code free of Spring, MyBatis, persistence models, message broker clients, and framework lifecycle APIs.
 - Model business behavior in the domain when rules and invariants are meaningful; use simpler CRUD or transaction scripts for low-complexity areas.
-- For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, and read-side port assumptions before coding; keep open domain questions visible.
+- For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-port ownership, and read-side assumptions before coding; keep open domain questions visible.
 - Put Spring Boot starters only in the boot/runtime assembly module, never in domain or application modules.
 - Put use case orchestration and transaction-facing workflow in the application layer.
-- Express outbound needs as secondary ports. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
-- In jfoundry Hexagonal or Onion projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly.
+- Express outbound needs as secondary ports. Put each port near the core code that owns the need: application workflow ports in application modules, narrow domain-decision ports in domain modules. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
+- In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/read-model/maintenance roles only when that distinction helps the project.
 - Keep persistence data converters infrastructure-local. Prefer MapStruct `@Mapper` interfaces with `INSTANCE`; keep `toEntity(...)` explicit and call aggregate `restore(...)`.
 - Enable Outbox only for reliable publication to an external process or broker. Use local domain event dispatch when events stay in-process.

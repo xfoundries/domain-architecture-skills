@@ -16,6 +16,9 @@ ArchRule[] jfoundryRules = JFoundryRules.hexagonalStrict();
 
 @ArchTest
 ArchRule[] jmoleculesDddRules = JFoundryRules.jmoleculesDdd();
+
+@ArchTest
+ArchRule[] aggregateRepositoryRules = JFoundryRules.aggregateRepositoryConventions();
 ```
 
 For Onion:
@@ -29,8 +32,11 @@ ArchRule[] jfoundryRules = JFoundryRules.onionSimple();
 
 Add these only when the project uses the corresponding style:
 
-- `JFoundryRules.aggregateRepositoryConventions()` for repository boundary enforcement.
 - `JFoundryRules.cqrs()` when using jfoundry CQRS annotations.
+
+## Migration Exceptions
+
+New jfoundry projects should keep `JFoundryRules.aggregateRepositoryConventions()` enabled from the initial skeleton. Migration projects may temporarily disable or baseline this rule only when existing repositories still leak wrappers, read models, pages, or persistence APIs. Record the exception and re-enable the rule after repository/read-port cleanup.
 
 ## Test Scope
 

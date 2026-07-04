@@ -69,7 +69,7 @@ Core rule:
 
 ```text
 Primary adapters -> primary ports/application
-Application -> secondary ports
+Application/domain core -> secondary ports
 Secondary adapters -> secondary ports/application contracts
 ```
 
@@ -77,9 +77,9 @@ Typical constraints:
 
 - Primary adapters such as controllers, CLI commands, or message consumers should drive the application through primary ports or application services.
 - Primary adapters should not call secondary adapters or repositories directly when that bypasses application rules.
-- Application code should express outbound needs through secondary ports.
+- Application or domain core code should express outbound needs through secondary ports owned near the consumer.
 - Secondary adapters implement ports for databases, message brokers, external APIs, file systems, email, and other outside technologies.
-- The application core should not depend on adapter implementations.
+- Inside/core code should not depend on adapter implementations.
 
 Ports should represent meaningful boundaries. Avoid creating an interface for every class when no boundary value exists.
 

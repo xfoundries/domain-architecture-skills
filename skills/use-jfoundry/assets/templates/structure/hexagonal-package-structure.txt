@@ -4,6 +4,8 @@ PACKAGE_NAME
 ├── domain
 │   ├── model
 │   ├── event
+│   ├── port
+│   │   └── out
 │   └── repository
 ├── application
 │   ├── port
@@ -23,8 +25,8 @@ PACKAGE_NAME
     └── config
 
 Rules:
-- domain contains aggregates, entities, value objects, domain events, domain services, and aggregate repository contracts.
-- application contains use cases, application services, primary ports, secondary ports, commands, and query models.
+- domain contains aggregates, entities, value objects, domain events, domain services, aggregate repository contracts, and optional narrow secondary ports consumed by domain policies/services.
+- application contains use cases, application services, primary ports, workflow/read secondary ports, commands, and query models.
 - adapter.in contains primary adapters that call primary ports or application services.
-- adapter.out contains secondary adapters that implement secondary ports.
+- adapter.out contains secondary adapters that implement secondary ports from domain or application modules.
 - infrastructure contains runtime configuration and technical wiring, not domain logic.
