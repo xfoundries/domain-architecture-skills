@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: Use when modeling business domains from requirements, user stories, workflows, event storming notes, existing systems, database tables, or APIs; identifying bounded contexts, ubiquitous language, commands, aggregates, entities, value objects, invariants, domain events, domain services, repositories, read models, or reviewing whether a proposed model is behavior-rich rather than table-driven.
+description: Use when modeling business domains from requirements, user stories, workflows, event storming notes, existing systems, database tables, or APIs; identifying bounded contexts, ubiquitous language, business commands, aggregates, entities, value objects, invariants, domain events, domain services, repositories, read needs, or reviewing whether a proposed model is behavior-rich rather than table-driven.
 ---
 
 # Domain Modeling

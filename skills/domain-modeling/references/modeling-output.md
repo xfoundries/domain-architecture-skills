@@ -48,13 +48,25 @@ Repositories:
 - Aggregate repository:
   Load/save intent:
 
-Read Models / Query Ports:
+Read Needs / Read Models:
 - Read need:
   Shape/purpose:
 
 Open Questions:
 - Question:
 ```
+
+## Boundary Between Modeling And Architecture Mapping
+
+Commands in this note mean business intentions that can be accepted or rejected. They do not imply
+that implementation must create command classes, command handlers, or CQRS.
+
+Read needs and read models identify query, screen, report, notification, or decision-support
+shapes that should not distort write aggregates. They do not imply an implementation term such as
+`QueryPort`, `ReadModelPort`, `LookupPort`, repository, controller, or API endpoint.
+
+Map commands and read needs to application services, CQRS handlers, ports/adapters, or framework
+types only after the domain assumptions and chosen architecture are clear.
 
 ## When To Ask For Review
 
