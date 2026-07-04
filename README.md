@@ -64,21 +64,21 @@ This repository includes a marketplace manifest at `.agents/plugins/marketplace.
 
 ```bash
 codex plugin marketplace add xfoundries/software-architecture-skills
-codex plugin add domain-architecture@domain-architecture
+codex plugin add domain-architecture@xfoundries
 ```
 
 For local development from this checkout:
 
 ```bash
 codex plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
-codex plugin add domain-architecture@domain-architecture
+codex plugin add domain-architecture@xfoundries
 ```
 
 The same shape works for compatible agents that read `.agents/plugins/marketplace.json`. The marketplace entry points at the repository root:
 
 ```json
 {
-  "name": "domain-architecture",
+  "name": "xfoundries",
   "interface": {
     "displayName": "Domain Architecture"
   },
@@ -108,14 +108,14 @@ Claude Code can validate and install the same plugin source through its plugin s
 ```bash
 claude plugin validate /Users/huangxiao/Workspace/mine/software-architecture-skills
 claude plugin marketplace add xfoundries/software-architecture-skills
-claude plugin install domain-architecture@domain-architecture
+claude plugin install domain-architecture@xfoundries
 ```
 
 For local development from this checkout:
 
 ```bash
 claude plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
-claude plugin install domain-architecture@domain-architecture
+claude plugin install domain-architecture@xfoundries
 ```
 
 ### Raw skill compatibility
@@ -161,7 +161,7 @@ skills/
 
 For local development, keep the marketplace source pointed at this repository. After changing plugin metadata, reinstall or update the plugin in the target agent so it refreshes cached metadata.
 
-For Codex, update the `.codex-plugin/plugin.json` cachebuster when necessary and reinstall from `domain-architecture@domain-architecture`.
+For Codex, update the `.codex-plugin/plugin.json` cachebuster when necessary and reinstall from `domain-architecture@xfoundries`.
 
 ## Design Principle
 
