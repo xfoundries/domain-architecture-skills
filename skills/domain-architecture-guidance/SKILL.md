@@ -42,6 +42,7 @@ DDD is a domain modeling methodology and language for business concepts, boundar
 
 - Read `references/source-policy.md` when deciding what sources are authoritative, how to handle Explicit Architecture, or how to cite architecture claims.
 - Read `references/architecture-constraints.md` when deciding whether a dependency, call path, package reference, or use-case boundary is an architecture violation.
+- Read `references/hexagonal-architecture.md` when explaining, designing, or reviewing Hexagonal Architecture / Ports and Adapters roles, primary/secondary ports, adapter direction, or application-service naming.
 - Read `references/backend-guidance.md` when implementing or reviewing Java, Kotlin, C#, .NET, Go, Python, Dart, Swift, or similar business-domain code.
 - Read `references/examples-java-kotlin.md` for jMolecules-oriented Java/Kotlin snippets.
 - Read `references/examples-csharp-dotnet.md` for idiomatic C#/.NET examples.

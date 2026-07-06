@@ -13,7 +13,7 @@ For straightforward project scaffolding with no prior architecture decision requ
 
 ## First-Time Workflow
 
-1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects.
+1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
 2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. Read `references/dependencies.md`, choose the BOM by runtime, and copy the matching Maven template snippets from `assets/templates/maven/`.
 4. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
@@ -65,7 +65,7 @@ Replace placeholders such as `PACKAGE_NAME` and `JFOUNDRY_VERSION`. Keep optiona
 ## Reference Routing
 
 - Read `references/first-use.md` when the user is starting a new project or asks how to invoke this skill.
-- Read `references/architecture.md` for package roles, annotations, dependency direction, and architecture style selection.
+- Read `references/architecture.md` for architecture style selection, Maven module versus package role boundaries, package roles, annotations, and dependency direction.
 - Read `references/dependencies.md` for starter selection and Maven snippets.
 - Read `references/repository-and-ports.md` before modeling persistence, aggregate repositories, read models, or query ports.
 - Read `references/persistence-data-converters.md` before writing `DataConverter` implementations, persistence data objects, or MapStruct mapping rules.

@@ -22,26 +22,40 @@ Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope. 
 
 ## Hexagonal Roles
 
-- `@Application`: application core role. It can include use cases, application services, and domain-facing orchestration. Do not confuse this with a Maven module named `application`; a multi-module project may split the Hexagonal inside/core across domain and application modules. Do not mark an entire domain root package as `@Application`.
-- `@PrimaryPort`: inbound API contract exposed by the application/use-case layer to driving adapters. It should be an interface and live under `port.in`, `ports.in`, `port.inbound`, `ports.inbound`, `usecase`, or `usecases`. Domain modules do not normally expose primary ports.
-- `@PrimaryAdapter`: inbound driver such as REST controller, message listener, CLI command, scheduler, or batch trigger.
-- `@SecondaryPort`: outbound need expressed by an inside/core consumer. It should be an interface and live under `port.out`, `ports.out`, `port.outbound`, or `ports.outbound` near the code that owns the need.
-- `@SecondaryAdapter`: implementation of a secondary port, such as MyBatis/JPA persistence, Redis, HTTP clients, broker senders, file storage, or external SDK adapters.
+For general Hexagonal semantics, primary/secondary port direction, and application-service naming, read `domain-architecture-guidance/references/hexagonal-architecture.md`. This section only maps those roles to jfoundry annotations and package locations.
 
-## Secondary Port Ownership
+- `@Application`: marks application core code. It can include use cases, application services, and domain-facing orchestration. Do not confuse this with a Maven module named `application`; a multi-module project may split the Hexagonal inside/core across domain and application modules. Do not mark an entire domain root package as `@Application`.
+- `@PrimaryPort`: marks inbound interfaces exposed to driving adapters. Put them under `port.in`, `ports.in`, `port.inbound`, `ports.inbound`, `usecase`, or `usecases`. Java examples in this skill family often name these `*UseCase`.
+- `@PrimaryAdapter`: marks inbound drivers such as REST controllers, message listeners, CLI commands, schedulers, or batch triggers.
+- `@SecondaryPort`: marks outbound interfaces owned by the consumer. Put application-owned ports under application `port.out`; put only narrow domain-policy ports under domain `port.out`.
+- `@SecondaryAdapter`: marks implementations of secondary ports, such as MyBatis/JPA persistence, Redis, HTTP clients, broker senders, file storage, or external SDK adapters.
 
-Place a secondary port by consumer ownership, not by the word `Application` in Hexagonal Architecture:
-
-- If an application service needs workflow context, command enrichment, a read model, or a query shape, put the port in the application module.
-- If a domain service or policy needs an external fact to make a domain decision, put a narrow domain-facing port in the domain module.
-- Keep domain-facing ports small and named by domain meaning, such as `EmcAvailabilityPort`, `CreditLimitPolicyPort`, or `EnvAppDependencyPort`.
-- Do not move broad read/query ports into the domain module just because one domain service needs one method. Split a narrow domain-facing port instead.
-
-Aggregate repositories are DDD repository contracts for aggregate lifecycle and command-side loading. In Hexagonal implementations they are outbound contracts implemented by infrastructure, but keep them under the domain repository package instead of duplicating them as application `port.out` interfaces.
+Keep aggregate repository contracts under the domain repository package instead of duplicating them as application `port.out` interfaces.
 
 ## Package Defaults
 
 For new Hexagonal projects, copy `assets/templates/structure/hexagonal-package-structure.txt`.
+
+The template package structure describes architectural roles, not mandatory Maven modules. Do not create separate Maven modules named `adapter-in` and `adapter-out` unless the project has a real build, ownership, or deployment reason.
+
+For normal multi-module Maven business projects, prefer a small physical module set first:
+
+```text
+PROJECT
+  PROJECT-domain
+  PROJECT-application
+  PROJECT-infrastructure
+  PROJECT-web          # or PROJECT-interface when the inbound surface is broader than HTTP
+  PROJECT-boot
+```
+
+Map Hexagonal roles inside those modules:
+
+- `PROJECT-web` or `PROJECT-interface`: primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners.
+- `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
+- `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
+- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, external SDK clients, HTTP clients, broker senders, Redis, and file storage. Keep runtime framework configuration out of this module when a boot module exists.
+- `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters.
 
 Recommended package shape:
 
@@ -53,13 +67,13 @@ PACKAGE_NAME
     port.in
     port.out        # workflow/read ports consumed by application services
     service
-  adapter.in
-  adapter.out
-  infrastructure
+  web             # or interface for non-HTTP-heavy inbound surfaces
+  infrastructure  # secondary adapter implementations: persistence, clients, messaging, cache, files
   boot
+    config        # runtime framework configuration and bean wiring
 ```
 
-Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters call application services or primary ports. Secondary adapters implement secondary ports from either the domain or application module.
+Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and runtime bean wiring in `boot`, not `infrastructure`.
 
 ## Annotation Placement
 
@@ -91,12 +105,12 @@ package PACKAGE_NAME.domain.port.out;
 
 ```java
 @org.jfoundry.architecture.hexagonal.PrimaryAdapter
-package PACKAGE_NAME.adapter.in;
+package PACKAGE_NAME.web;
 ```
 
 ```java
 @org.jfoundry.architecture.hexagonal.SecondaryAdapter
-package PACKAGE_NAME.adapter.out;
+package PACKAGE_NAME.infrastructure;
 ```
 
 ## Do Not

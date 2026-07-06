@@ -70,7 +70,7 @@ codex plugin add domain-architecture@xfoundries
 如果从当前 checkout 做本地开发：
 
 ```bash
-codex plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+codex plugin marketplace add .
 codex plugin add domain-architecture@xfoundries
 ```
 
@@ -106,7 +106,7 @@ codex plugin add domain-architecture@xfoundries
 Claude Code 可以通过插件系统校验和安装同一个插件源码。本仓库包含 `.claude-plugin/plugin.json`、`.claude-plugin/marketplace.json`，并复用同一份 `skills/` 能力。
 
 ```bash
-claude plugin validate /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin validate .
 claude plugin marketplace add xfoundries/software-architecture-skills
 claude plugin install domain-architecture@xfoundries
 ```
@@ -114,7 +114,7 @@ claude plugin install domain-architecture@xfoundries
 如果从当前 checkout 做本地开发：
 
 ```bash
-claude plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin marketplace add .
 claude plugin install domain-architecture@xfoundries
 ```
 
@@ -137,7 +137,7 @@ Use $domain-architecture-guidance to review this Java service and tell me whethe
 ```
 
 ```text
-Use $use-jfoundry to implement the confirmed model in a Java 21 jfoundry project with Hexagonal Architecture and ArchUnit tests.
+Use $use-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
 ```
 
 ## 仓库结构

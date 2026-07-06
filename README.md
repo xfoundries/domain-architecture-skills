@@ -70,7 +70,7 @@ codex plugin add domain-architecture@xfoundries
 For local development from this checkout:
 
 ```bash
-codex plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+codex plugin marketplace add .
 codex plugin add domain-architecture@xfoundries
 ```
 
@@ -106,7 +106,7 @@ For a personal marketplace under `~/.agents/plugins`, you can also point `~/plug
 Claude Code can validate and install the same plugin source through its plugin system. The repository includes `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and the same `skills/` capabilities used by other agents.
 
 ```bash
-claude plugin validate /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin validate .
 claude plugin marketplace add xfoundries/software-architecture-skills
 claude plugin install domain-architecture@xfoundries
 ```
@@ -114,7 +114,7 @@ claude plugin install domain-architecture@xfoundries
 For local development from this checkout:
 
 ```bash
-claude plugin marketplace add /Users/huangxiao/Workspace/mine/software-architecture-skills
+claude plugin marketplace add .
 claude plugin install domain-architecture@xfoundries
 ```
 
@@ -137,7 +137,7 @@ Use $domain-architecture-guidance to review this Java service and tell me whethe
 ```
 
 ```text
-Use $use-jfoundry to implement the confirmed model in a Java 21 jfoundry project with Hexagonal Architecture and ArchUnit tests.
+Use $use-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
 ```
 
 ## Repository Layout
