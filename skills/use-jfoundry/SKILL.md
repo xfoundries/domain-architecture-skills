@@ -9,12 +9,12 @@ description: Guide AI agents and developers when starting or modifying Java busi
 
 Use this skill to build business applications on jfoundry without drifting from the framework's intended architecture. It is for application projects, not for changing the jfoundry framework internals.
 
-Default to a new Java 21 Maven project using Hexagonal Architecture unless the user explicitly chooses Onion. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. Prefer copying the bundled templates first, then adapting names and packages.
+For straightforward project scaffolding with no prior architecture decision request, prefer a new Maven project on the latest stable Java version using Hexagonal Architecture unless the user explicitly chooses Onion. This is a scaffolding default, not an architecture analysis conclusion. When the user asks for architecture analysis, ADRs, domain modeling, architecture style selection, or similar design work, do not treat Hexagonal as preselected; evaluate Layered, Onion, Hexagonal, and CQRS applicability from the domain model and integration constraints first. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. Prefer copying the bundled templates first, then adapting names and packages.
 
 ## First-Time Workflow
 
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects.
-2. Choose one primary architecture style. Prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
+2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. Read `references/dependencies.md`, choose the BOM by runtime, and copy the matching Maven template snippets from `assets/templates/maven/`.
 4. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
 5. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
@@ -74,9 +74,9 @@ Replace placeholders such as `PACKAGE_NAME` and `JFOUNDRY_VERSION`. Keep optiona
 
 ## Common First Prompt
 
-When guiding a new project, start by asking for the base package, project/module shape, runtime stack, persistence choice, and whether external messaging is required. If the user has no preference, proceed with:
+When guiding direct project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, and whether external messaging is required. If the user has no preference and has not requested architecture analysis first, proceed with:
 
-- Java 21
+- latest stable Java version
 - Maven
 - no runtime framework binding yet
 - Hexagonal Architecture
@@ -85,10 +85,12 @@ When guiding a new project, start by asking for the base package, project/module
 - `jfoundry-application-starter`
 - `JFoundryRules.hexagonalStrict()` and `JFoundryRules.jmoleculesDdd()`
 
+If the user asks for architecture analysis, ADRs, domain modeling, or architecture style selection, do not use these defaults as conclusions. First model the domain and compare architecture styles, then apply the selected jfoundry template.
+
 Suggested user prompt for a new business project:
 
 ```text
-Use $use-jfoundry to create the initial architecture for a new Java 21 business project.
+Use $use-jfoundry to create the initial architecture for a new Java business project.
 Base package: com.example.order
 Project shape: multi-module Maven
 Runtime: undecided

@@ -2,13 +2,15 @@
 
 ## Style Selection
 
-Prefer Hexagonal Architecture for new business projects because it gives AI agents clear package and dependency boundaries:
+For straightforward scaffolding, prefer Hexagonal Architecture for new business projects because it gives AI agents clear package and dependency boundaries:
 
 ```text
 primary adapter -> primary port / application service -> domain
 inside core consumer -> secondary port
 secondary adapter -> secondary port
 ```
+
+When the task is architecture analysis, ADR writing, domain modeling, or style selection, do not treat Hexagonal as preselected. Compare Layered, Onion, Hexagonal, and CQRS applicability from the domain model, integration boundaries, dependency constraints, and read/write needs, then select the matching jfoundry template.
 
 Use Onion Simple when the team explicitly wants ring terminology:
 
