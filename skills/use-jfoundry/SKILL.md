@@ -15,22 +15,23 @@ For straightforward project scaffolding with no prior architecture decision requ
 
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
 2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
-3. Read `references/dependencies.md`, choose the BOM by runtime, and copy the matching Maven template snippets from `assets/templates/maven/`.
+3. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
 4. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
 5. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
 6. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
 7. Read `references/persistence-data-converters.md` before implementing `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct converters.
-8. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
-9. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
+8. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
+9. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
+10. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
 
 ## Core Rules
 
 - Keep domain code free of Spring, MyBatis, persistence models, message broker clients, and framework lifecycle APIs.
 - Model business behavior in the domain when rules and invariants are meaningful; use simpler CRUD or transaction scripts for low-complexity areas.
 - For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-port ownership, and read-side assumptions before coding; keep open domain questions visible.
-- Put Spring Boot starters only in the boot/runtime assembly module, never in domain or application modules.
 - Put use case orchestration and transaction-facing workflow in the application layer.
 - Express outbound needs as secondary ports. Put each port near the core code that owns the need: application workflow ports in application modules, narrow domain-decision ports in domain modules. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
+- Use jfoundry's compact exception model instead of creating a generic `BusinessException` hierarchy. Domain code throws only `DomainException` subtypes (`DomainRuleViolationException`, `DomainStateException`). Application code may throw `InvalidArgumentException`, `NotFoundException`, `ConflictException`, and `ExternalAccessException`.
 - In infrastructure modules, group adapters by technical shape before external-system name when that improves clarity, such as `persistence`, `query`, `client.<external-system>`, `messaging`, `cache`, and `file`. Use `query` as the neutral default for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology. Keep HTTP/API `*Request` and `*Response` DTOs in primary adapter packages; use application-owned `*Command` and `*Result` models for primary-port boundaries when that naming fits the project.
 - In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/query/maintenance roles only when that distinction helps the project.
@@ -38,6 +39,14 @@ For straightforward project scaffolding with no prior architecture decision requ
 - Enable Outbox only for reliable publication to an external process or broker. Use local domain event dispatch when events stay in-process.
 - Enable Inbox only when a consumer must handle duplicate delivery safely.
 - Add ArchUnit tests early. They are part of the project skeleton, not a late cleanup.
+
+## Runtime Rules
+
+- Do not assume Spring Boot. If the user has not selected Spring Framework, Spring Boot, or a Spring-specific starter, keep the project on framework-neutral jfoundry modules.
+- Treat `boot` as a runtime assembly name, not a Spring-only concept. For non-Spring runtimes, it may contain Helidon, Micronaut, Quarkus, CLI, or custom runtime wiring.
+- Put runtime framework starters only in the runtime assembly module/package, never in domain or application modules.
+- For Spring Framework or Spring Boot projects, read `references/spring-runtime.md` before selecting Spring BOMs, Spring Boot starters, WebMVC ProblemDetail mapping, event/outbox/inbox auto-configuration, or transaction integration.
+- For Quarkus, Micronaut, Helidon, or another runtime, use only framework-neutral jfoundry dependencies unless jfoundry has an explicit adapter for that runtime. Do not copy Spring starter snippets into non-Spring projects.
 
 ## Bundled Templates
 
@@ -52,6 +61,7 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/maven/infrastructure-mybatis-plus-dependencies.xml`
 - `assets/templates/maven/architecture-test-dependencies.xml`
 - `assets/templates/maven/spring-boot-app-dependencies.xml`
+- `assets/templates/maven/spring-boot-webmvc-dependencies.xml`
 - `assets/templates/maven/spring-boot-mybatis-plus-dependencies.xml`
 - `assets/templates/maven/outbox-dependencies.xml`
 - `assets/templates/maven/outbox-mybatis-plus-dependencies.xml`
@@ -68,6 +78,7 @@ Replace placeholders such as `PACKAGE_NAME` and `JFOUNDRY_VERSION`. Keep optiona
 - Read `references/first-use.md` when the user is starting a new project or asks how to invoke this skill.
 - Read `references/architecture.md` for architecture style selection, Maven module versus package role boundaries, package roles, annotations, and dependency direction.
 - Read `references/dependencies.md` for starter selection and Maven snippets.
+- Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
 - Read `references/repository-and-ports.md` before modeling persistence, aggregate repositories, read models, or query ports.
 - Read `references/persistence-data-converters.md` before writing `DataConverter` implementations, persistence data objects, or MapStruct mapping rules.
 - Read `references/outbox-inbox.md` before adding event externalization, broker adapters, Outbox tables, dispatchers, or consumer idempotency.

@@ -48,7 +48,7 @@ PROJECT
   PROJECT-application
   PROJECT-infrastructure
   PROJECT-web          # or PROJECT-interface when the inbound surface is broader than HTTP
-  PROJECT-boot
+  PROJECT-boot         # runtime assembly; name may differ outside Spring Boot projects
 ```
 
 Map Hexagonal roles inside those modules:
@@ -56,8 +56,8 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep runtime framework configuration out of this module when a boot module exists.
-- `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters.
+- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
+- `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters. The name `boot` is common for Spring Boot, but the role is runtime assembly, not a Spring-only rule.
 
 Recommended package shape:
 
@@ -90,9 +90,47 @@ PACKAGE_NAME
     config        # runtime framework configuration and bean wiring
 ```
 
-Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. HTTP/API DTOs in primary adapters should use adapter-local names such as `*Request` and `*Response`; primary ports should use application-owned models such as `*Command` and `*Result` when that naming fits the project. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and runtime bean wiring in `boot`, not `infrastructure`.
+Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. HTTP/API DTOs in primary adapters should use adapter-local names such as `*Request` and `*Response`; primary ports should use application-owned models such as `*Command` and `*Result` when that naming fits the project. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put global runtime framework configuration, component scanning, and runtime bean wiring in the runtime assembly module/package, not in `infrastructure`.
 
-For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate `boot` module/package exists, keep runtime assembly and component scanning in `boot`; use infrastructure-local config only for adapter details that are not global runtime wiring.
+For Spring projects, runtime configuration includes Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and auto-configuration customization. Read `references/spring-runtime.md` before adding those dependencies or configuration classes.
+
+For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
+
+## Exception Boundaries
+
+Use jfoundry's compact exception model. Do not create a catch-all `BusinessException` as the first design choice.
+
+Domain code may throw only domain exceptions:
+
+```text
+DomainException
+  DomainRuleViolationException
+  DomainStateException
+```
+
+- Use `DomainRuleViolationException` when a business rule cannot be satisfied, such as quota exceeded, insufficient balance, duplicate installation, or limit violations.
+- Use `DomainStateException` when the current domain object state does not allow the requested behavior, such as deleting a running environment or retrying a non-failed task.
+
+Application code may throw application exceptions:
+
+```text
+ApplicationException
+  InvalidArgumentException
+  NotFoundException
+  ConflictException
+  ExternalAccessException
+```
+
+- Use `InvalidArgumentException` for invalid use-case command/query arguments.
+- Use `NotFoundException` when a use case needs data that cannot be found.
+- Use `ConflictException` when the use case conflicts with current application state or optimistic concurrency.
+- Use `ExternalAccessException` when an application service calls a secondary port and the adapter cannot access an external capability such as a database, HTTP service, cache, message broker, file system, or SDK.
+
+Infrastructure adapters catch technical exceptions such as `IOException`, SQL exceptions, HTTP client exceptions, Redis exceptions, broker exceptions, and SDK exceptions. They convert those failures to the port contract expected by the caller; for application-owned secondary ports this is usually `ExternalAccessException`.
+
+Domain code should not depend on application exceptions. If domain behavior needs external data, prefer loading that data in the application service through a secondary port and passing the resulting value into the domain model.
+
+For Spring MVC applications, read `references/spring-runtime.md` and use `jfoundry-webmvc-spring-boot-starter` in the runtime assembly module. It maps jfoundry core exceptions to RFC 9457 `ProblemDetail` responses. HTTP status and response shape are Web adapter concerns; do not expose HTTP status concepts from domain or application code.
 
 ## Annotation Placement
 
@@ -139,3 +177,4 @@ package PACKAGE_NAME.infrastructure;
 - Do not put MyBatis `Mapper`, `Wrapper`, `Page`, `IPage`, Spring Data repositories, or JPA specifications in domain/application signatures.
 - Do not create one interface for every class. Create ports for real boundaries and outbound needs.
 - Do not enable CQRS only for symmetry. Use it when command and query models actually diverge.
+- Do not create custom HTTP error response wrappers for new Spring MVC jfoundry projects unless the user explicitly rejects RFC 9457 `ProblemDetail`.

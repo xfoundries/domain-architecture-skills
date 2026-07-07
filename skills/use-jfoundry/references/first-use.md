@@ -8,7 +8,7 @@ Use this prompt when starting a business project from scratch:
 Use $use-jfoundry to create the initial architecture for a new Java business project.
 Base package: PACKAGE_NAME
 Project shape: multi-module Maven preferred, or single app for small projects
-Runtime: none, Spring Boot, Spring Framework, or undecided
+Runtime: none, Spring Boot, Spring Framework, Quarkus, Micronaut, Helidon, CLI/custom, or undecided
 Persistence: none, MyBatis-Plus, JPA, or undecided
 Messaging: none, Kafka, RabbitMQ, RocketMQ, or undecided
 Architecture: default
@@ -20,7 +20,7 @@ The agent should:
 
 1. Confirm or infer the base package and project shape; prefer multi-module Maven for normal DDD projects.
 2. For direct scaffolding, default architecture to Hexagonal unless the user requests Onion. For architecture analysis, ADR, domain modeling, or style-selection work, evaluate candidate architecture styles before selecting templates.
-3. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put Spring Boot starters in domain or application modules.
+3. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put runtime framework starters in domain or application modules.
 4. Copy package structure from `assets/templates/structure/`.
 5. Copy `HexagonalArchitectureTest.java` or `OnionSimpleArchitectureTest.java`.
 6. Replace placeholders.
@@ -43,6 +43,8 @@ Use these defaults when the user asks for straightforward scaffolding and has no
 - no Inbox
 - no broker starter
 - no MyBatis-Plus unless persistence is explicitly requested
+
+If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. For other runtimes, use framework-neutral jfoundry dependencies unless an explicit runtime adapter exists.
 
 These are scaffolding defaults, not architecture analysis conclusions. When the user asks to decide the architecture, first compare the relevant styles from the domain model and integration constraints.
 

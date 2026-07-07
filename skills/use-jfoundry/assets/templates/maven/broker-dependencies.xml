@@ -1,5 +1,5 @@
 <dependencies>
-    <!-- Pick the broker starter the application actually uses. -->
+    <!-- Spring Boot runtime only. Pick the broker starter the application actually uses. -->
     <dependency>
         <groupId>io.github.xfoundries</groupId>
         <artifactId>jfoundry-messaging-kafka-spring-boot-starter</artifactId>

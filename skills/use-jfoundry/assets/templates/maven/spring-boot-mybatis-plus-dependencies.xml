@@ -1,4 +1,5 @@
 <dependencies>
+    <!-- Spring Boot runtime assembly only. -->
     <dependency>
         <groupId>io.github.xfoundries</groupId>
         <artifactId>jfoundry-mybatis-plus-spring-boot-starter</artifactId>

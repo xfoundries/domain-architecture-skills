@@ -1,5 +1,5 @@
 <dependencies>
-    <!-- Idempotent message consumption. -->
+    <!-- Spring Boot runtime only. Idempotent message consumption. -->
     <dependency>
         <groupId>io.github.xfoundries</groupId>
         <artifactId>jfoundry-inbox-spring-boot-starter</artifactId>

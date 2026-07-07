@@ -36,4 +36,4 @@ Rules:
 - domain may define narrow outbound ports for external facts needed by domain policies/services.
 - infrastructure implements outer-ring concerns such as web delivery, persistence, query adapters, messaging, clients, file/cache adapters, schedulers, and framework details.
 - group infrastructure by technical shape first and business feature or external system second.
-- in Onion Simple, web belongs under infrastructure because delivery mechanisms are outer-ring concerns. If a separate boot package/module exists, keep global runtime assembly, component scanning, and bean wiring in boot; keep only adapter-local configuration in infrastructure/config.
+- in Onion Simple, web belongs under infrastructure because delivery mechanisms are outer-ring concerns. If a separate runtime assembly package/module exists, keep global runtime assembly, component scanning, and bean wiring there; keep only adapter-local configuration in infrastructure/config. The package name boot is common for Spring Boot projects but is not required for other runtimes.

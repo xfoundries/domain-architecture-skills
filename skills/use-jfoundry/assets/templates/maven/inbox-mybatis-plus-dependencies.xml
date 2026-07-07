@@ -1,5 +1,5 @@
 <dependencies>
-    <!-- MyBatis-Plus InboxMessageStore adapter. -->
+    <!-- Spring Boot runtime only. MyBatis-Plus InboxMessageStore adapter. -->
     <dependency>
         <groupId>io.github.xfoundries</groupId>
         <artifactId>jfoundry-inbox-mybatis-plus-spring-boot-starter</artifactId>

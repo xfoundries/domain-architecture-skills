@@ -3,6 +3,7 @@
 
 # Editors
 .idea/
+*.iml
 .vscode/
 *.swp
 *.swo

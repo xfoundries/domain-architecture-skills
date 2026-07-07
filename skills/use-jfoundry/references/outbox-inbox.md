@@ -9,7 +9,7 @@ Use Outbox only when domain events must be reliably published outside the proces
 - Eventually consistent integration.
 - Failure retry and dead-letter handling.
 
-If events only need in-process Spring listeners, use local event dispatch and do not configure Outbox.
+If events only need in-process local listeners, use local event dispatch and do not configure Outbox.
 
 ## Event Flow
 
@@ -30,6 +30,8 @@ The intended flow is:
 Mark only externally published events with `@Externalized`. Use `@MessageRouting` when topic or routing key must be explicit. `@MessageRouting` alone does not make an event externalized.
 
 ## Starter Selection
+
+The Outbox/Inbox concepts are framework-neutral, but the runtime/starters documented here are currently Spring Boot-specific. For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, do not copy these starter snippets unless jfoundry provides a matching runtime adapter.
 
 For Outbox with MyBatis-Plus storage:
 
@@ -53,7 +55,7 @@ inboxTemplate.executeOnce(eventId, "order-projection", () -> {
 });
 ```
 
-For MyBatis-Plus storage, add `jfoundry-inbox-spring-boot-starter` and `jfoundry-inbox-mybatis-plus-spring-boot-starter`.
+For Spring Boot with MyBatis-Plus storage, add `jfoundry-inbox-spring-boot-starter` and `jfoundry-inbox-mybatis-plus-spring-boot-starter`.
 
 ## Operational Notes
 
