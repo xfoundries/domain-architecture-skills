@@ -19,6 +19,39 @@ Inside/core code should not depend on adapter implementations. Adapters depend o
 - Secondary Port: outbound need expressed by application or domain core.
 - Secondary Adapter: implementation of a secondary port, such as persistence, external API client, broker sender, cache, file storage, or SDK adapter.
 
+## Adapter Internal Organization
+
+Hexagonal Architecture defines adapter direction and dependency rules, not a single package taxonomy inside the adapter area. Organize adapter internals by the dominant technical reason to change:
+
+- Primary adapters may group HTTP/API transport DTOs separately from controllers, for example `web.order.request` and `web.order.response`.
+- Primary adapter request/response DTOs should stay adapter-local. They model transport shape, validation annotations, serialization names, and API compatibility.
+- Primary ports should expose use-case contracts with application-owned input/output models, often named `*Command` / `*Result` or equivalent project terms.
+- Secondary adapters may group persistence, read models, remote clients, messaging, cache, and file storage separately.
+- Remote SDK/HTTP integrations can be grouped under a technical category such as `client.<external-system>` when several external systems share the same adapter style.
+
+Example:
+
+```text
+web
+  order
+    OrderController
+    request
+    response
+application
+  port.in
+    SubmitOrderUseCase
+    SubmitOrderCommand
+    SubmitOrderResult
+infrastructure
+  persistence
+  readmodel
+  client
+    payment
+    shipping
+```
+
+Avoid treating HTTP `Request`/`Response` classes as domain entities or as primary-port models. Avoid flattening every external system directly under `infrastructure` when a `client.<system>` grouping would make the adapter type clearer.
+
 ## Primary Port And Application Service Naming
 
 Primary ports are contracts. Application services usually implement those contracts and contain the use-case orchestration.

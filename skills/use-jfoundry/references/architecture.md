@@ -54,7 +54,7 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, external SDK clients, HTTP clients, broker senders, Redis, and file storage. Keep runtime framework configuration out of this module when a boot module exists.
+- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, read models, remote SDK/HTTP clients, broker senders, Redis, and file storage. Group remote SDK/HTTP adapters under `client.<external-system>` when the project integrates multiple external systems. Keep runtime framework configuration out of this module when a boot module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters.
 
 Recommended package shape:
@@ -67,13 +67,23 @@ PACKAGE_NAME
     port.in
     port.out        # workflow/read ports consumed by application services
     service
-  web             # or interface for non-HTTP-heavy inbound surfaces
-  infrastructure  # secondary adapter implementations: persistence, clients, messaging, cache, files
+  web               # or interface for non-HTTP-heavy inbound surfaces
+    <feature>
+      request       # HTTP/API DTOs, adapter-local
+      response      # HTTP/API DTOs, adapter-local
+  infrastructure    # secondary adapter implementations
+    persistence
+    readmodel
+    client
+      <external-system>
+    messaging
+    cache
+    file
   boot
     config        # runtime framework configuration and bean wiring
 ```
 
-Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and runtime bean wiring in `boot`, not `infrastructure`.
+Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. HTTP/API DTOs in primary adapters should use adapter-local names such as `*Request` and `*Response`; primary ports should use application-owned models such as `*Command` and `*Result` when that naming fits the project. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and runtime bean wiring in `boot`, not `infrastructure`.
 
 ## Annotation Placement
 
