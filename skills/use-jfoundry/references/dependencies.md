@@ -27,7 +27,8 @@ Choose starters by Maven module or layer. In a serious DDD project, prefer multi
 Use only the capabilities the module actually needs:
 
 - Domain module: `jfoundry-domain-starter`
-- Application module: `jfoundry-application-starter`
+- Application module: `jfoundry-application-starter`, which aggregates `jfoundry-application-core`, `jfoundry-transaction-core`, CQRS stereotypes, and the domain starter.
+- Application module that only needs explicit transaction boundary contracts: `jfoundry-transaction-core`
 - Infrastructure module with MyBatis-Plus repositories: `jfoundry-infrastructure-mybatis-plus-starter`
 - Architecture tests: `jfoundry-architecture-test` with `test` scope
 

@@ -19,6 +19,13 @@ The Spring Boot runtime assembly module commonly contains:
 
 Do not put business rules or aggregate behavior in the runtime assembly module.
 
+## Transaction Boundaries
+
+- Use `TransactionRunner` from `jfoundry-transaction-core` when an application service needs an explicit transaction block while keeping application code free of Spring `TransactionTemplate`.
+- Normal application modules usually get `TransactionRunner` through `jfoundry-application-starter`; depend on `jfoundry-transaction-core` directly only when the module needs transaction contracts without the full application starter.
+- `jfoundry-spring-boot-starter` brings the Spring runtime adapter. When a `PlatformTransactionManager` exists, Spring Boot auto-configuration creates a `TransactionRunner` backed by Spring `TransactionTemplate`.
+- Whole-method Spring transactions may still use `@Transactional` in Spring application services. Domain objects and domain services should not control transactions directly.
+
 ## WebMVC Exception Mapping
 
 For Spring MVC HTTP APIs, prefer `jfoundry-webmvc-spring-boot-starter`.
