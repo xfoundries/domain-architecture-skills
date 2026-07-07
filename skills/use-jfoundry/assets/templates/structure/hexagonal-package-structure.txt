@@ -21,7 +21,7 @@ PACKAGE_NAME
 │   └── scheduler
 └── infrastructure
     ├── persistence
-    ├── readmodel
+    ├── query
     ├── messaging
     ├── client
     │   └── external-system
@@ -33,5 +33,5 @@ Rules:
 - domain contains aggregates, entities, value objects, domain events, domain services, aggregate repository contracts, and optional narrow secondary ports consumed by domain policies/services.
 - application contains use cases, application services, primary ports, workflow/read secondary ports, commands, and query models.
 - web contains primary adapters that call primary ports or application services. Keep HTTP/API Request/Response DTOs adapter-local under feature request/response packages. If inbound adapters are not mainly HTTP, rename this package to interface.
-- infrastructure contains secondary adapters that implement secondary ports from domain or application modules. Group persistence, read models, remote clients, messaging, cache, and file adapters by technical shape; use client/external-system for SDK or HTTP integrations with external systems. It contains no domain logic and no runtime framework configuration when a boot module exists.
+- infrastructure contains secondary adapters that implement secondary ports from domain or application modules. Group persistence, query adapters, remote clients, messaging, cache, and file adapters by technical shape; use client/external-system for SDK or HTTP integrations with external systems. Prefer query over readmodel unless the project explicitly uses read-model terminology. It contains no domain logic and no runtime framework configuration when a boot module exists.
 - boot contains the runtime entry point, selected runtime framework starters, Spring configuration, component scanning, and bean wiring.

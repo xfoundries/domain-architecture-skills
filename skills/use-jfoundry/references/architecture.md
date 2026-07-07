@@ -54,7 +54,7 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, read models, remote SDK/HTTP clients, broker senders, Redis, and file storage. Group remote SDK/HTTP adapters under `client.<external-system>` when the project integrates multiple external systems. Keep runtime framework configuration out of this module when a boot module exists.
+- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group remote SDK/HTTP adapters under `client.<external-system>` when the project integrates multiple external systems. Keep runtime framework configuration out of this module when a boot module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters.
 
 Recommended package shape:
@@ -73,7 +73,7 @@ PACKAGE_NAME
       response      # HTTP/API DTOs, adapter-local
   infrastructure    # secondary adapter implementations
     persistence
-    readmodel
+    query
     client
       <external-system>
     messaging
