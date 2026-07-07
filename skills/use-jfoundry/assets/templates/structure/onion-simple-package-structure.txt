@@ -14,9 +14,19 @@ PACKAGE_NAME
 │   └── service
 └── infrastructure
     ├── web
+    │   └── feature
     ├── persistence
+    │   └── aggregate-or-feature
+    ├── query
+    │   └── feature
     ├── messaging
+    │   └── topic-or-system
     ├── client
+    │   └── external-system
+    ├── file
+    │   └── feature
+    ├── cache
+    │   └── feature
     └── config
 
 Rules:
@@ -24,4 +34,6 @@ Rules:
 - domain does not depend on application or infrastructure.
 - application orchestrates use cases and may depend on domain plus application-owned outbound ports.
 - domain may define narrow outbound ports for external facts needed by domain policies/services.
-- infrastructure implements persistence, messaging, web, scheduler, client, and framework details.
+- infrastructure implements outer-ring concerns such as web delivery, persistence, query adapters, messaging, clients, file/cache adapters, schedulers, and framework details.
+- group infrastructure by technical shape first and business feature or external system second.
+- in Onion Simple, web belongs under infrastructure because delivery mechanisms are outer-ring concerns. If a separate boot package/module exists, keep global runtime assembly, component scanning, and bean wiring in boot; keep only adapter-local configuration in infrastructure/config.

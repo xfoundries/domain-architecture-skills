@@ -26,8 +26,9 @@ Hexagonal Architecture defines adapter direction and dependency rules, not a sin
 - Primary adapters may group HTTP/API transport DTOs separately from controllers, for example `web.order.request` and `web.order.response`.
 - Primary adapter request/response DTOs should stay adapter-local. They model transport shape, validation annotations, serialization names, and API compatibility.
 - Primary ports should expose use-case contracts with application-owned input/output models, often named `*Command` / `*Result` or equivalent project terms.
-- Secondary adapters may group persistence, query adapters, remote clients, messaging, cache, and file storage separately. Use neutral names such as `query` unless the project explicitly uses read-model terminology.
-- Remote SDK/HTTP integrations can be grouped under a technical category such as `client.<external-system>` when several external systems share the same adapter style.
+- Secondary adapters may group by technical shape first, then business feature or external system: `persistence.<aggregate-or-feature>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic-or-system>`, `file.<feature>`, `cache.<feature>`.
+- Use neutral names such as `query` unless the project explicitly uses read-model terminology.
+- Remote SDK/HTTP integrations should usually sit under a technical category such as `client.<external-system>` when several external systems share the same adapter style.
 
 Example:
 
@@ -44,7 +45,9 @@ application
     SubmitOrderResult
 infrastructure
   persistence
+    order
   query
+    order
   client
     payment
     shipping

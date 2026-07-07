@@ -17,7 +17,8 @@ Choose starters by Maven module or layer. In a serious DDD project, prefer multi
 |---|---|---|
 | `domain` | `jfoundry-domain-starter` | Spring, MyBatis-Plus, JPA, MQ clients, HTTP clients, Spring Boot starters |
 | `application` | `jfoundry-application-starter` | Spring Boot starters, MyBatis mappers/services, broker adapters |
-| `infrastructure` | `jfoundry-infrastructure-mybatis-plus-starter` only for framework-neutral MyBatis-Plus adapters | controllers, application entry points, Spring Boot auto-configuration starters |
+| Hexagonal `infrastructure` secondary-adapter module | `jfoundry-infrastructure-mybatis-plus-starter` only for framework-neutral MyBatis-Plus adapters | controllers, application entry points, Spring Boot auto-configuration starters |
+| Onion outer `infrastructure` module/package | adapter starters needed by outer-ring concerns, such as persistence, web, messaging, and clients | domain model or business rule implementation |
 | `boot` / runtime assembly | `jfoundry-spring-boot-starter` and selected runtime feature starters | domain model or business rule implementation |
 | architecture tests | `jfoundry-architecture-test` with `test` scope | production scope |
 
@@ -39,6 +40,8 @@ Use only the capabilities the module actually needs:
 - Inbox core + `InboxTemplate`: `jfoundry-inbox-spring-boot-starter`
 - Inbox MyBatis-Plus store: `jfoundry-inbox-mybatis-plus-spring-boot-starter`
 - Architecture tests: `jfoundry-architecture-test` with `test` scope
+
+In Hexagonal projects, keep primary adapters such as controllers in `web` or `interface`, separate from the secondary-adapter `infrastructure` module. In Onion Simple projects, `infrastructure.web` is an acceptable outer-ring package because web delivery is infrastructure; still keep runtime assembly and global Spring Boot configuration in `boot` when a boot module exists.
 
 ## Template Mapping
 

@@ -18,6 +18,8 @@ Use Onion Simple when the team explicitly wants ring terminology:
 infrastructure -> application -> domain
 ```
 
+In Onion Simple, web/controllers are infrastructure concerns because delivery mechanisms sit in the outer ring. In Hexagonal, this skill normally separates primary adapters into `web` or `interface` and secondary adapters into `infrastructure` for clearer port/adapter roles.
+
 Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope. If a project already chose a style, preserve it.
 
 ## Hexagonal Roles
@@ -54,7 +56,7 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group remote SDK/HTTP adapters under `client.<external-system>` when the project integrates multiple external systems. Keep runtime framework configuration out of this module when a boot module exists.
+- `PROJECT-infrastructure`: secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep runtime framework configuration out of this module when a boot module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters.
 
 Recommended package shape:
@@ -73,17 +75,24 @@ PACKAGE_NAME
       response      # HTTP/API DTOs, adapter-local
   infrastructure    # secondary adapter implementations
     persistence
+      <aggregate-or-feature>
     query
+      <feature>
     client
       <external-system>
     messaging
+      <topic-or-system>
     cache
+      <feature>
     file
+      <feature>
   boot
     config        # runtime framework configuration and bean wiring
 ```
 
 Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. HTTP/API DTOs in primary adapters should use adapter-local names such as `*Request` and `*Response`; primary ports should use application-owned models such as `*Command` and `*Result` when that naming fits the project. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and runtime bean wiring in `boot`, not `infrastructure`.
+
+For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate `boot` module/package exists, keep runtime assembly and component scanning in `boot`; use infrastructure-local config only for adapter details that are not global runtime wiring.
 
 ## Annotation Placement
 
