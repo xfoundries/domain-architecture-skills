@@ -1,9 +1,9 @@
 ---
-name: use-jfoundry
+name: using-jfoundry
 description: Guide AI agents and developers when starting or modifying Java business projects that use the jfoundry framework. Use for Maven dependency selection, Hexagonal or Onion package layout, jMolecules/JFoundry architecture annotations, aggregate repository versus read-side port decisions, Outbox/Inbox integration, and ArchUnit test setup. Do not use for maintaining jfoundry internals.
 ---
 
-# Use JFoundry
+# Using JFoundry
 
 ## Purpose
 
@@ -102,7 +102,7 @@ If the user asks for architecture analysis, ADRs, domain modeling, or architectu
 Suggested user prompt for a new business project:
 
 ```text
-Use $use-jfoundry to create the initial architecture for a new Java business project.
+Use $using-jfoundry to create the initial architecture for a new Java business project.
 Base package: com.example.order
 Project shape: multi-module Maven
 Runtime: undecided

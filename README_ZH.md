@@ -15,7 +15,7 @@
 | `domain-architecture-workflow` | 端到端业务领域架构入口工作流，编排建模、架构判断和可选框架落地。                                                                                                       |
 | `domain-modeling`             | 框架无关的领域建模流程，覆盖统一语言、业务命令、事件、限界上下文、聚合、不变量、值对象、领域服务、仓储和读需求/读模型。                                               |
 | `domain-architecture-guidance` | 来源感知的架构指导，覆盖 DDD、Layered、Onion、Hexagonal / Ports and Adapters、CQRS、jMolecules 风格注解和架构测试。                                                    |
-| `use-jfoundry`               | [jfoundry](https://github.com/xfoundries/jfoundry) 专用 Java 业务项目指导，覆盖依赖、包结构、注解、Repository/Port 边界、持久化适配器、Outbox/Inbox 和 ArchUnit 规则。 |
+| `using-jfoundry`             | [jfoundry](https://github.com/xfoundries/jfoundry) 专用 Java 业务项目指导，覆盖依赖、包结构、注解、Repository/Port 边界、持久化适配器、Outbox/Inbox 和 ArchUnit 规则。 |
 
 ## 推荐工作流
 
@@ -24,7 +24,7 @@
 1. 理解业务目标、参与者、流程、约束和不确定性。
 2. 对非平凡业务行为使用 `domain-modeling` 先建模。
 3. 使用 `domain-architecture-guidance` 判断是否适合 DDD、Hexagonal、Onion、CQRS、ports/adapters 或更简单的 CRUD。
-4. 领域和架构假设清楚后，再使用框架专用指导。只有 [jfoundry](https://github.com/xfoundries/jfoundry) 项目才使用 `use-jfoundry`。
+4. 领域和架构假设清楚后，再使用框架专用指导。只有 [jfoundry](https://github.com/xfoundries/jfoundry) 项目才使用 `using-jfoundry`。
 5. 当实现触及边界时，用架构测试、代码评审或明确风险说明做验证。
 
 这个插件不依赖任何外部工作流系统。它可以和 planning、TDD、code review 或 superpowers 风格工作流一起使用：如果另一个流程插件或 skill 已经激活，只在其中的领域和架构决策节点使用本插件。
@@ -137,7 +137,7 @@ Use $domain-architecture-guidance to review this Java service and tell me whethe
 ```
 
 ```text
-Use $use-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
+Use $using-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
 ```
 
 ## 仓库结构
@@ -154,7 +154,7 @@ skills/
   domain-architecture-workflow/
   domain-modeling/
   domain-architecture-guidance/
-  use-jfoundry/
+  using-jfoundry/
 ```
 
 ## 更新

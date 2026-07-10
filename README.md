@@ -15,7 +15,7 @@ The distribution unit is the `domain-architecture` plugin. The `skills/` directo
 | `domain-architecture-workflow` | Entry-point workflow for end-to-end business-domain architecture work. Coordinates modeling, architecture decisions, and optional framework-specific landing. |
 | `domain-modeling` | Framework-neutral DDD/domain modeling workflow for ubiquitous language, business commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read needs/read models. |
 | `domain-architecture-guidance` | Source-aware architecture guidance for DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, jMolecules-style annotations, and architecture tests. |
-| `use-jfoundry` | JFoundry-specific application guidance for Java business projects using [jfoundry](https://github.com/xfoundries/jfoundry) dependencies, package layout, annotations, Repository/Port boundaries, persistence adapters, Outbox/Inbox, and ArchUnit rules. |
+| `using-jfoundry` | JFoundry-specific application guidance for Java business projects using [jfoundry](https://github.com/xfoundries/jfoundry) dependencies, package layout, annotations, Repository/Port boundaries, persistence adapters, Outbox/Inbox, and ArchUnit rules. |
 
 ## Recommended Workflow
 
@@ -24,7 +24,7 @@ Use the plugin's `domain-architecture-workflow` capability as the general entry 
 1. Understand the business goal, actors, workflows, constraints, and uncertainty.
 2. Use `domain-modeling` for non-trivial business behavior before implementation.
 3. Use `domain-architecture-guidance` to decide whether DDD, Hexagonal, Onion, CQRS, ports/adapters, or simpler CRUD is appropriate.
-4. Use framework-specific guidance only after the domain and architecture assumptions are clear. Use `use-jfoundry` only for [jfoundry](https://github.com/xfoundries/jfoundry) projects.
+4. Use framework-specific guidance only after the domain and architecture assumptions are clear. Use `using-jfoundry` only for [jfoundry](https://github.com/xfoundries/jfoundry) projects.
 5. Verify the result with architecture tests, code review, or explicit risk notes when the implementation touches boundaries.
 
 This plugin does not depend on any external workflow system. It can run alongside planning, TDD, code-review, or "superpowers"-style workflows: when another process workflow is active, use this plugin only for the domain and architecture decisions inside that process.
@@ -137,7 +137,7 @@ Use $domain-architecture-guidance to review this Java service and tell me whethe
 ```
 
 ```text
-Use $use-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
+Use $using-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
 ```
 
 ## Repository Layout
@@ -154,7 +154,7 @@ skills/
   domain-architecture-workflow/
   domain-modeling/
   domain-architecture-guidance/
-  use-jfoundry/
+  using-jfoundry/
 ```
 
 ## Updating

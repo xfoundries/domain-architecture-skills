@@ -7,7 +7,7 @@ The plugin exposes these internal skills:
 - `domain-architecture-workflow`: entry-point workflow and routing.
 - `domain-modeling`: framework-neutral domain modeling.
 - `domain-architecture-guidance`: source-aware architecture guidance.
-- `use-jfoundry`: jfoundry-specific application guidance.
+- `using-jfoundry`: jfoundry-specific application guidance.
 
 ## Scope
 
@@ -34,7 +34,7 @@ Do not collapse DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, Event
 - Keep `domain-architecture-workflow` as a coordinator. It should route to other skills and define phase order, not duplicate their detailed references.
 - Keep `domain-modeling` framework-neutral. It should not assume jfoundry, Spring, .NET, Go, Python, or a specific architecture style.
 - Keep `domain-architecture-guidance` source-aware. `references/source-policy.md` remains authoritative for source hierarchy.
-- Keep `use-jfoundry` jfoundry-specific. Do not move general DDD methodology into it.
+- Keep `using-jfoundry` jfoundry-specific. Do not move general DDD methodology into it.
 - Do not make this repository depend on superpowers or any other external process framework. It may mention that this plugin can be used alongside planning, TDD, or review workflows.
 
 ## Source Policy
@@ -99,5 +99,5 @@ Before publishing, check:
 - `domain-modeling` contains modeling workflow and output protocol guidance without framework assumptions.
 - `domain-architecture-guidance/references/source-policy.md` explains source hierarchy and cautions around Explicit Architecture and Clean Architecture.
 - `domain-architecture-guidance/references/architecture-constraints.md` separates DDD modeling concepts from Layered, Onion, Hexagonal / Ports and Adapters, and CQRS structural rules.
-- `use-jfoundry` remains a downstream business project skill, not a framework-maintenance skill.
+- `using-jfoundry` remains a downstream business project skill, not a framework-maintenance skill.
 - `README.md` and `README_ZH.md` mention all shipped skills.

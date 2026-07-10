@@ -23,7 +23,7 @@ If another planning, TDD, or review workflow is already active, use this skill o
 
 - Use `domain-modeling` for requirements-to-model work: ubiquitous language, business commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read needs/read models.
 - Use `domain-architecture-guidance` for architecture decisions and reviews: dependency direction, Layered/Onion/Hexagonal/CQRS boundaries, jMolecules-style annotations, architecture tests, and source-aware rule interpretation.
-- Use `use-jfoundry` only when the target project uses jfoundry or the user explicitly asks for jfoundry-specific dependencies, package layout, annotations, Repository/Port guidance, persistence adapters, Outbox/Inbox, or ArchUnit setup.
+- Use `using-jfoundry` only when the target project uses jfoundry or the user explicitly asks for jfoundry-specific dependencies, package layout, annotations, Repository/Port guidance, persistence adapters, Outbox/Inbox, or ArchUnit setup.
 
 ## Handoff Rules
 

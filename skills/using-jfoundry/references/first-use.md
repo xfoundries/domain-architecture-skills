@@ -5,7 +5,7 @@
 Use this prompt when starting a business project from scratch:
 
 ```text
-Use $use-jfoundry to create the initial architecture for a new Java business project.
+Use $using-jfoundry to create the initial architecture for a new Java business project.
 Base package: PACKAGE_NAME
 Project shape: multi-module Maven preferred, or single app for small projects
 Runtime: none, Spring Boot, Spring Framework, Quarkus, Micronaut, Helidon, CLI/custom, or undecided
