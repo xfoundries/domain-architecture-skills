@@ -15,7 +15,7 @@ The distribution unit is the `domain-architecture` plugin. The `skills/` directo
 | `domain-architecture-workflow` | Entry-point workflow for end-to-end business-domain architecture work. Coordinates modeling, architecture decisions, and optional framework-specific landing. |
 | `domain-modeling` | Framework-neutral DDD/domain modeling workflow for ubiquitous language, business commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read needs/read models. |
 | `domain-architecture-guidance` | Source-aware architecture guidance for DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, jMolecules-style annotations, and architecture tests. |
-| `using-jfoundry` | JFoundry-specific application guidance for Java business projects using [jfoundry](https://github.com/xfoundries/jfoundry) dependencies, package layout, annotations, Repository/Port boundaries, persistence adapters, Outbox/Inbox, and ArchUnit rules. |
+| `using-jfoundry` | [jfoundry](https://github.com/xfoundries/jfoundry)-specific application guidance for Java business projects covering actual-version-aware dependency selection, package layout, annotations, Repository/Port boundaries, persistence adapters, application transaction boundaries, optional distributed locks, Outbox/Inbox, and ArchUnit rules. |
 
 ## Recommended Workflow
 

@@ -15,7 +15,7 @@
 | `domain-architecture-workflow` | 端到端业务领域架构入口工作流，编排建模、架构判断和可选框架落地。                                                                                                       |
 | `domain-modeling`             | 框架无关的领域建模流程，覆盖统一语言、业务命令、事件、限界上下文、聚合、不变量、值对象、领域服务、仓储和读需求/读模型。                                               |
 | `domain-architecture-guidance` | 来源感知的架构指导，覆盖 DDD、Layered、Onion、Hexagonal / Ports and Adapters、CQRS、jMolecules 风格注解和架构测试。                                                    |
-| `using-jfoundry`             | [jfoundry](https://github.com/xfoundries/jfoundry) 专用 Java 业务项目指导，覆盖依赖、包结构、注解、Repository/Port 边界、持久化适配器、Outbox/Inbox 和 ArchUnit 规则。 |
+| `using-jfoundry`             | [jfoundry](https://github.com/xfoundries/jfoundry) 专用 Java 业务项目指导，覆盖感知实际版本的依赖选择、包结构、注解、Repository/Port 边界、持久化适配器、应用事务边界、可选分布式锁、Outbox/Inbox 和 ArchUnit 规则。 |
 
 ## 推荐工作流
 

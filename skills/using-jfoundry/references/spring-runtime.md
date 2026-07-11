@@ -21,10 +21,18 @@ Do not put business rules or aggregate behavior in the runtime assembly module.
 
 ## Transaction Boundaries
 
-- Use `TransactionRunner` from `jfoundry-transaction-core` when an application service needs an explicit transaction block while keeping application code free of Spring `TransactionTemplate`.
+- Choose a transaction boundary only for an application workflow that needs atomic persistence changes; a transaction is not mandatory for every application service.
+- Use `TransactionRunner` from `jfoundry-transaction-core` for an explicit, framework-neutral transaction block while keeping application code free of Spring `TransactionTemplate`.
+- Alternatively, annotate a Spring-managed application-service method with `org.jfoundry.application.transaction.ApplicationTransactional` for a declarative whole-method boundary. The Spring interceptor delegates to `TransactionRunner`; it does not introduce a separate transaction mechanism.
 - Normal application modules usually get `TransactionRunner` through `jfoundry-application-starter`; depend on `jfoundry-transaction-core` directly only when the module needs transaction contracts without the full application starter.
 - `jfoundry-spring-boot-starter` brings the Spring runtime adapter. When a `PlatformTransactionManager` exists, Spring Boot auto-configuration creates a `TransactionRunner` backed by Spring `TransactionTemplate`.
-- Whole-method Spring transactions may still use `@Transactional` in Spring application services. Domain objects and domain services should not control transactions directly.
+- `jfoundry.application.transaction.annotation.enabled` defaults to `true`; set it to `false` to disable the `@ApplicationTransactional` advisor.
+- `@ApplicationTransactional` applies only when a call enters a Spring-managed instance through its proxy. Self-invocation and unproxied instances bypass the advisor; use `TransactionRunner` when proxy interception cannot be guaranteed.
+- Keep either form in the application layer. Domain objects and domain services should not control transactions directly.
+
+## Distributed Locks
+
+Read `references/distributed-locks.md` only when a workflow requires cross-instance coordination for the same resource. Do not add the Redisson starter or a distributed lock for ordinary in-process concurrency or as a default transaction companion.
 
 ## WebMVC Exception Mapping
 

@@ -33,6 +33,7 @@ Use only the capabilities the module actually needs:
 - Domain module: `jfoundry-domain-starter`
 - Application module: `jfoundry-application-starter`, which aggregates `jfoundry-application-core`, `jfoundry-transaction-core`, CQRS stereotypes, and the domain starter.
 - Application module that only needs explicit transaction boundary contracts: `jfoundry-transaction-core`
+- Application module that compiles `LockTemplate`, `LockOptions`, `DistributedLockClient`, or `@DistributedLock`: optional `jfoundry-lock-core`; `jfoundry-application-starter` does not include it.
 - Infrastructure module with MyBatis-Plus repositories: `jfoundry-infrastructure-mybatis-plus-starter`
 - Architecture tests: `jfoundry-architecture-test` with `test` scope
 
@@ -58,6 +59,8 @@ Spring-specific starters belong in the runtime assembly module/package:
 - Inbox core + `InboxTemplate`: `jfoundry-inbox-spring-boot-starter`
 - Inbox MyBatis-Plus store: `jfoundry-inbox-mybatis-plus-spring-boot-starter`
 
+When cross-instance coordination for the same resource is required, read `references/distributed-locks.md`. Add `jfoundry-lock-redisson-spring-boot-starter` to the runtime assembly only after choosing Redisson as the distributed-lock adapter; it is optional and managed by `jfoundry-spring-dependencies`.
+
 For Spring MVC applications, use `jfoundry-webmvc-spring-boot-starter` in the runtime assembly module. It brings Spring MVC web support and the jfoundry RFC 9457 `ProblemDetail` exception mapping. Do not add `spring-boot-starter-web` separately when this starter is selected.
 
 ## Template Mapping
@@ -66,11 +69,13 @@ For Spring MVC applications, use `jfoundry-webmvc-spring-boot-starter` in the ru
 - Use `dependency-management-spring.xml` when any selected starter is Spring-specific.
 - Use `domain-module-dependencies.xml` for a dedicated domain module.
 - Use `application-module-dependencies.xml` for a dedicated application module.
+- Use `lock-core-dependencies.xml` in an application module only when it compiles jfoundry lock APIs.
 - Use `infrastructure-mybatis-plus-dependencies.xml` for a dedicated infrastructure module using MyBatis-Plus.
 - Use `architecture-test-dependencies.xml` in the module that runs ArchUnit tests, usually the runtime assembly module test source set or a dedicated architecture-test module.
 - Use `spring-boot-app-dependencies.xml` only for a Spring Boot runtime assembly module.
 - Use `spring-boot-webmvc-dependencies.xml` only for a Spring Boot MVC app that exposes HTTP APIs and should use jfoundry ProblemDetail exception mapping.
 - Use `spring-boot-mybatis-plus-dependencies.xml` only in the Spring Boot runtime assembly module when the application uses MyBatis-Plus for business persistence.
+- Use `lock-redisson-dependencies.xml` only when cross-instance same-resource coordination is required and the Spring Boot runtime selects the Redisson lock adapter.
 - Use `outbox-dependencies.xml` only when reliable external publication is required and the runtime is Spring Boot.
 - Use `outbox-mybatis-plus-dependencies.xml` only when Outbox uses the MyBatis-Plus store in a Spring Boot runtime.
 - Use `inbox-dependencies.xml` only when consumer idempotency is required and the runtime is Spring Boot.
@@ -80,6 +85,8 @@ For Spring MVC applications, use `jfoundry-webmvc-spring-boot-starter` in the ru
 ## Avoid
 
 - Do not add Outbox/Inbox starters by default.
+- Do not add a distributed-lock starter by default; local synchronization, idempotency, or database constraints may already satisfy the concurrency requirement.
+- Do not assume `jfoundry-application-starter` includes `jfoundry-lock-core`.
 - Do not assume MyBatis-Plus is present just because the project uses Spring Boot.
 - Do not depend directly on low-level adapter modules from business code unless the project is doing an advanced custom assembly.
 - Do not put Spring Boot starters into pure domain or application modules.

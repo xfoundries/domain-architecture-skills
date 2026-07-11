@@ -22,8 +22,9 @@ For straightforward project scaffolding with no prior architecture decision requ
 7. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
 8. Read `references/persistence-data-converters.md` before implementing `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct converters.
 9. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
-10. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
-11. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
+10. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
+11. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
+12. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
 
 ## Core Rules
 
@@ -64,6 +65,8 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/maven/spring-boot-app-dependencies.xml`
 - `assets/templates/maven/spring-boot-webmvc-dependencies.xml`
 - `assets/templates/maven/spring-boot-mybatis-plus-dependencies.xml`
+- `assets/templates/maven/lock-core-dependencies.xml`
+- `assets/templates/maven/lock-redisson-dependencies.xml`
 - `assets/templates/maven/outbox-dependencies.xml`
 - `assets/templates/maven/outbox-mybatis-plus-dependencies.xml`
 - `assets/templates/maven/inbox-dependencies.xml`
@@ -72,7 +75,7 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/structure/hexagonal-package-structure.txt`
 - `assets/templates/structure/onion-simple-package-structure.txt`
 
-Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only after selecting the exact version through `references/version-selection.md`. Keep optional snippets optional; do not add Outbox, Inbox, MyBatis-Plus, or broker starters unless the use case needs them.
+Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only after selecting the exact version through `references/version-selection.md`. Keep optional snippets optional; do not add distributed-lock, Outbox, Inbox, MyBatis-Plus, or broker starters unless the use case needs them.
 
 ## Reference Routing
 
@@ -81,6 +84,7 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 - Read `references/architecture.md` for architecture style selection, Maven module versus package role boundaries, package roles, annotations, and dependency direction.
 - Read `references/dependencies.md` for starter selection and Maven snippets.
 - Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
+- Read `references/distributed-locks.md` only when cross-instance coordination is required for the same resource.
 - Read `references/repository-and-ports.md` before modeling persistence, aggregate repositories, read models, or query ports.
 - Read `references/persistence-data-converters.md` before writing `DataConverter` implementations, persistence data objects, or MapStruct mapping rules.
 - Read `references/outbox-inbox.md` before adding event externalization, broker adapters, Outbox tables, dispatchers, or consumer idempotency.
