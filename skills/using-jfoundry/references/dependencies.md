@@ -1,5 +1,9 @@
 # Dependency Guidance
 
+## Version First
+
+Read `version-selection.md` and select an exact jfoundry version before choosing a BOM or copying dependency templates. Replace `JFOUNDRY_VERSION` only after that selection; never put a dynamic version selector in generated Maven configuration.
+
 ## BOM Choice
 
 Choose the BOM by runtime binding, not by architecture style:

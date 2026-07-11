@@ -20,19 +20,20 @@ The agent should:
 
 1. Confirm or infer the base package and project shape; prefer multi-module Maven for normal DDD projects.
 2. For direct scaffolding, default architecture to Hexagonal unless the user requests Onion. For architecture analysis, ADR, domain modeling, or style-selection work, evaluate candidate architecture styles before selecting templates.
-3. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put runtime framework starters in domain or application modules.
-4. Copy package structure from `assets/templates/structure/`.
-5. Copy `HexagonalArchitectureTest.java` or `OnionSimpleArchitectureTest.java`.
-6. Replace placeholders.
-7. Create package-level architecture annotations where package roles are stable.
-8. Add only required optional starters.
-9. Run Maven verification.
+3. Read `version-selection.md` and select the exact jfoundry version before choosing dependency templates.
+4. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put runtime framework starters in domain or application modules.
+5. Copy package structure from `assets/templates/structure/`.
+6. Copy `HexagonalArchitectureTest.java` or `OnionSimpleArchitectureTest.java`.
+7. Replace `JFOUNDRY_VERSION` only with the selected exact version, then replace the other placeholders.
+8. Create package-level architecture annotations where package roles are stable.
+9. Add only required optional starters.
+10. Run Maven verification.
 
 ## Recommended Defaults
 
 Use these defaults when the user asks for straightforward scaffolding and has no preference:
 
-- latest stable Java version
+- a Java version compatible with the selected jfoundry release and runtime
 - multi-module Maven for normal DDD projects
 - Hexagonal Architecture
 - no runtime framework binding yet

@@ -9,20 +9,21 @@ description: Guide AI agents and developers when starting or modifying Java busi
 
 Use this skill to build business applications on jfoundry without drifting from the framework's intended architecture. It is for application projects, not for changing the jfoundry framework internals.
 
-For straightforward project scaffolding with no prior architecture decision request, prefer a new Maven project on the latest stable Java version using Hexagonal Architecture unless the user explicitly chooses Onion. This is a scaffolding default, not an architecture analysis conclusion. When the user asks for architecture analysis, ADRs, domain modeling, architecture style selection, or similar design work, do not treat Hexagonal as preselected; evaluate Layered, Onion, Hexagonal, and CQRS applicability from the domain model and integration constraints first. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. Prefer copying the bundled templates first, then adapting names and packages.
+For straightforward project scaffolding with no prior architecture decision request, prefer a new Maven project on a Java version compatible with the selected jfoundry release and runtime, using Hexagonal Architecture unless the user explicitly chooses Onion. This is a scaffolding default, not an architecture analysis conclusion. When the user asks for architecture analysis, ADRs, domain modeling, architecture style selection, or similar design work, do not treat Hexagonal as preselected; evaluate Layered, Onion, Hexagonal, and CQRS applicability from the domain model and integration constraints first. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. Prefer copying the bundled templates first, then adapting names and packages.
 
 ## First-Time Workflow
 
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
 2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
-3. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
-4. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
-5. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
-6. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
-7. Read `references/persistence-data-converters.md` before implementing `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct converters.
-8. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
-9. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
-10. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
+3. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
+4. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
+5. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
+6. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
+7. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
+8. Read `references/persistence-data-converters.md` before implementing `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct converters.
+9. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
+10. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
+11. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
 
 ## Core Rules
 
@@ -71,11 +72,12 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/structure/hexagonal-package-structure.txt`
 - `assets/templates/structure/onion-simple-package-structure.txt`
 
-Replace placeholders such as `PACKAGE_NAME` and `JFOUNDRY_VERSION`. Keep optional snippets optional; do not add Outbox, Inbox, MyBatis-Plus, or broker starters unless the use case needs them.
+Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only after selecting the exact version through `references/version-selection.md`. Keep optional snippets optional; do not add Outbox, Inbox, MyBatis-Plus, or broker starters unless the use case needs them.
 
 ## Reference Routing
 
 - Read `references/first-use.md` when the user is starting a new project or asks how to invoke this skill.
+- Read `references/version-selection.md` before selecting dependency templates or changing a jfoundry version in an existing project.
 - Read `references/architecture.md` for architecture style selection, Maven module versus package role boundaries, package roles, annotations, and dependency direction.
 - Read `references/dependencies.md` for starter selection and Maven snippets.
 - Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
@@ -88,7 +90,7 @@ Replace placeholders such as `PACKAGE_NAME` and `JFOUNDRY_VERSION`. Keep optiona
 
 When guiding direct project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, and whether external messaging is required. If the user has no preference and has not requested architecture analysis first, proceed with:
 
-- latest stable Java version
+- a Java version compatible with the selected jfoundry release and runtime
 - Maven
 - no runtime framework binding yet
 - Hexagonal Architecture
