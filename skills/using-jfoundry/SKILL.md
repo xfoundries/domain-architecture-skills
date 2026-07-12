@@ -9,14 +9,14 @@ description: Guide AI agents and developers when starting or modifying Java busi
 
 Use this skill to build business applications on jfoundry without drifting from the framework's intended architecture. It is for application projects, not for changing the jfoundry framework internals.
 
-For straightforward project scaffolding with no prior architecture decision request, prefer a new Maven project on a Java version compatible with the selected jfoundry release and runtime, using Hexagonal Architecture unless the user explicitly chooses Onion. This is a scaffolding default, not an architecture analysis conclusion. When the user asks for architecture analysis, ADRs, domain modeling, architecture style selection, or similar design work, do not treat Hexagonal as preselected; evaluate Layered, Onion, Hexagonal, and CQRS applicability from the domain model and integration constraints first. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. Prefer copying the bundled templates first, then adapting names and packages.
+Resolve the primary architecture style from a confirmed `Architecture Guidance Result`, existing project evidence, established conventions that are sufficient for the requested change, or an explicit user choice. Do not select Hexagonal, Onion, Layered, CQRS, or another style merely because no earlier decision is available. When the missing choice materially changes dependency direction, package or module placement, templates, or architecture tests, return `needs-input` and recommend `domain-architecture-guidance` rather than guessing. Do not default the runtime framework to Spring Boot; choose Spring only when the user selects Spring Framework, Spring Boot, or a Spring-specific starter. After the architecture is resolved, copy the matching bundled templates before adapting names and packages.
 
 ## First-Time Workflow
 
 At task classification, for project setup, modification, or framework-landing work, read `references/implementation-guidance-result.md` before deciding `completed`, `needs-input`, or `not-applicable`. Simple conceptual explanations are excluded. If an exact version or runtime blocks an early workflow step, return the structured `needs-input` result instead of continuing to resolve landing details.
 
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
-2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
+2. Resolve one primary architecture style from a confirmed `Architecture Guidance Result`, project evidence, established conventions, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. Return `needs-input` only when a missing choice blocks responsible landing. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
 4. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
 5. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
@@ -97,18 +97,17 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 
 ## Common First Prompt
 
-When guiding direct project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, and whether external messaging is required. If the user has no preference and has not requested architecture analysis first, proceed with:
+When guiding project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, external messaging needs, and the source of the architecture decision. Inspect an existing project before asking for information its ADRs, dependencies, packages, or architecture tests already establish. If no architecture is resolved and that choice materially changes the generated landing, recommend `domain-architecture-guidance` and ask the smallest blocking question.
+
+Architecture-neutral defaults may include:
 
 - a Java version compatible with the selected jfoundry release and runtime
 - Maven
 - no runtime framework binding yet
-- Hexagonal Architecture
 - `jfoundry-dependencies` BOM
-- `jfoundry-domain-starter`
-- `jfoundry-application-starter`
-- `JFoundryRules.hexagonalStrict()` and `JFoundryRules.jmoleculesDdd()`
+- no optional persistence, messaging, Outbox, Inbox, or distributed-lock integration until required
 
-If the user asks for architecture analysis, ADRs, domain modeling, or architecture style selection, do not use these defaults as conclusions. First model the domain and compare architecture styles, then apply the selected jfoundry template.
+Select domain/application starters, package templates, architecture annotations, and ArchUnit rules only after the relevant project roles and architecture are clear. A simple CRUD change may preserve established conventions without introducing a richer architecture. A new domain-heavy project should complete Domain Modeling and Architecture Guidance before template selection.
 
 Suggested user prompt for a new business project:
 
@@ -119,7 +118,7 @@ Project shape: multi-module Maven
 Runtime: undecided
 Persistence: MyBatis-Plus
 Messaging: Kafka later, not in the initial skeleton
-Architecture: default unless you need to choose
+Architecture: confirmed result, existing project style, explicit choice, or undecided
 ```
 
-If details are missing, ask one concise question or proceed with the defaults above when the choice is low risk.
+If details are missing, ask one concise question or proceed with the architecture-neutral defaults above when the choice is low risk. Do not treat `undecided` as permission to select Hexagonal Architecture.

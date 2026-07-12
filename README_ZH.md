@@ -44,6 +44,10 @@ Desired next activity:
 
 如果只处理单一问题，可以直接调用 `domain-modeling`、`domain-architecture-guidance` 或 `using-jfoundry`。
 
+`using-jfoundry` 负责把已确认的架构翻译为框架落地指导。它会保留 Architecture Guidance 结果、现有项目证据、足以支持简单变更的既有约定或用户明确选择；不会把尚未决定架构的项目默认设为 Hexagonal Architecture。
+
+如果是否使用 jfoundry 尚未决定，框架中立的 Domain Modeling 和 Architecture Guidance 会继续进行，不调用 `using-jfoundry`。只有后续框架相关活动实质依赖这一选择时，工作流才会询问。
+
 ### 与 Process Companion 组合
 
 Superpowers、SpecKit、OpenSpec 等工作流都是可选 Process Companion。它们负责自己的 specification、planning、task、implementation、review、文件和命令；本插件负责 Domain Modeling、Architecture Guidance、可选 jfoundry landing 和 Handoff。

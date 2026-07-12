@@ -11,7 +11,7 @@ Project shape: multi-module Maven preferred, or single app for small projects
 Runtime: none, Spring Boot, Spring Framework, Quarkus, Micronaut, Helidon, CLI/custom, or undecided
 Persistence: none, MyBatis-Plus, JPA, or undecided
 Messaging: none, Kafka, RabbitMQ, RocketMQ, or undecided
-Architecture: default
+Architecture: confirmed result, existing project style, explicit choice, or undecided
 ```
 
 ## Agent Sequence
@@ -19,27 +19,24 @@ Architecture: default
 The agent should:
 
 1. Confirm or infer the base package and project shape; prefer multi-module Maven for normal DDD projects.
-2. For direct scaffolding, default architecture to Hexagonal unless the user requests Onion. For architecture analysis, ADR, domain modeling, or style-selection work, evaluate candidate architecture styles before selecting templates.
+2. Resolve the architecture from a confirmed `Architecture Guidance Result`, project evidence, established conventions sufficient for the requested change, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. Return `needs-input` only when a missing choice blocks responsible landing.
 3. Read `version-selection.md` and select the exact jfoundry version before choosing dependency templates.
 4. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put runtime framework starters in domain or application modules.
-5. Copy package structure from `assets/templates/structure/`.
-6. Copy `HexagonalArchitectureTest.java` or `OnionSimpleArchitectureTest.java`.
+5. Copy a package structure from `assets/templates/structure/` only when it matches the resolved architecture; otherwise preserve the established project structure.
+6. Copy `HexagonalArchitectureTest.java` or `OnionSimpleArchitectureTest.java` only when the corresponding architecture is selected.
 7. Replace `JFOUNDRY_VERSION` only with the selected exact version, then replace the other placeholders.
 8. Create package-level architecture annotations where package roles are stable.
 9. Add only required optional starters.
 10. Run Maven verification.
 
-## Recommended Defaults
+## Architecture-Neutral Defaults
 
-Use these defaults when the user asks for straightforward scaffolding and has no preference:
+Use these defaults when the user asks for scaffolding and the choice is independent of architecture:
 
 - a Java version compatible with the selected jfoundry release and runtime
-- multi-module Maven for normal DDD projects
-- Hexagonal Architecture
+- Maven
 - no runtime framework binding yet
 - `jfoundry-dependencies`
-- `jfoundry-domain-starter` in the domain module
-- `jfoundry-application-starter` in the application module
 - no Outbox
 - no Inbox
 - no broker starter
@@ -47,7 +44,7 @@ Use these defaults when the user asks for straightforward scaffolding and has no
 
 If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. For other runtimes, use framework-neutral jfoundry dependencies unless an explicit runtime adapter exists.
 
-These are scaffolding defaults, not architecture analysis conclusions. When the user asks to decide the architecture, first compare the relevant styles from the domain model and integration constraints.
+Select project modules, domain/application starters, package templates, annotations, and architecture tests only after the architecture and project roles are clear. A simple CRUD change may preserve established conventions without richer modeling or a new architecture decision. A new domain-heavy project should obtain Domain Modeling and Architecture Guidance before template selection.
 
 ## When To Ask Before Proceeding
 
@@ -57,4 +54,5 @@ Ask before continuing when:
 - The project shape affects file creation substantially.
 - The persistence choice is unknown and code generation depends on it.
 - The user asks for external messaging but does not identify a broker.
-- The project already has an architecture style and it conflicts with the defaults.
+- An explicit architecture choice conflicts with the existing project evidence.
+- An unresolved architecture choice changes dependency direction, package or module placement, templates, or architecture tests.

@@ -45,6 +45,8 @@ Return the applicable specialist results and a Domain Architecture Handoff.
 
 The specialists produce, and the coordinator consumes, `Domain Modeling Result`, `Architecture Guidance Result`, and, only when jfoundry applies, `JFoundry Implementation Guidance Result`. The coordinator then produces `Domain Architecture Handoff` for the next activity.
 
+`JFoundry: undecided` does not block framework-neutral Domain Modeling or Architecture Guidance and does not by itself invoke `using-jfoundry`. Preserve the uncertainty as a pending optional landing. Ask about it only when the next activity requires framework-specific implementation guidance and the choice materially changes that activity.
+
 `Domain Architecture Handoff` is the coordinator-owned composite interoperability result. It preserves phase states, specialist summaries or artifacts, confirmed decisions, constraints, open questions and blockers, framework landing or non-applicability, and the recommended next activity. It does not replace specialist payloads and does not require a fixed file format.
 
 ## Process Companion Contract

@@ -16,7 +16,7 @@ If another planning, TDD, or review workflow is already active, use this skill o
 1. Understand the business goal, actors, workflows, constraints, and uncertainty.
 2. Use `domain-modeling` for non-trivial business behavior and consume its `Domain Modeling Result`.
 3. Use `domain-architecture-guidance` to choose appropriate boundaries and consume its `Architecture Guidance Result`.
-4. Use `using-jfoundry` only when applicable and after domain and architecture assumptions are clear.
+4. Use `using-jfoundry` only when applicable and after domain and architecture assumptions are clear. If jfoundry use is undecided, continue framework-neutral phases without invoking it and defer the choice until a framework-specific next activity materially requires it.
 5. Produce a composite `Domain Architecture Handoff`.
 6. During implementation or review, revisit the modeling or architecture phase when changed business meaning, drift, or conflicts invalidate assumptions.
 
@@ -24,7 +24,7 @@ If another planning, TDD, or review workflow is already active, use this skill o
 
 - Use `domain-modeling` for requirements-to-model work: ubiquitous language, business commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read needs/read models.
 - Use `domain-architecture-guidance` for architecture decisions and reviews: dependency direction, Layered/Onion/Hexagonal/CQRS boundaries, jMolecules-style annotations, architecture tests, and source-aware rule interpretation.
-- Use `using-jfoundry` only when the target project uses jfoundry or the user explicitly asks for jfoundry-specific dependencies, package layout, annotations, Repository/Port guidance, persistence adapters, Outbox/Inbox, or ArchUnit setup.
+- Use `using-jfoundry` only when the target project uses jfoundry or the user explicitly asks for jfoundry-specific dependencies, package layout, annotations, Repository/Port guidance, persistence adapters, Outbox/Inbox, or ArchUnit setup. `Undecided` alone does not make this specialist applicable.
 
 ## Result And Handoff Routing
 

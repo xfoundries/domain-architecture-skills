@@ -45,7 +45,10 @@ The specialist owns the `JFoundry Landing` payload. Select its fields from the c
 ## Status And Applicability
 
 - Use `not-applicable` when the target does not use jfoundry and the user did not request it. Record why no framework landing is needed.
-- Use `needs-input` only when an exact Java or jfoundry version, runtime, primary architecture, module shape, persistence choice, or messaging requirement prevents a responsible landing. Ask the smallest blocking question rather than choosing an unsafe exact value.
+- Resolve the primary architecture from confirmed Architecture Guidance, project evidence, established conventions sufficient for the requested change, or an explicit user choice. Do not manufacture an architecture decision inside the JFoundry landing.
+- For an existing project or simple CRUD change, return `completed` when established conventions are sufficient and record that evidence; an upstream phase may be `not-applicable` when it adds no substantive decision.
+- Use `needs-input` for architecture only when the unresolved choice materially changes dependency direction, package or module placement, selected templates, or architecture tests. Recommend `domain-architecture-guidance` and ask the smallest blocking question.
+- Use `needs-input` for an exact Java or jfoundry version, runtime, module shape, persistence choice, or messaging requirement only when it prevents a responsible landing. Ask the smallest blocking question rather than choosing an unsafe exact value.
 - Keep nonblocking uncertainty in **Open Questions** or **Handoff Notes** and return `completed` when the landing is usable for its recommended next step.
 - Return to architecture guidance when a jfoundry layout or convention conflicts with the confirmed architecture. Preserve the architecture result while the conflict is resolved.
 

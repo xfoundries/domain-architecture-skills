@@ -97,3 +97,35 @@ Use these compact scenarios to review routing and result protocols. Each scenari
 **Expected:** Use the specification and available project evidence as inputs, route through Domain Modeling and Architecture Guidance, use jfoundry guidance only when applicable, and return the specialist results plus `Domain Architecture Handoff` to the companion-owned next activity. Keep SpecKit responsible for its files, commands, templates, approval gates, planning, and task generation. Return any blocking business or architecture question with an interim handoff to the companion-owned specification activity.
 
 **Prohibited:** Selecting a different companion, assuming or reproducing SpecKit directories or commands, treating the handoff as a mandatory file format, skipping responsible modeling or architecture work, or generating dependent plans and tasks from guessed decisions.
+
+## Scenario 13: Existing JFoundry Project Preserves Architecture
+
+**Input:** Add a use case to an existing jfoundry project whose ADR and architecture tests establish Onion Architecture.
+
+**Expected:** Preserve Onion Architecture and land the change using project evidence. Return `completed` when the affected boundaries are clear without reopening architecture selection.
+
+**Prohibited:** Replacing Onion with Hexagonal because the request directly invoked `using-jfoundry` or because Hexagonal templates are bundled.
+
+## Scenario 14: Simple JFoundry CRUD
+
+**Input:** Add basic reference-data CRUD to a jfoundry application using established application and persistence conventions, with no new business rules or boundary decision.
+
+**Expected:** Keep the established simple conventions. Domain Modeling and Architecture Guidance may be `not-applicable`; JFoundry Implementation Guidance records the project evidence and returns the smallest usable landing.
+
+**Prohibited:** Introducing Hexagonal ports, aggregates, CQRS, or new Maven modules solely because jfoundry is present.
+
+## Scenario 15: New JFoundry Project Without An Architecture Decision
+
+**Input:** Scaffold a new domain-heavy jfoundry project, but no Architecture Guidance Result, project evidence, or explicit architecture choice is available.
+
+**Expected:** Return `needs-input`, recommend Architecture Guidance, and ask the smallest question needed to resolve the architecture before selecting package and architecture-test templates.
+
+**Prohibited:** Silently selecting Hexagonal Architecture as a scaffolding default.
+
+## Scenario 16: JFoundry Undecided Does Not Block
+
+**Input:** Produce Domain Modeling and Architecture Guidance for a business system whose framework choice is undecided and whose next activity is architecture review rather than framework-specific implementation.
+
+**Expected:** Complete the applicable framework-neutral phases without invoking `using-jfoundry`. Record jfoundry as a pending optional landing in the `Domain Architecture Handoff`; do not ask for a framework choice until a framework-specific next activity materially requires it.
+
+**Prohibited:** Marking Domain Modeling or Architecture Guidance `needs-input`, invoking `using-jfoundry`, or forcing a jfoundry decision solely because the framework choice is undecided.

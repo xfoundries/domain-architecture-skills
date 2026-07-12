@@ -2,7 +2,9 @@
 
 ## Style Selection
 
-For straightforward scaffolding, prefer Hexagonal Architecture for new business projects because it gives AI agents clear package and dependency boundaries:
+Select templates only after resolving the architecture from a confirmed `Architecture Guidance Result`, existing project evidence, established conventions sufficient for the requested change, or an explicit user choice. Preserve an existing style. Do not use a JFoundry template to make the architecture decision.
+
+Use the Hexagonal template when Hexagonal Architecture has been selected. Its core dependency flow is:
 
 ```text
 primary adapter -> primary port / application service -> domain
@@ -10,9 +12,7 @@ inside core consumer -> secondary port
 secondary adapter -> secondary port
 ```
 
-When the task is architecture analysis, ADR writing, domain modeling, or style selection, do not treat Hexagonal as preselected. Compare Layered, Onion, Hexagonal, and CQRS applicability from the domain model, integration boundaries, dependency constraints, and read/write needs, then select the matching jfoundry template.
-
-Use Onion Simple when the team explicitly wants ring terminology:
+Use Onion Simple when Onion Architecture has been selected:
 
 ```text
 infrastructure -> application -> domain
@@ -20,7 +20,7 @@ infrastructure -> application -> domain
 
 In Onion Simple, web/controllers are infrastructure concerns because delivery mechanisms sit in the outer ring. In Hexagonal, this skill normally separates primary adapters into `web` or `interface` and secondary adapters into `infrastructure` for clearer port/adapter roles.
 
-Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope. If a project already chose a style, preserve it.
+For simple CRUD or another confirmed style, preserve the selected boundaries and do not force a Hexagonal or Onion template merely because those templates are bundled. Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope.
 
 ## Hexagonal Roles
 

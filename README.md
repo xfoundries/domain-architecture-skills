@@ -44,6 +44,10 @@ Desired next activity:
 
 For focused work, invoke `domain-modeling`, `domain-architecture-guidance`, or `using-jfoundry` directly.
 
+`using-jfoundry` translates a confirmed architecture into framework-specific guidance. It preserves Architecture Guidance results, existing project evidence, established conventions sufficient for simple changes, or an explicit user choice; it does not default an undecided project to Hexagonal Architecture.
+
+If jfoundry use is undecided, framework-neutral Domain Modeling and Architecture Guidance continue without invoking `using-jfoundry`. The workflow asks for that choice only when a framework-specific next activity materially depends on it.
+
 ### With A Process Companion
 
 Superpowers, SpecKit, OpenSpec, and similar workflows are optional companions. They own their specification, planning, tasks, implementation, review, files, and commands; this plugin owns the domain and architecture results, optional jfoundry landing, and handoff.

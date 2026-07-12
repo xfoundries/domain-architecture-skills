@@ -40,6 +40,16 @@ Move backward when later work invalidates earlier assumptions:
 
 Preserve prior confirmed results. State what changed, why it changed, and which downstream results need revision.
 
+## Framework Landing Applicability
+
+Classify jfoundry applicability without making it a prerequisite for framework-neutral work:
+
+- When the project uses jfoundry or the user explicitly requests jfoundry-specific landing, invoke `using-jfoundry` after the required domain and architecture assumptions are clear.
+- When the project does not use jfoundry, skip `using-jfoundry` and record why no framework landing applies. Do not invoke the specialist merely to return `not-applicable`.
+- When jfoundry use is undecided, continue Domain Modeling and Architecture Guidance without invoking `using-jfoundry`. Record the pending optional landing in the handoff. Ask the smallest blocking question only when the recommended next activity is framework-specific and the unresolved choice materially changes that activity.
+
+An undecided optional framework landing does not make Domain Modeling or Architecture Guidance `needs-input`.
+
 ## Blocking Rules
 
 Use `needs-input` for each example below only when the unresolved information prevents a responsible current or downstream decision. Otherwise record it as an assumption or open question and let the responsible specialist classify the detail:
