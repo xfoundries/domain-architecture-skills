@@ -12,21 +12,24 @@ Use:
 
 ```java
 @ArchTest
-ArchRule[] jfoundryRules = JFoundryRules.hexagonalStrict();
+static final ArchTests jfoundryRules = JFoundryRules.hexagonalStrict();
 
 @ArchTest
-ArchRule[] jmoleculesDddRules = JFoundryRules.jmoleculesDdd();
+static final ArchTests jmoleculesDddRules = JFoundryRules.jmoleculesDdd();
 
 @ArchTest
-ArchRule[] aggregateRepositoryRules = JFoundryRules.aggregateRepositoryConventions();
+static final ArchTests aggregateRepositoryRules = JFoundryRules.aggregateRepositoryConventions();
 ```
 
 For Onion:
 
 ```java
 @ArchTest
-ArchRule[] jfoundryRules = JFoundryRules.onionSimple();
+static final ArchTests jfoundryRules = JFoundryRules.onionSimple();
 ```
+
+These entrypoints return ArchUnit `ArchTests`. Do not declare `@ArchTest ArchRule[]` fields;
+ArchUnit's JUnit 5 engine does not treat an array as a rule collection.
 
 ## Optional Rules
 

@@ -46,6 +46,8 @@ Desired next activity:
 
 `using-jfoundry` 负责把已确认的架构翻译为框架落地指导。它会保留 Architecture Guidance 结果、现有项目证据、足以支持简单变更的既有约定或用户明确选择；不会把尚未决定架构的项目默认设为 Hexagonal Architecture。
 
+其中的架构测试模板使用 ArchUnit 原生 `ArchTests`。聚合 Repository 保持独立的 DDD 身份：Hexagonal 项目可以同时把它表达为 Secondary Port，而无需移出 `domain.repository`；Onion 项目则通过内环契约与基础设施环实现表达同一依赖倒置关系。
+
 如果是否使用 jfoundry 尚未决定，框架中立的 Domain Modeling 和 Architecture Guidance 会继续进行，不调用 `using-jfoundry`。只有后续框架相关活动实质依赖这一选择时，工作流才会询问。
 
 ### 与 Process Companion 组合

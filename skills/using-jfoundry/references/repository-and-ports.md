@@ -13,7 +13,12 @@ Use an aggregate repository for aggregate lifecycle and command-side aggregate l
 
 Name methods by domain intent, not SQL shape. Prefer `findCurrentOperation(...)` over condition-list method names.
 
-An aggregate repository is a DDD repository contract. In Hexagonal/JFoundry applications it is an outbound contract implemented by infrastructure, but it should remain focused on aggregate lifecycle rather than being duplicated as a generic read port.
+An aggregate repository is a DDD repository contract whose identity does not depend on an
+architecture style. In a Hexagonal/JFoundry application it may simultaneously be a
+`@SecondaryPort`, while remaining under `domain.repository`; its infrastructure implementation may
+be a `@SecondaryAdapter`. In Onion it is an inner-ring contract implemented by the infrastructure
+ring. Do not duplicate the repository as an application `port.out` interface merely to satisfy a
+package convention.
 
 ## LookupPort
 
@@ -77,4 +82,7 @@ Aggregate repository interfaces should not expose:
 - Persistence data objects or mapper types.
 - Page DTOs or reporting projections that are not aggregates.
 
-Add `JFoundryRules.aggregateRepositoryConventions()` when the project is ready to enforce these repository leak conventions. The rule group does not force `LookupPort`, `QueryPort`, `ReadModelPort`, or `MaintenancePort` suffixes.
+Add `JFoundryRules.aggregateRepositoryConventions()` when the project is ready to enforce these
+repository leak conventions. It recognizes both jMolecules `Repository` and jfoundry
+`AggregateRepository` interfaces. The rule group does not force `LookupPort`, `QueryPort`,
+`ReadModelPort`, or `MaintenancePort` suffixes.

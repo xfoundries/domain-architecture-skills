@@ -32,7 +32,14 @@ For general Hexagonal semantics, primary/secondary port direction, and applicati
 - `@SecondaryPort`: marks outbound interfaces owned by the consumer. Put application-owned ports under application `port.out`; put only narrow domain-policy ports under domain `port.out`.
 - `@SecondaryAdapter`: marks implementations of secondary ports, such as MyBatis/JPA persistence, Redis, HTTP clients, broker senders, file storage, or external SDK adapters.
 
-Keep aggregate repository contracts under the domain repository package instead of duplicating them as application `port.out` interfaces.
+An aggregate repository has an independent DDD role. In a Hexagonal project it may also be marked
+`@SecondaryPort`, while remaining under the domain repository package. Do not duplicate it as an
+application `port.out` interface. A `@SecondaryAdapter` may implement either a regular secondary
+port or a DDD repository.
+
+In Onion, express the same dependency inversion with rings: the aggregate repository contract is
+inside the domain ring and its implementation is in the infrastructure ring. Do not mix Hexagonal
+port/adapter annotations into the Onion analysis scope.
 
 ## Package Defaults
 
