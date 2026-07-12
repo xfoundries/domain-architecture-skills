@@ -40,6 +40,7 @@ At task classification, for project setup, modification, or framework-landing wo
 - In infrastructure modules, group adapters by technical shape before external-system name when that improves clarity, such as `persistence`, `query`, `client.<external-system>`, `messaging`, `cache`, and `file`. Use `query` as the neutral default for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology. Keep HTTP/API `*Request` and `*Response` DTOs in primary adapter packages; use application-owned `*Command` and `*Result` models for primary-port boundaries when that naming fits the project.
 - In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/query/maintenance roles only when that distinction helps the project.
+- Keep persistence-owned optimistic-lock versions and managed ORM entities out of domain aggregates. When a selected adapter uses `AggregatePersistenceContext`, keep load and modify in one transaction; do not assume detached aggregate merge support.
 - Treat jfoundry persistence base classes as optional implementation support, not as a DDD requirement. A custom adapter may implement the aggregate repository contract directly when that is clearer.
 - Use `MybatisPlusAggregateRepository` only when one `AggregateData` and one `BaseMapper` can fully store and restore the aggregate. For multi-table or composite persistence, extend `AbstractAggregateRepository` when its lifecycle and event-registration support is useful, then implement the complete aggregate `do*` operations in the business infrastructure adapter.
 - Do not override the public `add`, `modify`, `addAll`, `modifyAll`, `remove`, or `findById` methods of jfoundry repository bases. Their protected `do*` operations are the persistence extension points.
@@ -67,10 +68,12 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/maven/domain-module-dependencies.xml`
 - `assets/templates/maven/application-module-dependencies.xml`
 - `assets/templates/maven/infrastructure-mybatis-plus-dependencies.xml`
+- `assets/templates/maven/infrastructure-jpa-dependencies.xml`
 - `assets/templates/maven/architecture-test-dependencies.xml`
 - `assets/templates/maven/spring-boot-app-dependencies.xml`
 - `assets/templates/maven/spring-boot-webmvc-dependencies.xml`
 - `assets/templates/maven/spring-boot-mybatis-plus-dependencies.xml`
+- `assets/templates/maven/spring-boot-jpa-dependencies.xml`
 - `assets/templates/maven/lock-core-dependencies.xml`
 - `assets/templates/maven/lock-redisson-dependencies.xml`
 - `assets/templates/maven/outbox-dependencies.xml`

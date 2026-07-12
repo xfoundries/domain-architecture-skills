@@ -1,6 +1,6 @@
 # Persistence Data Converters
 
-Use this reference when a business project implements jfoundry aggregate repositories with `AbstractAggregateRepository`, `MybatisPlusAggregateRepository`, `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct.
+Use this reference when a business project implements jfoundry aggregate repositories with `AbstractAggregateRepository`, MyBatis-Plus, Jakarta Persistence, `AggregateData`, `DataConverter`, or MapStruct.
 
 ## Choose The Repository Implementation Shape
 
@@ -126,6 +126,32 @@ mutable, externally referenced, audited, ordered, large, or concurrently modifie
 affect correctness and are unknown, keep them as an open question or return `needs-input`; if they
 only affect low-risk optimization, record the selected assumption.
 
+## Persistence-owned Optimistic Locking
+
+Do not add a database version to a domain aggregate merely because MyBatis-Plus or JPA uses
+optimistic locking. `AggregatePersistenceContext` tracks persistence state by aggregate object
+identity for one runtime-managed transaction. Spring supplies a transaction-bound implementation;
+business code does not manage a scope. A tracked operation without an active transaction, or a
+modify/remove of an aggregate not loaded in the current transaction, fails fast. Detached aggregate
+merge is not supported.
+
+For one MyBatis-Plus Data object:
+
+- annotate the Data version with `@Version` and configure `OptimisticLockerInnerInterceptor`;
+- use `MybatisPlusVersionedAggregateRepository` only when one Data fully represents the aggregate;
+- keep version reads/writes behind `VersionedDataAccessor`;
+- for composite adapters, attach the root version on load/add, require it before modify/remove,
+  and replace it only after the complete aggregate operation succeeds;
+- include ID and the loaded version in remove predicates;
+- treat affected rows equal to zero as `ConflictException`.
+
+For one JPA entity graph, `JpaAggregateRepository` and `JpaAggregateMapper` may be used. The mapper
+creates new entities, restores aggregates, converts IDs, and applies aggregate state to the managed
+entity loaded by `EntityManager.find`. The repository flushes add/modify/remove and translates
+`OptimisticLockException` to `ConflictException`; it does not call `merge`. Multiple independent
+entities, repositories, or persistence technologies still require a business-owned composite
+adapter.
+
 ## Failure Translation
 
 `AbstractAggregateRepository` applies the runtime-neutral `PersistenceFailureTranslator` around
@@ -161,3 +187,6 @@ Do not blindly ignore all audit fields.
 jfoundry BOMs manage MapStruct versions, but business projects still own compiler annotation processor configuration. Put MapStruct and Lombok processors in the module that compiles the converter, usually infrastructure.
 
 Use `-Amapstruct.unmappedTargetPolicy=ERROR` when the project is ready to fail fast on unmapped data fields.
+
+Use `infrastructure-jpa-dependencies.xml` for a framework-neutral JPA infrastructure module, or
+`spring-boot-jpa-dependencies.xml` in a Spring Boot runtime assembly. Both capabilities are optional.

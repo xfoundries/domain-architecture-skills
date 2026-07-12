@@ -28,7 +28,15 @@ Do not put business rules or aggregate behavior in the runtime assembly module.
 - `jfoundry-spring-boot-starter` brings the Spring runtime adapter. When a `PlatformTransactionManager` exists, Spring Boot auto-configuration creates a `TransactionRunner` backed by Spring `TransactionTemplate`.
 - `jfoundry.application.transaction.annotation.enabled` defaults to `true`; set it to `false` to disable the `@ApplicationTransactional` advisor.
 - `@ApplicationTransactional` applies only when a call enters a Spring-managed instance through its proxy. Self-invocation and unproxied instances bypass the advisor; use `TransactionRunner` when proxy interception cannot be guaranteed.
+- With the Spring Boot starter, jfoundry creates `SpringTransactionRunner` after Boot has configured a `PlatformTransactionManager`, then registers the annotation advisor after a runner exists. A user-defined `TransactionRunner` takes precedence and is also eligible for the advisor.
 - Keep either form in the application layer. Domain objects and domain services should not control transactions directly.
+- `jfoundry-persistence-spring` provides a transaction-bound `AggregatePersistenceContext` when
+  tracked persistence state is selected. Business code does not open a scope. Keep aggregate load
+  and modify/remove in the same transaction; `REQUIRES_NEW` receives an independent context and
+  resumes the outer context afterward.
+- MyBatis-Plus applications must still register `OptimisticLockerInnerInterceptor`; jfoundry does
+  not mutate an application-owned interceptor bean. JPA applications rely on their provider's
+  `@Version` handling. Neither runtime path supports detached aggregate merge by default.
 
 ## Distributed Locks
 
