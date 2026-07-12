@@ -98,39 +98,9 @@ For Onion Simple package layouts, use the Onion template instead of the Hexagona
 
 ## Exception Boundaries
 
-Use jfoundry's compact exception model. Do not create a catch-all `BusinessException` as the first design choice.
+Use jfoundry's compact domain/application exception model and do not create a generic `BusinessException` hierarchy. Domain code must not depend on application exceptions or HTTP concepts. Infrastructure adapters translate technical failures at the port boundary they own while preserving the cause; do not indiscriminately wrap domain failures.
 
-Domain code may throw only domain exceptions:
-
-```text
-DomainException
-  DomainRuleViolationException
-  DomainStateException
-```
-
-- Use `DomainRuleViolationException` when a business rule cannot be satisfied, such as quota exceeded, insufficient balance, duplicate installation, or limit violations.
-- Use `DomainStateException` when the current domain object state does not allow the requested behavior, such as deleting a running environment or retrying a non-failed task.
-
-Application code may throw application exceptions:
-
-```text
-ApplicationException
-  InvalidArgumentException
-  NotFoundException
-  ConflictException
-  ExternalAccessException
-```
-
-- Use `InvalidArgumentException` for invalid use-case command/query arguments.
-- Use `NotFoundException` when a use case needs data that cannot be found.
-- Use `ConflictException` when the use case conflicts with current application state or optimistic concurrency.
-- Use `ExternalAccessException` when an application service calls a secondary port and the adapter cannot access an external capability such as a database, HTTP service, cache, message broker, file system, or SDK.
-
-Infrastructure adapters catch technical exceptions such as `IOException`, SQL exceptions, HTTP client exceptions, Redis exceptions, broker exceptions, and SDK exceptions. They convert those failures to the port contract expected by the caller; for application-owned secondary ports this is usually `ExternalAccessException`.
-
-Domain code should not depend on application exceptions. If domain behavior needs external data, prefer loading that data in the application service through a secondary port and passing the resulting value into the domain model.
-
-For Spring MVC applications, read `references/spring-runtime.md` and use `jfoundry-webmvc-spring-boot-starter` in the runtime assembly module. It maps jfoundry core exceptions to RFC 9457 `ProblemDetail` responses. HTTP status and response shape are Web adapter concerns; do not expose HTTP status concepts from domain or application code.
+The `using-jfoundry` skill routes exception selection, adapter translation, runtime mapping, and testing decisions to `references/exception-handling.md`. Read that reference instead of duplicating its decision table here.
 
 ## Annotation Placement
 

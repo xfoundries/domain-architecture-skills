@@ -61,7 +61,7 @@ Spring-specific starters belong in the runtime assembly module/package:
 
 When cross-instance coordination for the same resource is required, read `references/distributed-locks.md`. Add `jfoundry-lock-redisson-spring-boot-starter` to the runtime assembly only after choosing Redisson as the distributed-lock adapter; it is optional and managed by `jfoundry-spring-dependencies`.
 
-For Spring MVC applications, use `jfoundry-webmvc-spring-boot-starter` in the runtime assembly module. It brings Spring MVC web support and the jfoundry RFC 9457 `ProblemDetail` exception mapping. Do not add `spring-boot-starter-web` separately when this starter is selected.
+For Spring Boot MVC applications, use `jfoundry-webmvc-spring-boot-starter` in the runtime assembly module. It brings Spring MVC web support and the jfoundry RFC 9457 `ProblemDetail` exception mapping. Do not add `spring-boot-starter-web` separately when this starter is selected. Plain Spring Framework MVC applications use `jfoundry-webmvc-spring` in the runtime assembly and explicitly register or component-scan `ProblemDetailExceptionHandler`; do not use the Boot starter unless Spring Boot is selected.
 
 ## Template Mapping
 

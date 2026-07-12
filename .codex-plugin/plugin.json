@@ -1,14 +1,14 @@
 {
   "name": "domain-architecture",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260712064834",
   "description": "Domain modeling and architecture workflow plugin for business software systems.",
   "author": {
     "name": "Huang Xiao",
     "email": "youngledo@qq.com",
     "url": "https://github.com/youngledo"
   },
-  "homepage": "https://github.com/xfoundries/software-architecture-skills",
-  "repository": "https://github.com/xfoundries/software-architecture-skills",
+  "homepage": "https://github.com/xfoundries/domain-architecture-skills",
+  "repository": "https://github.com/xfoundries/domain-architecture-skills",
   "license": "MIT",
   "keywords": [
     "domain-driven-design",
@@ -31,7 +31,7 @@
       "Architecture Guidance",
       "Workflow"
     ],
-    "websiteURL": "https://github.com/xfoundries/software-architecture-skills",
+    "websiteURL": "https://github.com/xfoundries/domain-architecture-skills",
     "defaultPrompt": [
       "Guide this business-domain design from requirements to architecture decisions.",
       "Model this workflow into commands, events, aggregates, and invariants.",

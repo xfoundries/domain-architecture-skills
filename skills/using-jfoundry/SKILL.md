@@ -13,6 +13,8 @@ For straightforward project scaffolding with no prior architecture decision requ
 
 ## First-Time Workflow
 
+At task classification, for project setup, modification, or framework-landing work, read `references/implementation-guidance-result.md` before deciding `completed`, `needs-input`, or `not-applicable`. Simple conceptual explanations are excluded. If an exact version or runtime blocks an early workflow step, return the structured `needs-input` result instead of continuing to resolve landing details.
+
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
 2. Choose one primary architecture style. For direct scaffolding, prefer Hexagonal for new business projects; choose Onion only when the user asks for it or the codebase already uses it. For architecture analysis or ADR work, compare candidate styles first and document the decision before selecting templates. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
@@ -25,6 +27,7 @@ For straightforward project scaffolding with no prior architecture decision requ
 10. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
 11. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
 12. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
+13. Complete the JFoundry Implementation Guidance Result with the selected artifacts, constraints, open questions, and verification commands.
 
 ## Core Rules
 
@@ -33,7 +36,7 @@ For straightforward project scaffolding with no prior architecture decision requ
 - For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-port ownership, and read-side assumptions before coding; keep open domain questions visible.
 - Put use case orchestration and transaction-facing workflow in the application layer.
 - Express outbound needs as secondary ports. Put each port near the core code that owns the need: application workflow ports in application modules, narrow domain-decision ports in domain modules. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
-- Use jfoundry's compact exception model instead of creating a generic `BusinessException` hierarchy. Domain code throws only `DomainException` subtypes (`DomainRuleViolationException`, `DomainStateException`). Application code may throw `InvalidArgumentException`, `NotFoundException`, `ConflictException`, and `ExternalAccessException`.
+- Use jfoundry's compact domain/application exception model; do not create a generic `BusinessException` hierarchy. Read `references/exception-handling.md` when selecting exceptions, translating failures, or mapping them at a runtime boundary.
 - In infrastructure modules, group adapters by technical shape before external-system name when that improves clarity, such as `persistence`, `query`, `client.<external-system>`, `messaging`, `cache`, and `file`. Use `query` as the neutral default for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology. Keep HTTP/API `*Request` and `*Response` DTOs in primary adapter packages; use application-owned `*Command` and `*Result` models for primary-port boundaries when that naming fits the project.
 - In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/query/maintenance roles only when that distinction helps the project.
@@ -79,9 +82,11 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 
 ## Reference Routing
 
+- For project setup, modification, or framework-landing work, read `references/implementation-guidance-result.md` at task classification before deciding result status or selecting landing details.
 - Read `references/first-use.md` when the user is starting a new project or asks how to invoke this skill.
 - Read `references/version-selection.md` before selecting dependency templates or changing a jfoundry version in an existing project.
 - Read `references/architecture.md` for architecture style selection, Maven module versus package role boundaries, package roles, annotations, and dependency direction.
+- Read `references/exception-handling.md` before choosing domain/application exceptions, translating adapter failures, or mapping errors at an HTTP/runtime boundary.
 - Read `references/dependencies.md` for starter selection and Maven snippets.
 - Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
 - Read `references/distributed-locks.md` only when cross-instance coordination is required for the same resource.

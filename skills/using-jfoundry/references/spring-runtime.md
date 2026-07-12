@@ -36,16 +36,18 @@ Read `references/distributed-locks.md` only when a workflow requires cross-insta
 
 ## WebMVC Exception Mapping
 
-For Spring MVC HTTP APIs, prefer `jfoundry-webmvc-spring-boot-starter`.
+For Spring Boot MVC HTTP APIs, use `jfoundry-webmvc-spring-boot-starter`. For plain Spring Framework MVC, add `jfoundry-webmvc-spring` to the runtime assembly and explicitly register or component-scan `ProblemDetailExceptionHandler`; do not use the Boot starter unless Spring Boot is selected.
 
 It maps jfoundry domain/application exceptions to RFC 9457 `ProblemDetail` responses:
 
 - `InvalidArgumentException` -> `400 Bad Request`
 - `NotFoundException` -> `404 Not Found`
-- `ConflictException` and domain rule/state failures -> `409 Conflict`
+- `ConflictException` -> `409 Conflict`
+- `DomainRuleViolationException` -> `422 Unprocessable Entity`
+- `DomainStateException` -> `409 Conflict`
 - `ExternalAccessException` -> `503 Service Unavailable`
 
-HTTP status and response shape are Web adapter concerns. Domain and application code should throw jfoundry exceptions, not expose HTTP status concepts.
+HTTP status and response shape are Web adapter concerns. Domain and application code should throw jfoundry exceptions, not expose HTTP status concepts. The other five mappings use the exception message as the detail, so those messages must be client-safe. For `ExternalAccessException`, the built-in handler uses a safe default detail rather than exposing the raw exception message. Do not put secrets in exception messages.
 
 ## Event, Outbox, Inbox, And Messaging
 

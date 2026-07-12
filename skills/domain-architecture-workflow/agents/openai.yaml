@@ -1,4 +1,4 @@
 interface:
   display_name: "Domain Architecture Workflow"
   short_description: "Coordinate domain modeling and architecture guidance"
-  default_prompt: "Use $domain-architecture-workflow to guide this business-domain software design from requirements through architecture decisions."
+  default_prompt: "Use $domain-architecture-workflow to guide this business-domain software design through explicit domain-modeling and architecture results, optional framework guidance, and a final handoff."

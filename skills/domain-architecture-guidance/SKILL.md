@@ -23,6 +23,7 @@ DDD is a domain modeling methodology and language for business concepts, boundar
 6. Apply architecture constraints from `references/architecture-constraints.md` before changing boundaries or dependency direction.
 7. Apply backend implementation guidance from `references/backend-guidance.md` when changing code or recommending structure.
 8. State uncertainty explicitly when a rule is context-dependent.
+9. For architecture decisions, reviews, and boundary-affecting implementation recommendations, produce an `Architecture Guidance Result` from `references/architecture-result.md` with rule sources, constraints, evidence, open questions, and readiness for the recommended next step. Simple conceptual explanations and documentation answers may remain concise unless the user asks for a structured result.
 
 ## Core Rules
 
@@ -40,6 +41,7 @@ DDD is a domain modeling methodology and language for business concepts, boundar
 
 ## References
 
+- Read `references/architecture-result.md` before returning an architecture decision, review, or boundary-affecting implementation recommendation.
 - Read `references/source-policy.md` when deciding what sources are authoritative, how to handle Explicit Architecture, or how to cite architecture claims.
 - Read `references/architecture-constraints.md` when deciding whether a dependency, call path, package reference, or use-case boundary is an architecture violation.
 - Read `references/hexagonal-architecture.md` when explaining, designing, or reviewing Hexagonal Architecture / Ports and Adapters roles, primary/secondary ports, adapter direction, or application-service naming.

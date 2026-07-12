@@ -8,43 +8,60 @@ A plugin-first architecture guidance package for business-domain software system
 
 The distribution unit is the `domain-architecture` plugin. The `skills/` directory contains plugin-internal capabilities that are exposed by Codex, Claude Code, and other compatible agents after the plugin is installed.
 
-## Plugin Capabilities
+## Core Capabilities
 
-| Skill | Purpose |
-|---|---|
-| `domain-architecture-workflow` | Entry-point workflow for end-to-end business-domain architecture work. Coordinates modeling, architecture decisions, and optional framework-specific landing. |
-| `domain-modeling` | Framework-neutral DDD/domain modeling workflow for ubiquitous language, business commands, events, bounded contexts, aggregates, invariants, value objects, domain services, repositories, and read needs/read models. |
-| `domain-architecture-guidance` | Source-aware architecture guidance for DDD, Layered, Onion, Hexagonal / Ports and Adapters, CQRS, jMolecules-style annotations, and architecture tests. |
-| `using-jfoundry` | [jfoundry](https://github.com/xfoundries/jfoundry)-specific application guidance for Java business projects covering actual-version-aware dependency selection, package layout, annotations, Repository/Port boundaries, persistence adapters, application transaction boundaries, optional distributed locks, Outbox/Inbox, and ArchUnit rules. |
+| Skill | Core role | Scope |
+|---|---|---|
+| `domain-architecture-workflow` | Default end-to-end coordinator; routes phases and produces `Domain Architecture Handoff`. | Language and framework neutral. |
+| `domain-modeling` | Produces `Domain Modeling Result` for business language, behavior, boundaries, and invariants. | Language and framework neutral. |
+| `domain-architecture-guidance` | Produces `Architecture Guidance Result` for architecture choices, dependency rules, CQRS, and validation. | Principles are language neutral; Java/Kotlin guidance is the most concrete. |
+| `using-jfoundry` | Produces `JFoundry Implementation Guidance Result` for dependencies, layout, Ports, persistence, transactions, exception boundaries, messaging, and tests. | Java and jfoundry only. |
 
-## Recommended Workflow
+## How To Use
 
-Use the plugin's `domain-architecture-workflow` capability as the general entry point:
+For end-to-end work, start with `domain-architecture-workflow`:
 
-1. Understand the business goal, actors, workflows, constraints, and uncertainty.
-2. Use `domain-modeling` for non-trivial business behavior before implementation.
-3. Use `domain-architecture-guidance` to decide whether DDD, Hexagonal, Onion, CQRS, ports/adapters, or simpler CRUD is appropriate.
-4. Use framework-specific guidance only after the domain and architecture assumptions are clear. Use `using-jfoundry` only for [jfoundry](https://github.com/xfoundries/jfoundry) projects.
-5. Verify the result with architecture tests, code review, or explicit risk notes when the implementation touches boundaries.
+```text
+requirements
+-> domain-architecture-workflow
+-> Domain Modeling Result
+-> Architecture Guidance Result
+-> optional JFoundry Implementation Guidance Result
+-> Domain Architecture Handoff
+```
 
-This plugin does not depend on any external workflow system. It can run alongside planning, TDD, code-review, or "superpowers"-style workflows: when another process workflow is active, use this plugin only for the domain and architecture decisions inside that process.
+`Domain Architecture Handoff` is the coordinator's composite result for the next planning, implementation, or review activity. It preserves specialist results and phase status without replacing them or requiring a fixed file format.
 
-## Scope
+### Standalone
 
-Primary targets:
+```text
+Use $domain-architecture-workflow for this business project.
+Business goal and known rules:
+Existing artifacts and constraints:
+JFoundry: yes | no | undecided
+Desired next activity:
+```
 
-- Java / Kotlin backend systems
-- C# / .NET backend systems
-- Go backend systems
-- Python backend systems
+For focused work, invoke `domain-modeling`, `domain-architecture-guidance`, or `using-jfoundry` directly.
 
-Conditional targets:
+### With A Process Companion
 
-- Dart / Flutter
-- Swift / iOS
-- Other client applications with substantial offline domain logic, sync workflows, local persistence boundaries, or complex business rules
+Superpowers, SpecKit, OpenSpec, and similar workflows are optional companions. They own their specification, planning, tasks, implementation, review, files, and commands; this plugin owns the domain and architecture results, optional jfoundry landing, and handoff.
 
-Do not use this plugin to force DDD, ports/adapters, CQRS, repositories, or layered projects into simple CRUD applications, thin mobile clients, or small scripts.
+```text
+Use <process companion> for the development process.
+Use $domain-architecture-workflow for domain and architecture decisions after
+requirements are understood and before dependent planning or tasks. Feed
+Domain Architecture Handoff into the companion's next activity.
+```
+
+If a blocker changes business meaning or architecture, return it to the companion-owned requirements or specification activity instead of guessing. See the [first-use guide](skills/domain-architecture-workflow/references/first-use.md) for the complete input, ownership, status, and return rules.
+
+## Scope And Limits
+
+- The core modeling and architecture methods are language and framework neutral, but implementation guidance is deepest for Java/Kotlin. C#/.NET, Go, and Python have mappings and examples with fewer integrations and templates; `using-jfoundry` is Java-only.
+- The primary target is business backend software. Client applications are a conditional fit when they contain substantial offline domain logic, synchronization, persistence boundaries, or complex rules.
+- Do not force DDD, Ports and Adapters, CQRS, repositories, or layered structures into simple CRUD applications, thin clients, or small scripts.
 
 ## Source Policy
 
@@ -63,7 +80,7 @@ The plugin distinguishes DDD modeling concepts from architecture style constrain
 This repository includes a marketplace manifest at `.agents/plugins/marketplace.json`, so it can be added as a local or Git marketplace:
 
 ```bash
-codex plugin marketplace add xfoundries/software-architecture-skills
+codex plugin marketplace add xfoundries/domain-architecture-skills
 codex plugin add domain-architecture@xfoundries
 ```
 
@@ -74,32 +91,7 @@ codex plugin marketplace add .
 codex plugin add domain-architecture@xfoundries
 ```
 
-The same shape works for compatible agents that read `.agents/plugins/marketplace.json`. The marketplace entry points at the repository root:
-
-```json
-{
-  "name": "xfoundries",
-  "interface": {
-    "displayName": "Domain Architecture"
-  },
-  "plugins": [
-    {
-      "name": "domain-architecture",
-      "source": {
-        "source": "url",
-        "url": "./"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    }
-  ]
-}
-```
-
-For a personal marketplace under `~/.agents/plugins`, you can also point `~/plugins/domain-architecture` at this repository and use a personal marketplace entry. The repo-local marketplace above is the preferred project-owned distribution shape.
+Compatible agents can use the same repo-owned [marketplace manifest](.agents/plugins/marketplace.json), which points at the plugin root.
 
 ### Claude Code
 
@@ -107,7 +99,7 @@ Claude Code can validate and install the same plugin source through its plugin s
 
 ```bash
 claude plugin validate .
-claude plugin marketplace add xfoundries/software-architecture-skills
+claude plugin marketplace add xfoundries/domain-architecture-skills
 claude plugin install domain-architecture@xfoundries
 ```
 
@@ -116,28 +108,6 @@ For local development from this checkout:
 ```bash
 claude plugin marketplace add .
 claude plugin install domain-architecture@xfoundries
-```
-
-### Raw skill compatibility
-
-Agents that do not support plugins can still consume the folders under `skills/` as plain `SKILL.md` skills. This is a compatibility fallback, not the preferred installation shape.
-
-## Usage Examples
-
-```text
-Use $domain-architecture-workflow to guide this order-management project from requirements to architecture decisions.
-```
-
-```text
-Use $domain-modeling to turn these billing requirements into commands, events, aggregates, invariants, and open questions.
-```
-
-```text
-Use $domain-architecture-guidance to review this Java service and tell me whether the aggregate boundaries and Hexagonal dependencies are justified.
-```
-
-```text
-Use $using-jfoundry to implement the confirmed model in a Java jfoundry project with Hexagonal Architecture and ArchUnit tests.
 ```
 
 ## Repository Layout
