@@ -22,7 +22,7 @@ At task classification, for project setup, modification, or framework-landing wo
 5. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
 6. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
 7. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
-8. Read `references/persistence-data-converters.md` before implementing `AggregateData`, `DataConverter`, MyBatis-Plus data objects, or MapStruct converters.
+8. Read `references/persistence-data-mappers.md` before implementing `AggregateData`, `DataMapper`, MyBatis-Plus data objects, or MapStruct mappers.
 9. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
 10. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
 11. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
@@ -40,11 +40,11 @@ At task classification, for project setup, modification, or framework-landing wo
 - In infrastructure modules, group adapters by technical shape before external-system name when that improves clarity, such as `persistence`, `query`, `client.<external-system>`, `messaging`, `cache`, and `file`. Use `query` as the neutral default for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology. Keep HTTP/API `*Request` and `*Response` DTOs in primary adapter packages; use application-owned `*Command` and `*Result` models for primary-port boundaries when that naming fits the project.
 - In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
 - Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/query/maintenance roles only when that distinction helps the project.
-- Keep persistence-owned optimistic-lock versions and managed ORM entities out of domain aggregates. When a selected adapter uses `AggregatePersistenceContext`, keep load and modify in one transaction; do not assume detached aggregate merge support.
+- Keep persistence-owned optimistic-lock versions and managed ORM entities out of domain aggregates. For tracked repositories, keep load and modify in one transaction; runtime integration injects `AggregatePersistenceContext`, so business constructors do not receive it. Do not assume detached aggregate merge support.
 - Treat jfoundry persistence base classes as optional implementation support, not as a DDD requirement. A custom adapter may implement the aggregate repository contract directly when that is clearer.
-- Use `MybatisPlusAggregateRepository` only when one `AggregateData` and one `BaseMapper` can fully store and restore the aggregate. For multi-table or composite persistence, extend `AbstractAggregateRepository` when its lifecycle and event-registration support is useful, then implement the complete aggregate `do*` operations in the business infrastructure adapter.
+- Use `MybatisPlusAggregateRepository` directly when one `AggregateData`, one `DataMapper`, and one `BaseMapper` fully store and restore the aggregate. When one MyBatis-Plus root Data anchors a multi-table aggregate, override complete `do*` operations and use its protected complete-operation helpers; keep aggregate restoration and dependent synchronization in the business adapter. Use `AbstractAggregateRepository` or a direct port implementation when no single MyBatis-Plus root Data exists or the helpers do not fit.
 - Do not override the public `add`, `modify`, `addAll`, `modifyAll`, `remove`, or `findById` methods of jfoundry repository bases. Their protected `do*` operations are the persistence extension points.
-- Keep persistence data converters infrastructure-local. Prefer MapStruct `@Mapper` interfaces with `INSTANCE`; keep `toEntity(...)` explicit and call aggregate `restore(...)`.
+- Keep persistence data mappers infrastructure-local. Prefer MapStruct `@Mapper` interfaces with `INSTANCE`; keep `toEntity(...)` explicit and call aggregate `restore(...)`.
 - Enable Outbox only for reliable publication to an external process or broker. Use local domain event dispatch when events stay in-process.
 - Enable Inbox only when a consumer must handle duplicate delivery safely.
 - Add ArchUnit tests early. They are part of the project skeleton, not a late cleanup.
@@ -97,7 +97,7 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 - Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
 - Read `references/distributed-locks.md` only when cross-instance coordination is required for the same resource.
 - Read `references/repository-and-ports.md` before modeling persistence, aggregate repositories, read models, or query ports.
-- Read `references/persistence-data-converters.md` before writing `DataConverter` implementations, persistence data objects, or MapStruct mapping rules.
+- Read `references/persistence-data-mappers.md` before writing `DataMapper` implementations, persistence data objects, composite aggregate adapters, or MapStruct mapping rules.
 - Read `references/outbox-inbox.md` before adding event externalization, broker adapters, Outbox tables, dispatchers, or consumer idempotency.
 - Read `references/testing.md` before adding or changing architecture tests.
 

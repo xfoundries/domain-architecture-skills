@@ -32,7 +32,7 @@ JFoundry Landing:
   Architecture annotations:
   Port ownership:
   Aggregate repositories / read-side ports:
-  Persistence converters / data mapping:
+  Persistence mappers / data mapping:
   Exception handling / boundary mapping:
   Outbox / Inbox / lock / broker decisions:
   Templates / placeholders:

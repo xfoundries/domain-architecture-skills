@@ -1,6 +1,6 @@
-# Persistence Data Converters
+# Persistence Data Mappers
 
-Use this reference when a business project implements jfoundry aggregate repositories with `AbstractAggregateRepository`, MyBatis-Plus, Jakarta Persistence, `AggregateData`, `DataConverter`, or MapStruct.
+Use this reference when a business project implements jfoundry aggregate repositories with `AbstractAggregateRepository`, MyBatis-Plus, Jakarta Persistence, `AggregateData`, `DataMapper`, or MapStruct.
 
 ## Choose The Repository Implementation Shape
 
@@ -9,11 +9,12 @@ one of these implementation shapes from the aggregate's actual persistence needs
 
 - Implement the repository contract directly when project-local code is clearer and jfoundry's
   lifecycle/event-registration support is not needed.
-- Extend `AbstractAggregateRepository<T, ID>` when one complete aggregate operation coordinates
-  multiple tables, mappers, stores, or persistence representations and the adapter should reuse
-  jfoundry's validation, batch, and event-registration lifecycle.
-- Extend `MybatisPlusAggregateRepository<T, ID, D, K>` only when one `AggregateData<K>` and one
-  `BaseMapper` can fully store and restore the aggregate.
+- Extend `MybatisPlusAggregateRepository<T, ID, D, K>` directly when one `AggregateData<K>`, one
+  `DataMapper`, and one `BaseMapper` fully store and restore the aggregate.
+- Extend the same MyBatis-Plus base and override complete `do*` operations when one root Data anchors
+  a multi-table aggregate and its protected complete-operation helpers fit.
+- Extend `AbstractAggregateRepository<T, ID>` when no single MyBatis-Plus root Data exists or a
+  complete aggregate operation coordinates other stores or persistence representations.
 
 `AbstractAggregateRepository` exposes protected `doFindById(...)`, `doAdd(...)`, `doModify(...)`,
 and `doRemove(...)` extension points. Treat its public lifecycle methods as framework-managed entry
@@ -31,16 +32,16 @@ successfully.
 - Convert the domain ID to the data ID in `toDataId(...)`.
 - Prefer MapStruct for `toData(...)`.
 - Keep `toEntity(...)` explicit and call the aggregate's `restore(...)` factory.
-- Do not make converters Spring Beans by default. Prefer MapStruct's default component model and expose `INSTANCE = Mappers.getMapper(...)`.
+- Do not make data mappers Spring Beans by default. Prefer MapStruct's default component model and expose `INSTANCE = Mappers.getMapper(...)`.
 
-## Converter Template
+## Data Mapper Template
 
 ```java
 @Mapper
-public interface OrderDataConverter
-        extends DataConverter<Order, OrderId, OrderData, String> {
+public interface OrderDataMapper
+        extends DataMapper<Order, OrderId, OrderData, String> {
 
-    OrderDataConverter INSTANCE = Mappers.getMapper(OrderDataConverter.class);
+    OrderDataMapper INSTANCE = Mappers.getMapper(OrderDataMapper.class);
 
     @Override
     @Mapping(target = "id", expression = "java(toDataId(entity.getId()))")
@@ -68,17 +69,17 @@ public interface OrderDataConverter
 }
 ```
 
-Repository adapters should hold a static converter reference:
+Repository adapters should hold a static data mapper reference:
 
 ```java
-private static final OrderDataConverter CONVERTER = OrderDataConverter.INSTANCE;
+private static final OrderDataMapper DATA_MAPPER = OrderDataMapper.INSTANCE;
 
 public final class OrderRepositoryImpl
         extends MybatisPlusAggregateRepository<Order, OrderId, OrderData, String>
         implements OrderRepository {
 
     public OrderRepositoryImpl(OrderMapper mapper) {
-        super(mapper, CONVERTER);
+        super(mapper, DATA_MAPPER);
     }
 }
 ```
@@ -91,34 +92,50 @@ An aggregate may be stored through a root record plus dependent records without 
 records into separate aggregates. Keep the complete operation in one business infrastructure
 adapter.
 
+When the aggregate has one MyBatis-Plus root Data, keep root mapping local and pass its two
+functions to the base. The root Data alone does not need to implement reverse aggregate mapping.
+
 **Sketch:**
 
 ```java
 public final class OrderRepositoryImpl
-        extends AbstractAggregateRepository<Order, OrderId>
+        extends MybatisPlusAggregateRepository<Order, OrderId, OrderData, String>
         implements OrderRepository {
+
+    private static final OrderRootDataMapper ROOT_DATA_MAPPER = new OrderRootDataMapper();
+
+    OrderRepositoryImpl(OrderMapper orderMapper, OrderLineMapper lineMapper) {
+        super(orderMapper,
+                ROOT_DATA_MAPPER::toData,
+                ROOT_DATA_MAPPER::toDataId,
+                OrderData.class);
+        this.lineMapper = lineMapper;
+    }
 
     @Override
     protected Order doFindById(OrderId id) {
-        // Load every persistence record required to restore one complete Order.
+        return loadAggregate(id, root -> restoreOrder(
+                root, lineMapper.selectByOrderId(root.getId())));
     }
 
     @Override
     protected void doAdd(Order order) {
-        // Insert the complete aggregate before returning.
+        insertAggregate(order, ROOT_DATA_MAPPER.toData(order), root -> insertLines(order));
     }
 
     @Override
     protected void doModify(Order order) {
-        // Check the root update result before synchronizing dependent records.
+        updateAggregate(order, ROOT_DATA_MAPPER.toData(order), root -> synchronizeLines(order));
     }
 
-    @Override
-    protected void doRemove(Order order) {
-        // Apply the project-selected cascade or explicit removal policy.
-    }
 }
 ```
+
+The default `doRemove` uses root-first deletion and therefore fits database cascades. The
+`deleteAggregate` callback runs only after the root conflict check and deletion; use it for
+post-root cleanup, not for child rows whose foreign keys require child-first deletion. When the
+project requires explicit child-first removal, implement a project-specific atomic delete strategy
+instead of forcing this helper.
 
 The plugin must not choose full replacement, differential updates, or append-only writes merely
 because an aggregate spans multiple tables. Derive that algorithm from whether members are
@@ -135,20 +152,21 @@ business code does not manage a scope. A tracked operation without an active tra
 modify/remove of an aggregate not loaded in the current transaction, fails fast. Detached aggregate
 merge is not supported.
 
-For one MyBatis-Plus Data object:
+For MyBatis-Plus root Data:
 
 - annotate the Data version with `@Version` and configure `OptimisticLockerInnerInterceptor`;
-- use `MybatisPlusVersionedAggregateRepository` only when one Data fully represents the aggregate;
-- keep version reads/writes behind `VersionedDataAccessor`;
-- for composite adapters, attach the root version on load/add, require it before modify/remove,
-  and replace it only after the complete aggregate operation succeeds;
-- include ID and the loaded version in remove predicates;
-- treat affected rows equal to zero as `ConflictException`.
+- pass the Data class to `MybatisPlusAggregateRepository` to enable metadata detection;
+- let the base track loaded versions, restore them before `updateById`, translate zero-row conflicts,
+  advance state after complete success, and delete with ID plus loaded version;
+- do not inject `AggregatePersistenceContext`, expose a version accessor, or manually read/write the
+  version in the business repository;
+- omit the Data class when the adapter intentionally does not use `@Version` tracking.
 
 For one JPA entity graph, `JpaAggregateRepository` and `JpaAggregateMapper` may be used. The mapper
 creates new entities, restores aggregates, converts IDs, and applies aggregate state to the managed
 entity loaded by `EntityManager.find`. The repository flushes add/modify/remove and translates
-`OptimisticLockException` to `ConflictException`; it does not call `merge`. Multiple independent
+`OptimisticLockException` to `ConflictException`; it does not call `merge`. Runtime integration
+injects the persistence context rather than business constructors. Multiple independent
 entities, repositories, or persistence technologies still require a business-owned composite
 adapter.
 
@@ -180,11 +198,11 @@ Do not blindly ignore all audit fields.
 
 - Ignore logical-delete fields and pure persistence fill fields when the domain aggregate does not own them.
 - Map audit fields when the domain model intentionally carries an audit snapshot through `AuditableAggregateRoot` or `AuditableEntity`.
-- Do not reintroduce persistence audit base classes into the domain model just to reduce converter code.
+- Do not reintroduce persistence audit base classes into the domain model just to reduce mapper code.
 
 ## Maven Notes
 
-jfoundry BOMs manage MapStruct versions, but business projects still own compiler annotation processor configuration. Put MapStruct and Lombok processors in the module that compiles the converter, usually infrastructure.
+jfoundry BOMs manage MapStruct versions, but business projects still own compiler annotation processor configuration. Put MapStruct and Lombok processors in the module that compiles the mapper, usually infrastructure.
 
 Use `-Amapstruct.unmappedTargetPolicy=ERROR` when the project is ready to fail fast on unmapped data fields.
 
