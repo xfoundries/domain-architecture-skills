@@ -29,6 +29,36 @@ The intended flow is:
 
 Mark only externally published events with `@Externalized`. Use `@MessageRouting` when topic or routing key must be explicit. `@MessageRouting` alone does not make an event externalized.
 
+## Choose The External Contract
+
+Use direct domain-event externalization only when that event is deliberately a stable public contract:
+
+```java
+@Externalized("orders.events.v1")
+@MessageRouting(topic = "orders.events.v1", key = "orderId")
+public final class OrderPlaced extends AbstractDomainEvent {
+    // Stable public event fields.
+}
+```
+
+When the internal domain event and public contract need different ownership or evolution, keep the domain event internal. Translate it at the application boundary and append the versioned integration event explicitly:
+
+```java
+OrderPlacedV1 integrationEvent = translator.translate(domainEvent);
+outboxTemplate.append(new OutboxAppendRequest(
+        eventId,
+        "orders.events.v1",
+        orderId,
+        "OrderPlacedV1",
+        integrationEvent,
+        occurredAt,
+        "Order",
+        orderId,
+        aggregateVersion));
+```
+
+`OutboxTemplate` uses the configured `PayloadSerializer` and `OutboxMessageStore` in the caller's transaction. It does not start a transaction, publish synchronously, or decide how a business event maps to an integration contract. Keep that translation in the business project, and do not make the domain model depend on an `integration-contracts` module.
+
 ## Starter Selection
 
 The Outbox/Inbox concepts are framework-neutral, but the runtime/starters documented here are currently Spring Boot-specific. For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, do not copy these starter snippets unless jfoundry provides a matching runtime adapter.
@@ -38,6 +68,8 @@ For Outbox with MyBatis-Plus storage:
 - Add `jfoundry-outbox-spring-boot-starter`.
 - Add `jfoundry-outbox-mybatis-plus-spring-boot-starter`.
 - Add one real broker starter, such as `jfoundry-messaging-kafka-spring-boot-starter`, when production dispatch is enabled.
+
+The Outbox starter auto-configures `OutboxTemplate` when `OutboxMessageStore` and `PayloadSerializer` beans are available. Non-Spring runtimes can construct the framework-neutral template directly.
 
 For JobRunr dispatching, add `jfoundry-outbox-jobrunr-spring-boot-starter` and set dispatcher mode accordingly.
 

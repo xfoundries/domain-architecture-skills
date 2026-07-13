@@ -101,6 +101,19 @@ Typical constraints:
 
 Do not introduce CQRS for symmetry alone. If the project has chosen CQRS, keep command and query responsibilities separated.
 
+## Domain Events And Integration Contracts
+
+Do not assume an internal domain event is automatically a suitable public integration contract.
+The two types may share business meaning while serving different ownership and evolution needs:
+
+- Direct externalization is reasonable when the event is deliberately designed, owned, and versioned as a stable public contract.
+- Otherwise translate the domain event at the application or infrastructure boundary into a versioned integration event.
+- Keep broker routing, serialization metadata, and consumer-specific payload concerns outside the domain model.
+- Write the integration event to Outbox in the same transaction as the business state when reliable cross-process publication is required.
+- Treat duplicate delivery as expected and use consumer idempotency when the handling effect must occur once per logical consumer.
+
+This is an integration-boundary decision, not a requirement that every domain event be published. It also does not make CQRS or Event Sourcing mandatory.
+
 ## Review Language
 
 Use precise wording:
