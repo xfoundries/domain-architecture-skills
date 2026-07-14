@@ -38,6 +38,10 @@ Do not put business rules or aggregate behavior in the runtime assembly module.
 - MyBatis-Plus applications must still register `OptimisticLockerInnerInterceptor`; jfoundry does
   not mutate an application-owned interceptor bean. JPA applications rely on their provider's
   `@Version` handling. Neither runtime path supports detached aggregate merge by default.
+- Spring class-based proxies cannot advise final classes or final methods. If a repository adapter
+  relies on Spring `@Repository` exception translation, transactions, or another advisor, keep the
+  adapter class and advised public lifecycle entry methods proxyable. Extend jfoundry repositories
+  through their protected `do*` operations instead of overriding public lifecycle methods.
 
 ## Distributed Locks
 
@@ -64,6 +68,8 @@ HTTP status and response shape are Web adapter concerns. Domain and application 
 - Use Outbox only when domain events must be reliably published outside the process.
 - Use Inbox only when duplicate message delivery must be handled idempotently.
 - Use one broker starter, such as Kafka, RabbitMQ, or RocketMQ, only when production dispatch actually targets that broker.
+- In a context or smoke test, assert that the selected `MessageSender` is the expected broker adapter
+  rather than the logging fallback; classpath presence alone does not prove the runtime wiring.
 
 Read `references/outbox-inbox.md` before adding Outbox or Inbox.
 

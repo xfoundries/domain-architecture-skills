@@ -111,7 +111,12 @@ The `using-jfoundry` skill routes exception selection, adapter translation, runt
 
 ## Annotation Placement
 
-Prefer package-level annotations when an entire package has one role. Use class-level annotations for incremental migration or mixed packages.
+Prefer package-level annotations when an entire package has one role. A package-level role applies
+to every type in that package, including records, DTOs, and nested types declared by a port. If a
+port package also owns input/output models or other non-port types, use type-level annotations on
+the port interfaces or move those models to a separate package. Use class-level annotations for
+incremental migration or any other mixed package; do not weaken the architecture rule to accept
+non-interface types as ports.
 
 For Hexagonal, add `package-info.java` files in role packages where useful:
 

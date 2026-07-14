@@ -51,7 +51,8 @@ Spring-specific starters belong in the runtime assembly module/package:
 - Spring Boot runtime module with MyBatis-Plus business persistence: `jfoundry-mybatis-plus-spring-boot-starter`
 - Spring Boot runtime module with JPA business persistence: `jfoundry-jpa-spring-boot-starter`
 - Local Spring domain event dispatch: `jfoundry-event-spring-boot-starter`
-- Messaging transport contracts and default logging sender: `jfoundry-messaging-spring-boot-starter`
+- Messaging transport contracts, Spring Boot JSON support, Jackson payload serialization, and the
+  default logging sender: `jfoundry-messaging-spring-boot-starter`
 - Kafka sender adapter: `jfoundry-messaging-kafka-spring-boot-starter`
 - RabbitMQ sender adapter: `jfoundry-messaging-rabbitmq-spring-boot-starter`
 - RocketMQ sender adapter: `jfoundry-messaging-rocketmq-spring-boot-starter`

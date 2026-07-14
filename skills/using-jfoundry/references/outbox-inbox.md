@@ -59,6 +59,12 @@ outboxTemplate.append(new OutboxAppendRequest(
 
 `OutboxTemplate` uses the configured `PayloadSerializer` and `OutboxMessageStore` in the caller's transaction. It does not start a transaction, publish synchronously, or decide how a business event maps to an integration contract. Keep that translation in the business project, and do not make the domain model depend on an `integration-contracts` module.
 
+Keep the wire payload independent of Java implementation types. The default Jackson serializer
+writes ordinary JSON without Jackson default-typing metadata or Java class names. Use the envelope's
+event type/version and the Outbox `payloadType` as stable contract identifiers; each consumer should
+deserialize into its own versioned contract. Do not rely on `@class`, collection implementation
+names, or values such as `java.math.BigDecimal` being embedded in JSON.
+
 ## Starter Selection
 
 The Outbox/Inbox concepts are framework-neutral, but the runtime/starters documented here are currently Spring Boot-specific. For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, do not copy these starter snippets unless jfoundry provides a matching runtime adapter.
@@ -71,11 +77,23 @@ For Outbox with MyBatis-Plus storage:
 
 The Outbox starter auto-configures `OutboxTemplate` when `OutboxMessageStore` and `PayloadSerializer` beans are available. Non-Spring runtimes can construct the framework-neutral template directly.
 
+The messaging starter transitively supplies Spring Boot's JSON starter, so a non-web consumer or
+batch application receives the default Jackson `ObjectMapper` and `PayloadSerializer` without
+adding a WebMVC or WebFlux starter. Do not add a web runtime only to make Outbox serialization
+work. A project-defined `ObjectMapper` or `PayloadSerializer` still takes precedence.
+
 For JobRunr dispatching, add `jfoundry-outbox-jobrunr-spring-boot-starter` and set dispatcher mode accordingly.
 
 ## MessageSender Rule
 
 Outbox does not imply a broker. The default logging sender is not a production publisher. If production Outbox dispatch is enabled, provide a real `MessageSender` through one broker starter or a custom adapter.
+
+For Spring Boot broker starters, verify the selected runtime bean rather than only checking the
+dependency graph. A context or smoke test should assert that `MessageSender` is the expected Kafka,
+RabbitMQ, or RocketMQ adapter and not the logging fallback. For Kafka, configure String key/value
+serializers because the jfoundry sender publishes the Outbox key and JSON body as strings. Keep
+listeners and automatic Outbox dispatch disabled by default in tests or partial local startup, then
+enable both explicitly in the integration profile that starts the broker.
 
 ## Inbox
 
