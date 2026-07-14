@@ -19,6 +19,12 @@ The Spring Boot runtime assembly module commonly contains:
 
 Do not put business rules or aggregate behavior in the runtime assembly module.
 
+jfoundry Spring Boot auto-configuration coordinates its transaction, domain-event, and
+distributed-lock advisors through Spring's canonical internal auto-proxy creator. It cooperates
+with a more capable creator registered by another Spring integration through Spring's standard
+escalation protocol. Business applications do not need to register a jfoundry-specific
+`AutoProxyCreator`.
+
 ## Transaction Boundaries
 
 - Choose a transaction boundary only for an application workflow that needs atomic persistence changes; a transaction is not mandatory for every application service.
