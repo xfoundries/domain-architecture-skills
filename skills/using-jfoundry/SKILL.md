@@ -1,6 +1,6 @@
 ---
 name: using-jfoundry
-description: Guide AI agents and developers when starting or modifying Java business projects that use the jfoundry framework. Use for Maven dependency selection, Hexagonal or Onion package layout, jMolecules/JFoundry architecture annotations, aggregate repository versus read-side port decisions, Outbox/Inbox integration, and ArchUnit test setup. Do not use for maintaining jfoundry internals.
+description: Guide AI agents and developers when starting or modifying Java business projects that use the jfoundry framework. Use for Maven dependency selection, Hexagonal or Onion package layout, jMolecules/JFoundry architecture annotations, aggregate repository versus read-side contract or port decisions, Outbox/Inbox integration, and ArchUnit test setup. Do not use for maintaining jfoundry internals.
 ---
 
 # Using JFoundry
@@ -21,7 +21,7 @@ At task classification, for project setup, modification, or framework-landing wo
 4. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
 5. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
 6. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
-7. Read `references/repository-and-ports.md` before creating aggregate repositories, read-side ports, query ports, lookup ports, read models, or maintenance ports.
+7. Read `references/repository-and-read-contracts.md` before creating aggregate repositories, read-side contracts or ports, query contracts, lookup contracts, read models, or maintenance contracts.
 8. Read `references/persistence-data-mappers.md` before implementing `AggregateData`, `DataMapper`, MyBatis-Plus data objects, or MapStruct mappers.
 9. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
 10. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
@@ -33,13 +33,13 @@ At task classification, for project setup, modification, or framework-landing wo
 
 - Keep domain code free of Spring, MyBatis, persistence models, message broker clients, and framework lifecycle APIs.
 - Model business behavior in the domain when rules and invariants are meaningful; use simpler CRUD or transaction scripts for low-complexity areas.
-- For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-port ownership, and read-side assumptions before coding; keep open domain questions visible.
+- For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-dependency ownership, and read-side assumptions before coding; keep open domain questions visible.
 - Put use case orchestration and transaction-facing workflow in the application layer.
-- Express outbound needs as secondary ports. Put each port near the core code that owns the need: application workflow ports in application modules, narrow domain-decision ports in domain modules. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in infrastructure adapters.
+- Express outbound needs in the vocabulary of the selected architecture. In Hexagonal projects, use secondary ports owned near the application or domain consumer. In Onion projects, define responsibility-named inner-ring contracts only where dependency inversion is useful; do not require `*Port` or `*Adapter` suffixes. Put MyBatis, JPA, Redis, HTTP clients, MQ clients, and other technology details in the outer infrastructure implementation.
 - Use jfoundry's compact domain/application exception model; do not create a generic `BusinessException` hierarchy. Read `references/exception-handling.md` when selecting exceptions, translating failures, or mapping them at a runtime boundary.
 - In infrastructure modules, group adapters by technical shape before external-system name when that improves clarity, such as `persistence`, `query`, `client.<external-system>`, `messaging`, `cache`, and `file`. Use `query` as the neutral default for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology. Keep HTTP/API `*Request` and `*Response` DTOs in primary adapter packages; use application-owned `*Command` and `*Result` models for primary-port boundaries when that naming fits the project.
-- In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. In Onion projects, outer infrastructure/web/messaging code should call application services, not persistence or client adapters directly.
-- Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, prefer read-side ports and split them into lookup/query/maintenance roles only when that distinction helps the project.
+- In jfoundry Hexagonal projects, primary adapters such as controllers, message listeners, CLI commands, and schedulers must call primary ports or application services, not secondary adapters directly. Onion itself permits an outer ring to call any inner ring; when a DDD/CQRS project selects an application boundary, document and enforce the stronger project policy that web and messaging code enter through that boundary instead of calling persistence or client implementations.
+- Use aggregate repositories for aggregate lifecycle and command-side aggregate loading. For non-aggregate reads, define application-owned read contracts only where useful and name them by business capability and responsibility. Use Hexagonal port terminology only in Hexagonal projects; split lookup, query, and maintenance responsibilities only when their result shapes or change reasons diverge.
 - Keep persistence-owned optimistic-lock versions and managed ORM entities out of domain aggregates. For tracked repositories, keep load and modify in one transaction; runtime integration injects `AggregatePersistenceContext`, so business constructors do not receive it. Do not assume detached aggregate merge support.
 - Treat jfoundry persistence base classes as optional implementation support, not as a DDD requirement. A custom adapter may implement the aggregate repository contract directly when that is clearer.
 - Use `MybatisPlusAggregateRepository` directly when one `AggregateData`, one `DataMapper`, and one `BaseMapper` fully store and restore the aggregate. When one MyBatis-Plus root Data anchors a multi-table aggregate, override complete `do*` operations and use its protected complete-operation helpers; keep aggregate restoration and dependent synchronization in the business adapter. Use `AbstractAggregateRepository` or a direct port implementation when no single MyBatis-Plus root Data exists or the helpers do not fit.
@@ -96,7 +96,7 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 - Read `references/dependencies.md` for starter selection and Maven snippets.
 - Read `references/spring-runtime.md` for Spring Framework / Spring Boot dependency selection, Spring WebMVC exception mapping, and Spring runtime wiring rules.
 - Read `references/distributed-locks.md` only when cross-instance coordination is required for the same resource.
-- Read `references/repository-and-ports.md` before modeling persistence, aggregate repositories, read models, or query ports.
+- Read `references/repository-and-read-contracts.md` before modeling persistence, aggregate repositories, read models, or read-side contracts and ports.
 - Read `references/persistence-data-mappers.md` before writing `DataMapper` implementations, persistence data objects, composite aggregate adapters, or MapStruct mapping rules.
 - Read `references/outbox-inbox.md` before adding event externalization, broker adapters, Outbox tables, dispatchers, or consumer idempotency.
 - Read `references/testing.md` before adding or changing architecture tests.

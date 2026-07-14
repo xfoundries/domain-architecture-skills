@@ -31,7 +31,7 @@ JFoundry Landing:
   Package roles / dependency direction:
   Architecture annotations:
   Port ownership:
-  Aggregate repositories / read-side ports:
+  Aggregate repositories / read-side contracts or ports:
   Persistence mappers / data mapping:
   Exception handling / boundary mapping:
   Outbox / Inbox / lock / broker decisions:

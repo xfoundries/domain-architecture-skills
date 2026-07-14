@@ -48,6 +48,8 @@ Desired next activity:
 
 其中的架构测试模板使用 ArchUnit 原生 `ArchTests`。聚合 Repository 保持独立的 DDD 身份：Hexagonal 项目可以同时把它表达为 Secondary Port，而无需移出 `domain.repository`；Onion 项目则通过内环契约与基础设施环实现表达同一依赖倒置关系。
 
+插件会区分命名规则的来源：Onion 不继承 Hexagonal 的 Primary/Secondary Port 或 Adapter 角色。`Reader`、`Store`、`Finder`、`Provider` 等名称可以作为按职责表达的项目约定，但不是 DDD、Onion 或 JFoundry 官方模式；命名仍应首先来自通用语言。
+
 其中的可靠消息指导会区分版本化集成契约与内部领域事件，要求使用不携带 Java 类型元数据的可移植 JSON，并在运行时验证所选 broker adapter 确实优先于 logging fallback。
 
 如果是否使用 jfoundry 尚未决定，框架中立的 Domain Modeling 和 Architecture Guidance 会继续进行，不调用 `using-jfoundry`。只有后续框架相关活动实质依赖这一选择时，工作流才会询问。

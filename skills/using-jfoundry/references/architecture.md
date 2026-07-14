@@ -20,6 +20,12 @@ infrastructure -> application -> domain
 
 In Onion Simple, web/controllers are infrastructure concerns because delivery mechanisms sit in the outer ring. In Hexagonal, this skill normally separates primary adapters into `web` or `interface` and secondary adapters into `infrastructure` for clearer port/adapter roles.
 
+Onion Architecture has no Primary/Secondary Port or Adapter taxonomy and no official class-name
+suffix convention. Its rings and inward dependency direction are architectural roles; class and
+interface names should first follow DDD ubiquitous language, then their application, CQRS, or
+technical responsibility. An inner-ring interface implemented by infrastructure is a dependency
+contract, but it need not be named `*Port`, and its implementation need not be named `*Adapter`.
+
 For simple CRUD or another confirmed style, preserve the selected boundaries and do not force a Hexagonal or Onion template merely because those templates are bundled. Do not mix Hexagonal and Onion annotations in the same ArchUnit analysis scope.
 
 ## Hexagonal Roles
@@ -31,6 +37,11 @@ For general Hexagonal semantics, primary/secondary port direction, and applicati
 - `@PrimaryAdapter`: marks inbound drivers such as REST controllers, message listeners, CLI commands, schedulers, or batch triggers.
 - `@SecondaryPort`: marks outbound interfaces owned by the consumer. Put application-owned ports under application `port.out`; put only narrow domain-policy ports under domain `port.out`.
 - `@SecondaryAdapter`: marks implementations of secondary ports, such as MyBatis/JPA persistence, Redis, HTTP clients, broker senders, file storage, or external SDK adapters.
+
+These annotations define Hexagonal roles; they do not impose suffixes. Prefer a domain-first name
+such as `ApprovedExpenseAmountReader` over a generic `MonthlyApprovedAmountPort` when the former
+describes the capability more accurately. Use `*UseCase` for a single application operation when it
+helps, not as a universal name for every inbound interface.
 
 An aggregate repository has an independent DDD role. In a Hexagonal project it may also be marked
 `@SecondaryPort`, while remaining under the domain repository package. Do not duplicate it as an
@@ -73,9 +84,12 @@ PACKAGE_NAME
   domain
     port.out        # optional: narrow ports consumed by domain services or policies
   application
-    port.in
-    port.out        # workflow/read ports consumed by application services
-    service
+    <capability>
+      command       # optional CQRS organization
+      query         # optional CQRS organization
+      port.in
+      port.out      # workflow/read ports consumed by application services
+      service
   web               # or interface for non-HTTP-heavy inbound surfaces
     <feature>
       request       # HTTP/API DTOs, adapter-local
@@ -103,9 +117,14 @@ For Spring projects, runtime configuration includes Spring `@Configuration`, `@C
 
 For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
 
+Within a ring, prefer business capability as the first organization axis. If the project uses CQRS,
+place `command` and `query` below the capability they serve instead of creating peer top-level
+`command`, `query`, `port`, and `service` taxonomies. Package annotations work well for homogeneous
+role packages; use type annotations when a capability package intentionally contains mixed roles.
+
 ## Exception Boundaries
 
-Use jfoundry's compact domain/application exception model and do not create a generic `BusinessException` hierarchy. Domain code must not depend on application exceptions or HTTP concepts. Infrastructure adapters translate technical failures at the port boundary they own while preserving the cause; do not indiscriminately wrap domain failures.
+Use jfoundry's compact domain/application exception model and do not create a generic `BusinessException` hierarchy. Domain code must not depend on application exceptions or HTTP concepts. Infrastructure implementations translate technical failures at the outbound contract boundary they own while preserving the cause; do not indiscriminately wrap domain failures.
 
 The `using-jfoundry` skill routes exception selection, adapter translation, runtime mapping, and testing decisions to `references/exception-handling.md`. Read that reference instead of duplicating its decision table here.
 
@@ -155,7 +174,7 @@ package PACKAGE_NAME.infrastructure;
 ## Do Not
 
 - Do not put controllers, schedulers, or message listeners in the application package.
-- Do not let controllers call repositories, mappers, secondary ports, or secondary adapters directly.
+- In Hexagonal projects, do not let controllers call repositories, mappers, secondary ports, or secondary adapters directly. In Onion projects, enforce an application-service entry boundary only when the project's DDD, CQRS, Layered, or local policy selects it; Onion's inward dependency rule alone does not require that call path.
 - Do not put MyBatis `Mapper`, `Wrapper`, `Page`, `IPage`, Spring Data repositories, or JPA specifications in domain/application signatures.
 - Do not create one interface for every class. Create ports for real boundaries and outbound needs.
 - Do not enable CQRS only for symmetry. Use it when command and query models actually diverge.

@@ -1,6 +1,11 @@
-# Repository And Port Guidance
+# Repository And Read-side Contract Guidance
 
-This guide uses `LookupPort`, `QueryPort`, and `MaintenancePort` as neutral read-side categories and suffixes. They are not mandatory DDD, Hexagonal Architecture, or CQRS terms. `ReadModelPort` is reasonable when the project explicitly uses read-model terminology or CQRS-style read models, but it should not be the default name for ordinary query adapters. A business project may use established names such as `ReadPort`, `Finder`, `Gateway`, `Resolver`, or `Scanner` when the responsibility is clear.
+This guide distinguishes aggregate repositories from non-aggregate read and maintenance contracts.
+The responsibility categories are architecture-neutral; the `*Port` suffix is not. In Hexagonal
+projects a read contract may be a secondary port, while Onion projects should normally name the same
+inner-ring contract from domain language and its actual responsibility, such as `Finder`, `Reader`,
+`Gateway`, `Resolver`, `Store`, or `Scanner`. These suffixes are project vocabulary, not mandatory
+DDD, Onion, Hexagonal, or CQRS terms.
 
 ## Aggregate Repository
 
@@ -20,9 +25,9 @@ be a `@SecondaryAdapter`. In Onion it is an inner-ring contract implemented by t
 ring. Do not duplicate the repository as an application `port.out` interface merely to satisfy a
 package convention.
 
-## LookupPort
+## Lookup Contracts
 
-Consider a lookup-style read port when core code needs context for a workflow or domain decision but will not modify the loaded object. `LookupPort` is the recommended suffix when the project has no existing name:
+Consider a lookup-style read contract when core code needs context for a workflow or domain decision but will not modify the loaded object:
 
 - Tenant, environment, account, or application key lookup.
 - Existence checks for related objects.
@@ -35,19 +40,22 @@ Place the port near the consumer:
 - Application workflow/read context belongs in the application module.
 - Domain-decision context may belong in the domain module, but keep it narrow and domain-named.
 - Avoid placing broad list, page, reporting, or UI-shaped lookup ports in the domain module.
-- In domain modules, prefer names that describe the external fact or policy input over generic `*LookupPort` names.
+- Prefer names that describe the external fact or policy input over generic `*LookupPort` names, especially in the domain module and in Onion projects.
 
-## QueryPort / ReadModelPort
+## Query And Read-Model Contracts
 
-Consider a query port for query use cases, page views, dashboards, reports, list screens, projections, and read shapes that differ from write aggregates. `QueryPort` is the neutral default suffix for ordinary business systems. `ReadModelPort` is appropriate when the project intentionally calls those outputs read models, especially when query shapes are explicitly separate from write aggregates.
+Consider an application-owned query contract for query use cases, page views, dashboards, reports,
+list screens, projections, and read shapes that differ from write aggregates. Name it by the business
+view and responsibility, for example `ExpenseClaimViewReader`. `ReadModel` or `Projection` is
+appropriate when the project intentionally uses that CQRS vocabulary.
 
 CQRS is useful when commands and reads have different models, performance needs, or consistency expectations. Do not introduce CQRS just because a method is read-only.
 
-`QueryPort` and `ReadModelPort` are application-owned read-side contracts by default. Do not place page, report, dashboard, or UI-shaped read ports in the domain module.
+These are application-owned read-side contracts by default. Do not place page, report, dashboard, or UI-shaped read contracts in the domain module.
 
-## MaintenancePort
+## Maintenance Contracts
 
-Consider a maintenance-style port for technical scanning and background maintenance. `MaintenancePort` is a JFoundry recommendation, not a widely standardized suffix:
+Consider a maintenance-style contract for technical scanning and background maintenance. Prefer a responsibility such as `Scanner`, `CleanupCandidates`, or `RetryCandidates` over a generic `MaintenancePort` suffix:
 
 - Find timed-out processing records.
 - Find expired IDs to clean up.
@@ -61,15 +69,15 @@ When replacing Active Record, MyBatis-Plus `IService`, generic `Wrapper`, or spe
 
 1. Ask whether the query exists to modify an aggregate.
 2. If yes, load by aggregate ID or stable business identity when possible.
-3. If the result prepares workflow context, prefer an application-owned lookup-style read port such as `LookupPort`.
-4. If the result serves UI, reporting, list, or page reads, prefer a query/read-side port such as `QueryPort`; use `ReadModelPort` only when read-model terminology is intentional.
-5. If the result serves background scan, cleanup, or repair, prefer a maintenance-style port such as `MaintenancePort` or `Scanner`.
-6. If a domain rule needs an external fact, create a narrow domain-facing secondary port instead of reusing a broad application lookup port.
+3. If the result prepares workflow context, prefer an application-owned lookup contract named for the fact it supplies.
+4. If the result serves UI, reporting, list, or page reads, prefer a query/read-side contract named for the business view; use `ReadModel` or `Projection` only when that terminology is intentional.
+5. If the result serves background scan, cleanup, or repair, prefer a responsibility such as `Scanner` or `CleanupCandidates`.
+6. If a domain rule needs an external fact, create a narrow domain-facing contract instead of reusing a broad application query contract. In Hexagonal Architecture this contract is a secondary port; in Onion it is an inner-ring dependency contract.
 7. If one old method serves commands and queries, split it.
 
 ## Gradual Adoption
 
-Small projects may start with one read-side port, such as `OrderQueryPort` or `OrderReadPort`, alongside aggregate repositories. Split lookup, query/read-model, and maintenance responsibilities later when query purposes, result shapes, or change reasons diverge.
+Small projects may start with one read-side contract, such as `OrderViews` or `OrderViewReader`, alongside aggregate repositories. Split lookup, query/read-model, and maintenance responsibilities later when query purposes, result shapes, or change reasons diverge.
 
 Do not split ports for naming symmetry. Split when it clarifies use-case responsibility, protects aggregate repositories from generic queries, or isolates infrastructure-specific read capabilities.
 

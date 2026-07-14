@@ -28,6 +28,13 @@ For Onion:
 static final ArchTests jfoundryRules = JFoundryRules.onionSimple();
 ```
 
+Primary architecture entrypoints fail when the analyzed scope contains no matching architecture
+annotation. Declare the selected Hexagonal roles or Onion rings before relying on the dependency
+rules; otherwise the test is intentionally rejected instead of passing as an empty no-op. This
+guard requires at least one selected-style marker. A complete application should still express all
+roles or rings justified by its chosen structure, while a deliberately partial analysis scope does
+not need to manufacture absent roles.
+
 These entrypoints return ArchUnit `ArchTests`. Do not declare `@ArchTest ArchRule[]` fields;
 ArchUnit's JUnit 5 engine does not treat an array as a rule collection.
 

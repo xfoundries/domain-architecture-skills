@@ -84,9 +84,9 @@ Use these compact scenarios to review routing and result protocols. Each scenari
 
 ## Scenario 11: JFoundry Exception Boundary
 
-**Input:** A jfoundry Spring MVC service calls a remote adapter through an application-owned secondary port. The adapter can return expected absence or business rejection, throw a known timeout, or expose domain rule and lifecycle failures.
+**Input:** A jfoundry Spring MVC service calls a remote infrastructure implementation through an application-owned outbound contract. The implementation can return expected absence or business rejection, throw a known timeout, or expose domain rule and lifecycle failures.
 
-**Expected:** JFoundry Implementation Guidance returns a `completed` landing backed by the exception and Spring runtime references. Expected remote `404` or business rejection is represented in the port result and interpreted by the application or domain; a known timeout becomes `ExternalAccessException` with its cause preserved. Spring maps `DomainRuleViolationException` to `422` and `DomainStateException` to `409`, while client responses keep raw external details private.
+**Expected:** JFoundry Implementation Guidance returns a `completed` landing backed by the exception and Spring runtime references. Expected remote `404` or business rejection is represented in the outbound contract result and interpreted by the application or domain; a known timeout becomes `ExternalAccessException` with its cause preserved. Hexagonal projects may express the boundary as a secondary port and adapter, while Onion projects keep responsibility-first contract names. Spring maps `DomainRuleViolationException` to `422` and `DomainStateException` to `409`, while client responses keep raw external details private.
 
 **Prohibited:** Mapping every non-2xx response to `ExternalAccessException`, making domain code depend on application exceptions, mapping `DomainRuleViolationException` to `409`, or exposing raw external details.
 
@@ -129,3 +129,11 @@ Use these compact scenarios to review routing and result protocols. Each scenari
 **Expected:** Complete the applicable framework-neutral phases without invoking `using-jfoundry`. Record jfoundry as a pending optional landing in the `Domain Architecture Handoff`; do not ask for a framework choice until a framework-specific next activity materially requires it.
 
 **Prohibited:** Marking Domain Modeling or Architecture Guidance `needs-input`, invoking `using-jfoundry`, or forcing a jfoundry decision solely because the framework choice is undecided.
+
+## Scenario 17: DDD-first Naming In Onion
+
+**Input:** An expense-approval project has selected DDD, Onion Simple, and CQRS. It needs names for a query-view reader, an approved-amount lookup, their MyBatis implementations, and a payment projection writer.
+
+**Expected:** Start from the bounded context's ubiquitous language and actual responsibilities. Names such as `ExpenseClaimViewReader`, `ApprovedExpenseAmountReader`, and `PaymentStatusProjectionStore` may be recommended as project-local Java conventions, with `Mybatis` added only to infrastructure implementations. Preserve `ExpenseClaimRepository` as a DDD aggregate Repository and state that `Reader` and `Store` are not official DDD, Onion, or jfoundry patterns.
+
+**Prohibited:** Renaming every dependency to `*Port`, every implementation to `*Adapter`, presenting `Reader` or `Store` as an Onion standard, or allowing architecture suffixes to replace domain language.

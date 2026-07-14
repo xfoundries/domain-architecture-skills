@@ -104,6 +104,12 @@ Avoid treating every ring as a physical project unless the codebase benefits fro
 
 In Onion Architecture, infrastructure belongs outside the domain core. Domain model code should not depend on persistence frameworks, web frameworks, messaging frameworks, or adapter implementations.
 
+Onion Architecture does not supply Primary/Secondary Port or Adapter roles or mandatory class-name
+suffixes. Let DDD ubiquitous language name domain types, let application types describe business
+actions and orchestration responsibilities, and let infrastructure types add technology names only
+where they identify the implementation. An inner-ring interface implemented by infrastructure is a
+dependency-inversion contract; `*Port` is optional project vocabulary, not an Onion requirement.
+
 ### Hexagonal Architecture / Ports and Adapters
 
 Use when the domain/application needs to be isolated from delivery mechanisms and external systems. Model primary adapters as inbound drivers and secondary adapters as outbound integrations.

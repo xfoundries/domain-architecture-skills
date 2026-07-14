@@ -61,6 +61,16 @@ Typical constraints:
 - Infrastructure depends on inner rings and implements outer concerns.
 - Persistence, web, messaging, serialization, and dependency injection details stay outside the domain model unless the project intentionally trades purity for framework integration.
 
+Onion Architecture does not define Primary/Secondary Port or Adapter roles, and it does not prescribe
+`*Port`, `*Adapter`, or `*UseCase` class-name suffixes. Inner rings may define interfaces that outer
+rings implement, but name those interfaces from domain language and their actual responsibility.
+Calling such an interface a port is a Hexagonal or project-local interpretation, not an Onion rule.
+
+The foundational Onion dependency rule also allows an outer ring to call any inner ring. Requiring
+controllers or message consumers to enter only through application services can be a useful DDD,
+CQRS, Layered, or project-local policy, but do not attribute that stronger call-path rule to Onion
+Architecture itself.
+
 Do not call this "overengineering" when the project has intentionally chosen Onion Architecture for boundary protection.
 
 ## Hexagonal Architecture / Ports and Adapters

@@ -4,14 +4,14 @@ PACKAGE_NAME
 ├── domain
 │   ├── model
 │   ├── event
+│   ├── policy
 │   ├── service
-│   ├── port
 │   └── repository
 ├── application
-│   ├── command
-│   ├── query
-│   ├── port
-│   └── service
+│   ├── <capability-one>
+│   │   ├── command
+│   │   └── query
+│   └── <capability-two>
 └── infrastructure
     ├── web
     │   └── feature
@@ -32,8 +32,11 @@ PACKAGE_NAME
 Rules:
 - dependencies point inward toward the domain.
 - domain does not depend on application or infrastructure.
-- application orchestrates use cases and may depend on domain plus application-owned outbound ports.
-- domain may define narrow outbound ports for external facts needed by domain policies/services.
+- application orchestrates business use cases and may depend on domain plus responsibility-named application contracts.
+- domain may define narrow dependency contracts for external facts needed by domain policies/services.
+- Onion has no Primary/Secondary Port or Adapter roles and requires no Port, Adapter, or UseCase suffixes.
+- within each ring, organize by business capability first. If CQRS is selected, command/query packages belong below the capability instead of forming peer axes alongside port/service packages.
+- name domain types from the ubiquitous language, application types from business actions and orchestration responsibilities, and infrastructure implementations from capability plus technology where useful.
 - infrastructure implements outer-ring concerns such as web delivery, persistence, query adapters, messaging, clients, file/cache adapters, schedulers, and framework details.
 - group infrastructure by technical shape first and business feature or external system second.
 - in Onion Simple, web belongs under infrastructure because delivery mechanisms are outer-ring concerns. If a separate runtime assembly package/module exists, keep global runtime assembly, component scanning, and bean wiring there; keep only adapter-local configuration in infrastructure/config. The package name boot is common for Spring Boot projects but is not required for other runtimes.
