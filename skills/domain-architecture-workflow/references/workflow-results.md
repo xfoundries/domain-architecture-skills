@@ -80,6 +80,7 @@ Produce one composite handoff containing:
 - governing constraints;
 - open questions, including blockers;
 - the framework landing, or why none applies;
+- the application runtime integration policy when a runtime decision makes it relevant;
 - the recommended next activity.
 
 Keep distinctions explicit among domain-modeling decisions, architecture-style constraints, framework conventions, heuristics, and project policies.

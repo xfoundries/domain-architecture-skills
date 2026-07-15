@@ -27,7 +27,9 @@ package convention.
 
 ## Lookup Contracts
 
-Consider a lookup-style read contract when core code needs context for a workflow or domain decision but will not modify the loaded object:
+Consider a lookup-style read contract when core code needs a fact for command workflow context or a
+domain decision but will not modify the loaded object. This is command-side supporting input, not a
+CQRS query-side view merely because it is read-only:
 
 - Tenant, environment, account, or application key lookup.
 - Existence checks for related objects.
@@ -69,6 +71,11 @@ secondary-direction equivalent). In Onion it is an inner-ring dependency contrac
 `projection.<feature>` is an available technical package shape for these flows, not a universal
 CQRS package. It does not imply Event Sourcing: an ordinary event or state-change notification may
 drive the update.
+
+When technical grouping improves navigation, use `persistence.<aggregate>` for aggregate lifecycle
+storage, `lookup.<feature>` for command-side fact reads, `query.<feature>` for caller-facing
+read-only views, and `projection.<feature>` for event/state-change materialization. These are
+optional project conventions, not architecture rules: do not create a category merely for symmetry.
 
 ## Maintenance Contracts
 

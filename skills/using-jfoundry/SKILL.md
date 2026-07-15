@@ -17,21 +17,23 @@ At task classification, for project setup, modification, or framework-landing wo
 
 1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
 2. Resolve one primary architecture style from a confirmed `Architecture Guidance Result`, project evidence, established conventions, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. Return `needs-input` only when a missing choice blocks responsible landing. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
-3. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
-4. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
-5. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
-6. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
-7. Read `references/repository-and-read-contracts.md` before creating aggregate repositories, read-side contracts or ports, query contracts, lookup contracts, read models, or maintenance contracts.
-8. Read `references/persistence-data-mappers.md` before implementing `AggregateData`, `DataMapper`, MyBatis-Plus data objects, or MapStruct mappers.
-9. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
-10. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
-11. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
-12. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
-13. Complete the JFoundry Implementation Guidance Result with the selected artifacts, constraints, open questions, and verification commands.
+3. When a runtime is selected, record the application runtime integration policy: framework-neutral contracts only, selected-runtime orchestration support at declared application boundaries, or a documented hybrid. Domain code remains runtime-free in every option. Do not block framework-neutral work while the runtime is undecided.
+4. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
+5. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
+6. Read `references/architecture.md` and copy the matching package structure from `assets/templates/structure/`.
+7. Copy one architecture test template from `assets/templates/java/`, replace `PACKAGE_NAME`, and add it under the business project's test source set.
+8. Read `references/repository-and-read-contracts.md` before creating aggregate repositories, read-side contracts or ports, query contracts, lookup contracts, read models, or maintenance contracts.
+9. Read `references/persistence-data-mappers.md` before implementing `AggregateData`, `DataMapper`, MyBatis-Plus data objects, or MapStruct mappers.
+10. Read `references/spring-runtime.md` when the selected runtime is Spring Framework or Spring Boot.
+11. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
+12. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
+13. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
+14. Complete the JFoundry Implementation Guidance Result with the selected artifacts, constraints, open questions, and verification commands.
 
 ## Core Rules
 
 - Keep domain code free of Spring, MyBatis, persistence models, message broker clients, and framework lifecycle APIs.
+- Application code should usually prefer jfoundry's framework-neutral transaction, lock, and messaging contracts, but a selected runtime may be used directly for an application-owned orchestration boundary when an additional abstraction adds no value. Do not let HTTP, ORM, mapper, broker-record, or client-SDK types leak into application code; keep those in adapters or infrastructure.
 - Model business behavior in the domain when rules and invariants are meaningful; use simpler CRUD or transaction scripts for low-complexity areas.
 - For non-trivial domain behavior, confirm aggregate, command, invariant, event, repository, outbound-dependency ownership, and read-side assumptions before coding; keep open domain questions visible.
 - Put use case orchestration and transaction-facing workflow in the application layer.

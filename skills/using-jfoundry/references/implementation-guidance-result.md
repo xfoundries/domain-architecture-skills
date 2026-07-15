@@ -24,6 +24,7 @@ JFoundry Landing:
   Java version:
   JFoundry version:
   Runtime choice:
+  Application runtime integration policy:
   Project / Maven module shape:
   Primary architecture style:
   BOM / starters:
@@ -53,3 +54,10 @@ The specialist owns the `JFoundry Landing` payload. Select its fields from the c
 - Return to architecture guidance when a jfoundry layout or convention conflicts with the confirmed architecture. Preserve the architecture result while the conflict is resolved.
 
 Optional integrations are absent unless the use case justifies them. Do not add distributed locks, Outbox, Inbox, broker integration, or external messaging merely to complete the payload. Use the detailed dependency, architecture, persistence, repository/port, runtime, and integration references for selection rules instead of duplicating them here.
+
+When a runtime is selected, record whether application code uses only framework-neutral jfoundry
+contracts, may directly use selected-runtime orchestration support at declared application
+boundaries, or follows a project-specific hybrid. Record that domain code remains free of runtime
+and technology APIs, and name delivery, ORM, mapper, broker-record, cache-client, or SDK types
+that remain outside application. Do not make this field block framework-neutral architecture work
+when the runtime is undecided.

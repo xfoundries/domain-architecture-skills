@@ -58,6 +58,19 @@ Typical constraints:
 
 Controller-to-repository can be acceptable in a simple CRUD style, but in a project that explicitly enforces layered boundaries it is usually a violation.
 
+## Runtime Integration By Layer
+
+Keep the domain model strictly free of runtime frameworks and technical APIs such as Spring,
+ORMs, HTTP, broker clients, cache clients, and serialization libraries. Application code has a
+different trade-off: it should usually prefer framework-neutral contracts, but may deliberately use
+runtime support for application-owned orchestration concerns such as transaction boundaries,
+idempotency, distributed locks, or scheduling when an extra abstraction would add no real value.
+
+That allowance does not make delivery or persistence technology an application concern. Keep
+`HttpServletRequest`, HTTP responses, ORM mappers/entities, database sessions, broker records, and
+client SDK types in adapters or infrastructure. Treat a direct runtime dependency in application as
+a project/runtime decision and keep it out of the domain model.
+
 ## Onion Architecture
 
 Core rule:
@@ -107,6 +120,7 @@ Typical constraints:
 - Inside/core code should not depend on adapter implementations.
 - In non-trivial applications, organizing by business capability before port direction usually keeps use cases and their models cohesive. This is an implementation recommendation, not a package structure mandated by Hexagonal Architecture.
 - When direction packages are used, a primary port should not depend on models owned by `port.out`, and a secondary port should not depend on models owned by `port.in`. Put shared application models in a neutral capability package.
+- For a command-oriented use case, a business-named `*UseCase` primary port is usually the clearest inbound contract. Its command handler or application service implements that contract; a primary adapter calls the use case directly.
 
 Ports should represent meaningful boundaries. Avoid creating an interface for every class when no boundary value exists.
 
@@ -126,6 +140,19 @@ Typical constraints:
 - Write models should protect invariants.
 - CQRS does not imply Event Sourcing.
 
+A `CommandDispatcher` or command bus is not the default CQRS entrypoint. Use it only when the
+application genuinely needs generic runtime command routing, such as a shared message pipeline,
+pluggable handler registration, or a common authorization/audit dispatch pipeline. Do not introduce
+a dispatcher merely to hide several primary-adapter dependencies or to forward each statically known
+command to one handler. In Hexagonal Architecture, let the command handler implement the
+business-named `*UseCase` primary port. In Onion Architecture, use a business-named application
+handler or service directly; Onion does not gain `port.in` or `@PrimaryPort` semantics from CQRS.
+
+Not every read is a query-side read model. A lookup obtains a fact needed to execute a command or
+make a domain decision; it remains read-only but belongs to command-side workflow context. A query
+serves a page, list, report, export, or other caller-facing read use case. Keep these responsibilities
+separate when their models or reasons to change differ.
+
 When a component consumes an event or another state change to materialize or refresh a
 query-optimized read model, `projection` is useful conditional CQRS vocabulary. Such a component
 may write the read model, but it is not a query and does not execute a business command or modify
@@ -134,7 +161,24 @@ writers in a `query` package. A technical package such as `projection.<feature>`
 for these flows, not as a universal package or suffix. The source of a projection can be an event
 or a state-change notification; it need not be an event-sourced stream.
 
+When technical grouping is useful, use `persistence.<aggregate>` for aggregate lifecycle storage,
+`lookup.<feature>` for command-side fact reads, `query.<feature>` for caller-facing read models, and
+`projection.<feature>` for event/state-change-driven read-model materialization. These are
+responsibility categories, not mandatory package roots.
+
 Do not introduce CQRS for symmetry alone. If the project has chosen CQRS, keep command and query responsibilities separated.
+
+## Application Support Naming
+
+An application-layer helper shared by several command handlers may centralize repeated aggregate
+loading, clock access, application-level authorization checks, or persistence calls without taking
+over domain behavior. Name it for that actual support responsibility, for example
+`ExpenseClaimCommandSupport` or `OrderCommandOperations`.
+
+Do not call such a helper `*Context` merely because it carries dependencies. Reserve `Context` for
+an object that represents an execution scope or contextual data, such as a request, tenant,
+security, or transaction context. This is a naming heuristic, not a DDD, CQRS, Hexagonal, or Onion
+architecture rule.
 
 ## Domain Events And Integration Contracts
 

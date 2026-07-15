@@ -36,6 +36,7 @@ The shared envelope fields are required. Include only applicable Architecture An
 - **Transaction/consistency implications**
 - **Integration/read-model implications**
 - **Ecosystem mapping**
+- **Application runtime integration policy**
 - **Validation rules**
 - **Documented exceptions/risks**
 - **Readiness for framework landing or implementation planning**

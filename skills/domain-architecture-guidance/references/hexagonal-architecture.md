@@ -50,7 +50,8 @@ Hexagonal Architecture defines adapter direction and dependency rules, not a sin
 - Primary adapters may group HTTP/API transport DTOs separately from controllers, for example `adapter.in.web.order.request` and `adapter.in.web.order.response`.
 - Primary adapter request/response DTOs should stay adapter-local. They model transport shape, validation annotations, serialization names, and API compatibility.
 - Primary ports should expose use-case contracts with application-owned input/output models, often named `*Command` / `*Result` or equivalent project terms.
-- Secondary adapters may group by technical shape first, then business feature or external system: `persistence.<aggregate-or-feature>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic-or-system>`, `file.<feature>`, `cache.<feature>`.
+- Secondary adapters may group by technical shape first, then business feature or external system: `persistence.<aggregate-or-feature>`, `lookup.<feature>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic-or-system>`, `file.<feature>`, `cache.<feature>`.
+- `lookup.<feature>` contains read-only facts needed by a command workflow or domain decision. It is not a page, report, or query-use-case adapter merely because it executes a database read.
 - `query.<feature>` contains read-only query adapters. When an adapter consumes an event or state change to materialize or refresh a query-optimized read model, use an optional `projection.<feature>` category instead. A projection writer may update a read model, but it is not a query adapter or a business-command handler.
 - `projection` is conditional CQRS vocabulary, not a universal package or suffix. It does not require Event Sourcing; a normal state-change notification can drive the update.
 - Remote SDK/HTTP integrations should usually sit under a technical category such as `client.<external-system>` when several external systems share the same adapter style.
@@ -72,6 +73,8 @@ application
 adapter.out
   persistence
     order
+  lookup
+    credit
   query
     order
   projection          # only for event/state-change-driven read-model updates
@@ -82,6 +85,36 @@ adapter.out
 ```
 
 Avoid treating HTTP `Request`/`Response` classes as domain entities or as primary-port models. Avoid flattening every external system directly under `adapter.out` when a `client.<system>` grouping would make the adapter type clearer.
+
+## Command Use Cases And Dispatchers
+
+When CQRS commands are exposed through a Hexagonal primary boundary, use a business-named
+`*UseCase` primary port for each application operation and let its command handler implement that
+port. The command is the input model; the use case is the inbound contract; the handler is the
+application implementation. A controller, message listener, CLI, or scheduler calls the relevant
+use case directly.
+
+```java
+@PrimaryPort
+public interface SubmitOrderUseCase {
+    void submit(SubmitOrderCommand command);
+}
+
+@Application
+@CommandHandler
+final class SubmitOrderCommandHandler implements SubmitOrderUseCase {
+    @Override
+    public void submit(SubmitOrderCommand command) {
+        // Orchestrate the command and invoke domain behavior.
+    }
+}
+```
+
+Do not add a fixed `OrderCommandDispatcher` whose overloaded `dispatch(...)` methods only delegate
+to statically known handlers. That layer has neither generic routing nor business orchestration. A
+real `CommandDispatcher` or command bus is appropriate only when commands must be routed at runtime
+through a shared pipeline, for example from multiple generic message transports, through pluggable
+handler registration, or through a common dispatch concern.
 
 ## Primary Port And Application Service Naming
 
@@ -113,7 +146,9 @@ This differs from secondary ports:
 SubmitOrderService -> PaymentGateway -> PaymentGatewayAdapter
 ```
 
-Do not treat every type named `UseCase` as the implementation. If a project uses `*UseCase` naming, document whether it means the inbound contract, the implementation, or a command handler.
+Do not treat every type named `UseCase` as the implementation. In this command-oriented convention,
+`*UseCase` is the inbound contract and the `*CommandHandler` is its implementation. Other projects
+may use `*Service` implementations, but must document the meaning consistently.
 
 ## Secondary Port Ownership
 

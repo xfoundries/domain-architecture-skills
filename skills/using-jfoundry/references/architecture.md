@@ -40,8 +40,11 @@ For general Hexagonal semantics, primary/secondary port direction, and applicati
 
 These annotations define Hexagonal roles; they do not impose suffixes. Prefer a domain-first name
 such as `ApprovedExpenseAmountReader` over a generic `MonthlyApprovedAmountPort` when the former
-describes the capability more accurately. Use `*UseCase` for a single application operation when it
-helps, not as a universal name for every inbound interface.
+describes the capability more accurately. For a CQRS command exposed to a primary adapter, use a
+business-named `*UseCase` as the single-operation `@PrimaryPort` and let the corresponding command
+handler implement it. Do not add a fixed `*CommandDispatcher` merely to delegate every known
+command to its handler; reserve a dispatcher for genuine runtime routing through a shared command
+pipeline.
 
 An aggregate repository has an independent DDD role. In a Hexagonal project it may also be marked
 `@SecondaryPort`, while remaining under the domain repository package. Do not duplicate it as an
@@ -51,6 +54,12 @@ port or a DDD repository.
 In Onion, express the same dependency inversion with rings: the aggregate repository contract is
 inside the domain ring and its implementation is in the infrastructure ring. Do not mix Hexagonal
 port/adapter annotations into the Onion analysis scope.
+
+For Onion CQRS commands, name application handlers or services from the business action and let
+web, messaging, or scheduler infrastructure call that application boundary directly. Do not copy
+Hexagonal `port.in`, `@PrimaryPort`, or `*UseCase` requirements into Onion merely because commands
+exist. A generic dispatcher still needs a real runtime-routing reason; fixed forwarding remains
+unhelpful in either architecture.
 
 ## Hexagonal Adapter Package Direction
 
@@ -83,7 +92,7 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: physical module for primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners; package them below the selected `adapter.in` or `adapter.primary` root.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: physical module for secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage; package them below the selected `adapter.out` or `adapter.secondary` root. Use `query` only for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. For an event- or state-change-driven read-model materialization flow, use the optional technical shape `projection.<feature>` rather than `query.<feature>`; it writes the read model and is not a query adapter. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
+- `PROJECT-infrastructure`: physical module for secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage; package them below the selected `adapter.out` or `adapter.secondary` root. Use `lookup.<feature>` for read-only facts needed to execute commands or make domain decisions, and `query.<feature>` only for caller-facing pages, lists, reports, exports, or other read use cases. Reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. For an event- or state-change-driven read-model materialization flow, use the optional technical shape `projection.<feature>` rather than `query.<feature>`; it writes the read model and is not a query adapter. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `lookup.<feature>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters. The name `boot` is common for Spring Boot, but the role is runtime assembly, not a Spring-only rule.
 
 Recommended package shape:
@@ -113,6 +122,8 @@ PACKAGE_NAME
     out
       persistence
         <aggregate-or-feature>
+      lookup
+        <feature>
       query
         <feature>
       projection      # only for event/state-change-driven read-model updates
@@ -147,6 +158,10 @@ component consumes an event or state change to materialize or refresh a query-op
 `infrastructure.projection.<feature>` is an available technical shape. The inner-ring contract may
 be named for its responsibility, but it is not a Hexagonal Port and the implementation is not a
 Hexagonal Adapter. `projection` remains conditional vocabulary and does not require Event Sourcing.
+
+Use `infrastructure.lookup.<feature>` for a read-only fact needed by command workflow or a domain
+decision. That role differs from caller-facing `infrastructure.query.<feature>` even though both
+may execute a database `SELECT`.
 
 Within a ring, prefer business capability as the first organization axis. If the project uses CQRS,
 place `command` and `query` below the capability they serve instead of creating peer top-level

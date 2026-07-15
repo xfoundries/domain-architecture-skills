@@ -34,12 +34,14 @@ Rules:
 - dependencies point inward toward the domain.
 - domain does not depend on application or infrastructure.
 - application orchestrates business use cases and may depend on domain plus responsibility-named application contracts.
+- for CQRS commands, use business-named application handlers or services. Do not add Hexagonal port/in, @PrimaryPort, or *UseCase requirements; a dispatcher still needs a genuine runtime-routing purpose instead of fixed forwarding.
 - domain may define narrow dependency contracts for external facts needed by domain policies/services.
 - Onion has no Primary/Secondary Port or Adapter roles and requires no Port, Adapter, or UseCase suffixes.
 - within each ring, organize by business capability first. If CQRS is selected, command/query packages belong below the capability instead of forming peer axes alongside port/service packages.
 - shared application query/view models belong to a neutral package inside their application capability. Do not move them into domain or let infrastructure own them merely for reuse.
 - do not introduce port/in or port/out packages to express application model ownership; Onion has no directional Port taxonomy.
 - name domain types from the ubiquitous language, application types from business actions and orchestration responsibilities, and infrastructure implementations from capability plus technology where useful.
-- infrastructure implements outer-ring concerns such as web delivery, persistence, query adapters, messaging, clients, file/cache adapters, schedulers, and framework details.
+- infrastructure implements outer-ring concerns such as web delivery, aggregate persistence, command-side lookup, caller-facing query, optional projection materialization, messaging, clients, file/cache adapters, schedulers, and framework details.
 - group infrastructure by technical shape first and business feature or external system second.
+- when those categories improve navigation, use persistence/aggregate-or-feature, lookup/feature, query/feature, and projection/feature. A lookup supplies facts for a command or domain decision; a query serves a page, report, or other read use case; a projection materializes a read model from an event or state change. Do not create categories merely for symmetry.
 - in Onion Simple, web belongs under infrastructure because delivery mechanisms are outer-ring concerns. If a separate runtime assembly package/module exists, keep global runtime assembly, component scanning, and bean wiring there; keep only adapter-local configuration in infrastructure/config. The package name boot is common for Spring Boot projects but is not required for other runtimes.
