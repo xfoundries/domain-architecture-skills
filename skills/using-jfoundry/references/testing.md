@@ -15,11 +15,19 @@ Use:
 static final ArchTests jfoundryRules = JFoundryRules.hexagonalStrict();
 
 @ArchTest
+static final ArchRule adapterPackages = JFoundryRules.hexagonalAdapterPackageConvention(
+        HexagonalAdapterPackageConvention.IN_OUT);
+
+@ArchTest
 static final ArchTests jmoleculesDddRules = JFoundryRules.jmoleculesDdd();
 
 @ArchTest
 static final ArchTests aggregateRepositoryRules = JFoundryRules.aggregateRepositoryConventions();
 ```
+
+Choose `IN_OUT` for `adapter.in` / `adapter.out`, or `PRIMARY_SECONDARY` for
+`adapter.primary` / `adapter.secondary`. This is a selected Hexagonal project convention and does
+not apply to Onion projects.
 
 For Onion:
 

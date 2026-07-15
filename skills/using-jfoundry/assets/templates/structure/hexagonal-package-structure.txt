@@ -21,25 +21,27 @@ PACKAGE_NAME
 │   │       ├── view
 │   │       └── service
 │   └── <capability-two>
-├── web
-│   ├── feature
-│   │   ├── request
-│   │   └── response
-│   ├── messaging
-│   └── scheduler
-└── infrastructure
-    ├── persistence
-    │   └── aggregate-or-feature
-    ├── query
-    │   └── feature
-    ├── messaging
-    │   └── topic-or-system
-    ├── client
-    │   └── external-system
-    ├── file
-    │   └── feature
-    └── cache
-        └── feature
+├── adapter
+│   ├── in
+│   │   ├── web
+│   │   │   └── feature
+│   │   │       ├── request
+│   │   │       └── response
+│   │   ├── messaging
+│   │   └── scheduler
+│   └── out
+│       ├── persistence
+│       │   └── aggregate-or-feature
+│       ├── query
+│       │   └── feature
+│       ├── messaging
+│       │   └── topic-or-system
+│       ├── client
+│       │   └── external-system
+│       ├── file
+│       │   └── feature
+│       └── cache
+│           └── feature
 
 Rules:
 - This is a package-role template, not a mandatory Maven module layout.
@@ -49,6 +51,7 @@ Rules:
 - Primary ports do not depend on models owned by port/out, and secondary ports do not depend on models owned by port/in. Put shared query/view models in a neutral application capability package such as query/view.
 - Port and Adapter are Hexagonal roles, not the first source of domain names. Use ubiquitous language first, and use Port/Adapter suffixes only when they improve clarity.
 - if CQRS is selected, place command/query packages below the business capability rather than mixing top-level command/query/port/service organization axes.
-- web contains primary adapters that call primary ports or application services. Keep HTTP/API Request/Response DTOs adapter-local under feature request/response packages. If inbound adapters are not mainly HTTP, rename this package to interface.
-- infrastructure contains secondary adapters that implement secondary ports from domain or application modules. Group by technical shape first and business feature or external system second, such as persistence/aggregate-or-feature, query/feature, client/external-system, messaging/topic-or-system, file/feature, and cache/feature. Prefer query over readmodel unless the project explicitly uses read-model terminology. It contains no domain logic and no global runtime framework configuration when a runtime assembly package/module exists.
+- Select one adapter direction vocabulary for the entire Hexagonal project: this template uses adapter/in and adapter/out. adapter/primary and adapter/secondary is an equivalent alternative, but do not mix the pairs outside an explicitly bounded migration. Add the matching JFoundry ArchUnit rule from the Java template.
+- adapter/in contains primary adapters that call primary ports or application services. Keep HTTP/API Request/Response DTOs adapter-local under web feature request/response packages. If inbound adapters are not mainly HTTP, replace web with interface.
+- adapter/out contains secondary adapters that implement secondary ports from domain or application modules. Group by technical shape first and business feature or external system second, such as persistence/aggregate-or-feature, query/feature, client/external-system, messaging/topic-or-system, file/feature, and cache/feature. Prefer query over readmodel unless the project explicitly uses read-model terminology. It contains no domain logic and no global runtime framework configuration when a runtime assembly package/module exists.
 - boot contains the runtime entry point, selected runtime framework starters, runtime configuration, component scanning, and bean wiring. The package name may differ outside Spring Boot projects.

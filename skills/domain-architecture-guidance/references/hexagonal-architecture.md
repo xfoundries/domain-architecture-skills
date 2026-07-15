@@ -37,11 +37,17 @@ locatable, not a structure mandated by Cockburn.
 - Secondary Port: outbound need expressed by application or domain core.
 - Secondary Adapter: implementation of a secondary port, such as persistence, external API client, broker sender, cache, file storage, or SDK adapter.
 
+## Adapter Package Direction
+
+Adapter direction should be locatable in a Hexagonal project. Two equivalent project conventions are valid: `adapter.in` / `adapter.out`, or `adapter.primary` / `adapter.secondary`. The first names direction from the application's perspective; the second uses Cockburn's role terms. They carry the same Primary/Secondary Adapter semantics and must not be mixed within one project, except during an explicitly bounded migration.
+
+Select the convention in the architecture decision and make the architecture test enforce it. This is a project or framework convention, not a package tree required by Hexagonal Architecture. Onion projects use ring terminology instead and do not adopt either direction pair.
+
 ## Adapter Internal Organization
 
 Hexagonal Architecture defines adapter direction and dependency rules, not a single package taxonomy inside the adapter area. Organize adapter internals by the dominant technical reason to change:
 
-- Primary adapters may group HTTP/API transport DTOs separately from controllers, for example `web.order.request` and `web.order.response`.
+- Primary adapters may group HTTP/API transport DTOs separately from controllers, for example `adapter.in.web.order.request` and `adapter.in.web.order.response`.
 - Primary adapter request/response DTOs should stay adapter-local. They model transport shape, validation annotations, serialization names, and API compatibility.
 - Primary ports should expose use-case contracts with application-owned input/output models, often named `*Command` / `*Result` or equivalent project terms.
 - Secondary adapters may group by technical shape first, then business feature or external system: `persistence.<aggregate-or-feature>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic-or-system>`, `file.<feature>`, `cache.<feature>`.
@@ -51,17 +57,18 @@ Hexagonal Architecture defines adapter direction and dependency rules, not a sin
 Example:
 
 ```text
-web
-  order
-    OrderController
-    request
-    response
+adapter.in
+  web
+    order
+      OrderController
+      request
+      response
 application
   port.in
     SubmitOrderUseCase
     SubmitOrderCommand
     SubmitOrderResult
-infrastructure
+adapter.out
   persistence
     order
   query
@@ -71,7 +78,7 @@ infrastructure
     shipping
 ```
 
-Avoid treating HTTP `Request`/`Response` classes as domain entities or as primary-port models. Avoid flattening every external system directly under `infrastructure` when a `client.<system>` grouping would make the adapter type clearer.
+Avoid treating HTTP `Request`/`Response` classes as domain entities or as primary-port models. Avoid flattening every external system directly under `adapter.out` when a `client.<system>` grouping would make the adapter type clearer.
 
 ## Primary Port And Application Service Naming
 

@@ -48,7 +48,7 @@ For focused work, invoke `domain-modeling`, `domain-architecture-guidance`, or `
 
 Its architecture-test templates use native ArchUnit `ArchTests`. Aggregate repositories retain their DDD identity: Hexagonal projects may also express them as secondary ports without moving them out of `domain.repository`, while Onion projects express the same dependency inversion through inner and infrastructure rings.
 
-The guidance keeps naming source-aware. Onion does not inherit Hexagonal Primary/Secondary Port or Adapter roles. Names such as `Reader`, `Store`, `Finder`, and `Provider` are responsibility-oriented project conventions when useful, not official DDD, Onion, or jfoundry patterns; ubiquitous language remains the first naming source.
+The guidance keeps naming source-aware. Onion does not inherit Hexagonal Primary/Secondary Port or Adapter roles. Hexagonal projects choose either `adapter.in/out` or `adapter.primary/secondary` as one enforced adapter-package convention; neither pair applies to Onion. Names such as `Reader`, `Store`, `Finder`, and `Provider` are responsibility-oriented project conventions when useful, not official DDD, Onion, or jfoundry patterns; ubiquitous language remains the first naming source.
 
 Its reliable-messaging guidance keeps versioned integration contracts separate from internal domain events, uses portable JSON without Java type metadata, and verifies that a selected broker adapter wins over the logging fallback at runtime.
 
