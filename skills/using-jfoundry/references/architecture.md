@@ -83,7 +83,7 @@ Map Hexagonal roles inside those modules:
 - `PROJECT-web` or `PROJECT-interface`: physical module for primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners; package them below the selected `adapter.in` or `adapter.primary` root.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: physical module for secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage; package them below the selected `adapter.out` or `adapter.secondary` root. Use `query` as the neutral package name for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
+- `PROJECT-infrastructure`: physical module for secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage; package them below the selected `adapter.out` or `adapter.secondary` root. Use `query` only for read-side query adapters; reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. For an event- or state-change-driven read-model materialization flow, use the optional technical shape `projection.<feature>` rather than `query.<feature>`; it writes the read model and is not a query adapter. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters. The name `boot` is common for Spring Boot, but the role is runtime assembly, not a Spring-only rule.
 
 Recommended package shape:
@@ -115,6 +115,8 @@ PACKAGE_NAME
         <aggregate-or-feature>
       query
         <feature>
+      projection      # only for event/state-change-driven read-model updates
+        <feature>
       client
         <external-system>
       messaging
@@ -139,6 +141,12 @@ the recommendation for non-trivial business applications, not a Cockburn-mandate
 For Spring projects, runtime configuration includes Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and auto-configuration customization. Read `references/spring-runtime.md` before adding those dependencies or configuration classes.
 
 For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
+
+For Onion CQRS flows, `infrastructure.query.<feature>` remains read-only. When an infrastructure
+component consumes an event or state change to materialize or refresh a query-optimized read model,
+`infrastructure.projection.<feature>` is an available technical shape. The inner-ring contract may
+be named for its responsibility, but it is not a Hexagonal Port and the implementation is not a
+Hexagonal Adapter. `projection` remains conditional vocabulary and does not require Event Sourcing.
 
 Within a ring, prefer business capability as the first organization axis. If the project uses CQRS,
 place `command` and `query` below the capability they serve instead of creating peer top-level

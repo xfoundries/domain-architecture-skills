@@ -126,6 +126,14 @@ Typical constraints:
 - Write models should protect invariants.
 - CQRS does not imply Event Sourcing.
 
+When a component consumes an event or another state change to materialize or refresh a
+query-optimized read model, `projection` is useful conditional CQRS vocabulary. Such a component
+may write the read model, but it is not a query and does not execute a business command or modify
+the write aggregate. Keep query contracts and query adapters read-only; do not place projection
+writers in a `query` package. A technical package such as `projection.<feature>` is available only
+for these flows, not as a universal package or suffix. The source of a projection can be an event
+or a state-change notification; it need not be an event-sourced stream.
+
 Do not introduce CQRS for symmetry alone. If the project has chosen CQRS, keep command and query responsibilities separated.
 
 ## Domain Events And Integration Contracts

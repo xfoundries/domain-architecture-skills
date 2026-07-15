@@ -45,13 +45,30 @@ Place the port near the consumer:
 ## Query And Read-Model Contracts
 
 Consider an application-owned query contract for query use cases, page views, dashboards, reports,
-list screens, projections, and read shapes that differ from write aggregates. Name it by the business
-view and responsibility, for example `ExpenseClaimViewReader`. `ReadModel` or `Projection` is
-appropriate when the project intentionally uses that CQRS vocabulary.
+list screens, and read shapes that differ from write aggregates. Name it by the business view and
+responsibility, for example `ExpenseClaimViewReader`. Query contracts and their adapters are
+read-only; do not put a read-model writer behind a query contract or in a `query` package.
 
 CQRS is useful when commands and reads have different models, performance needs, or consistency expectations. Do not introduce CQRS just because a method is read-only.
 
 These are application-owned read-side contracts by default. Do not place page, report, dashboard, or UI-shaped read contracts in the domain module.
+
+## Projection Updates
+
+Use `projection` only when a component consumes an event or another state change to materialize or
+refresh a query-optimized read model. A projection update can write that read model, but it does not
+execute a business command or modify the write aggregate. For example, a payment-result consumer
+may update payment-status data that a separate `ExpenseClaimViewReader` later reads.
+
+Keep the projection writer behind a separate application-owned contract when a boundary is useful;
+name it for its responsibility instead of requiring a `*Projection` suffix. In Hexagonal it may be
+a secondary port with its implementation under `adapter.out.projection.<feature>` (or the selected
+secondary-direction equivalent). In Onion it is an inner-ring dependency contract implemented in
+`infrastructure.projection.<feature>`; do not import Hexagonal Port or Adapter roles into Onion.
+
+`projection.<feature>` is an available technical package shape for these flows, not a universal
+CQRS package. It does not imply Event Sourcing: an ordinary event or state-change notification may
+drive the update.
 
 ## Maintenance Contracts
 
@@ -70,10 +87,11 @@ When replacing Active Record, MyBatis-Plus `IService`, generic `Wrapper`, or spe
 1. Ask whether the query exists to modify an aggregate.
 2. If yes, load by aggregate ID or stable business identity when possible.
 3. If the result prepares workflow context, prefer an application-owned lookup contract named for the fact it supplies.
-4. If the result serves UI, reporting, list, or page reads, prefer a query/read-side contract named for the business view; use `ReadModel` or `Projection` only when that terminology is intentional.
-5. If the result serves background scan, cleanup, or repair, prefer a responsibility such as `Scanner` or `CleanupCandidates`.
-6. If a domain rule needs an external fact, create a narrow domain-facing contract instead of reusing a broad application query contract. In Hexagonal Architecture this contract is a secondary port; in Onion it is an inner-ring dependency contract.
-7. If one old method serves commands and queries, split it.
+4. If the result serves UI, reporting, list, or page reads, prefer a read-only query/read-side contract named for the business view.
+5. If an event or state change materializes or refreshes a separate query-optimized read model, use a separate projection writer rather than a query contract.
+6. If the result serves background scan, cleanup, or repair, prefer a responsibility such as `Scanner` or `CleanupCandidates`.
+7. If a domain rule needs an external fact, create a narrow domain-facing contract instead of reusing a broad application query contract. In Hexagonal Architecture this contract is a secondary port; in Onion it is an inner-ring dependency contract.
+8. If one old method serves commands and queries, split it.
 
 ## Gradual Adoption
 

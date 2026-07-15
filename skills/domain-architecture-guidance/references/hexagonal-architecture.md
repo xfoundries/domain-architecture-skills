@@ -51,7 +51,8 @@ Hexagonal Architecture defines adapter direction and dependency rules, not a sin
 - Primary adapter request/response DTOs should stay adapter-local. They model transport shape, validation annotations, serialization names, and API compatibility.
 - Primary ports should expose use-case contracts with application-owned input/output models, often named `*Command` / `*Result` or equivalent project terms.
 - Secondary adapters may group by technical shape first, then business feature or external system: `persistence.<aggregate-or-feature>`, `query.<feature>`, `client.<external-system>`, `messaging.<topic-or-system>`, `file.<feature>`, `cache.<feature>`.
-- Use neutral names such as `query` unless the project explicitly uses read-model terminology.
+- `query.<feature>` contains read-only query adapters. When an adapter consumes an event or state change to materialize or refresh a query-optimized read model, use an optional `projection.<feature>` category instead. A projection writer may update a read model, but it is not a query adapter or a business-command handler.
+- `projection` is conditional CQRS vocabulary, not a universal package or suffix. It does not require Event Sourcing; a normal state-change notification can drive the update.
 - Remote SDK/HTTP integrations should usually sit under a technical category such as `client.<external-system>` when several external systems share the same adapter style.
 
 Example:
@@ -73,6 +74,8 @@ adapter.out
     order
   query
     order
+  projection          # only for event/state-change-driven read-model updates
+    payment
   client
     payment
     shipping
