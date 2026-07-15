@@ -17,13 +17,13 @@ For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, keep `jfoundry-depende
 
 ## Framework-Neutral Starters
 
-Choose starters by Maven module or layer. In a serious DDD project, prefer multi-module Maven because dependency boundaries become physical build boundaries. A small project may start as a single Maven module/application artifact, but it must still preserve package boundaries and ArchUnit tests.
+Choose starters by Maven module or layer. A non-trivial DDD project may use physical module boundaries, but start with the boundaries that are actually needed: in Hexagonal, one `adapter` module may contain both primary and secondary adapters; in Onion, outer concerns belong to `infrastructure`. A small project may use a single Maven application artifact, but it must still preserve package boundaries and ArchUnit tests.
 
 | Module / layer | Add | Never add |
 |---|---|---|
 | `domain` | `jfoundry-domain-starter` | runtime framework APIs, MyBatis-Plus, JPA, MQ clients, HTTP clients, Spring Boot starters |
 | `application` | `jfoundry-application-starter` | runtime framework starters, MyBatis mappers/services, broker adapters |
-| Hexagonal `infrastructure` secondary-adapter module | selected persistence starter such as `jfoundry-infrastructure-mybatis-plus-starter` or `jfoundry-infrastructure-jpa-starter` | controllers, application entry points, runtime auto-configuration starters |
+| Hexagonal `adapter` module | adapter-specific dependencies, such as `jfoundry-infrastructure-mybatis-plus-starter` or `jfoundry-infrastructure-jpa-starter`; primary-adapter APIs only when that adapter compiles against them | domain/application business implementation, runtime auto-configuration starters |
 | Onion outer `infrastructure` module/package | adapter starters needed by outer-ring concerns, such as persistence, web, messaging, and clients | domain model or business rule implementation |
 | runtime assembly | selected runtime framework starters | domain model or business rule implementation |
 | architecture tests | `jfoundry-architecture-test` with `test` scope | production scope |
@@ -34,11 +34,11 @@ Use only the capabilities the module actually needs:
 - Application module: `jfoundry-application-starter`, which aggregates `jfoundry-application-core`, `jfoundry-transaction-core`, CQRS stereotypes, and the domain starter.
 - Application module that only needs explicit transaction boundary contracts: `jfoundry-transaction-core`
 - Application module that compiles `LockTemplate`, `LockOptions`, `DistributedLockClient`, or `@DistributedLock`: optional `jfoundry-lock-core`; `jfoundry-application-starter` does not include it.
-- Infrastructure module with MyBatis-Plus repositories: `jfoundry-infrastructure-mybatis-plus-starter`
-- Infrastructure module with Jakarta Persistence repositories: `jfoundry-infrastructure-jpa-starter`
+- Adapter module with MyBatis-Plus repositories: `jfoundry-infrastructure-mybatis-plus-starter`
+- Adapter module with Jakarta Persistence repositories: `jfoundry-infrastructure-jpa-starter`
 - Architecture tests: `jfoundry-architecture-test` with `test` scope
 
-In Hexagonal projects, keep primary adapters such as controllers in `web` or `interface`, separate from the secondary-adapter `infrastructure` module. In Onion Simple projects, `infrastructure.web` is an acceptable outer-ring package because web delivery is infrastructure; still keep runtime assembly and global runtime framework configuration in `boot` when a boot module exists.
+In Hexagonal projects, a single `adapter` module may contain primary adapters such as controllers, message listeners, and schedulers together with secondary adapters. When a real boundary justifies splitting it, use an `interface` module for all `adapter.in` transports and an `infrastructure` module for `adapter.out`; do not create a separate Maven module for each transport or package direction. In Onion Simple projects, `infrastructure.web` is an acceptable outer-ring package because web delivery is infrastructure; still keep runtime assembly and global runtime framework configuration in `boot` when a boot module exists.
 
 ## Spring Runtime Dependencies
 

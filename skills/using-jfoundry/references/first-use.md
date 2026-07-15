@@ -7,7 +7,7 @@ Use this prompt when starting a business project from scratch:
 ```text
 Use $using-jfoundry to create the initial architecture for a new Java business project.
 Base package: PACKAGE_NAME
-Project shape: multi-module Maven preferred, or single app for small projects
+Project shape: single app, Hexagonal domain/application/adapter/boot, a justified Hexagonal adapter split, or Onion domain/application/infrastructure/boot
 Runtime: none, Spring Boot, Spring Framework, Quarkus, Micronaut, Helidon, CLI/custom, or undecided
 Persistence: none, MyBatis-Plus, JPA, or undecided
 Messaging: none, Kafka, RabbitMQ, RocketMQ, or undecided
@@ -18,7 +18,7 @@ Architecture: confirmed result, existing project style, explicit choice, or unde
 
 The agent should:
 
-1. Confirm or infer the base package and project shape; prefer multi-module Maven for normal DDD projects.
+1. Confirm or infer the base package and whether physical modules are justified. After resolving the architecture, for a new non-trivial Hexagonal project evaluate `domain` / `application` / `adapter` / `boot`, where one `adapter` module contains `adapter.in` and `adapter.out`; split it into `interface` for all inbound transports and `infrastructure` for `adapter.out` only when a real build, ownership, deployment, or dependency-isolation boundary justifies doing so. For Onion, evaluate `domain` / `application` / `infrastructure` / `boot` and retain the rings' inward dependency direction.
 2. Resolve the architecture from a confirmed `Architecture Guidance Result`, project evidence, established conventions sufficient for the requested change, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. Return `needs-input` only when a missing choice blocks responsible landing.
 3. Read `version-selection.md` and select the exact jfoundry version before choosing dependency templates.
 4. Copy Maven snippets by module or layer from `assets/templates/maven/`; never put runtime framework starters in domain or application modules.

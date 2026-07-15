@@ -15,8 +15,8 @@ Resolve the primary architecture style from a confirmed `Architecture Guidance R
 
 At task classification, for project setup, modification, or framework-landing work, read `references/implementation-guidance-result.md` before deciding `completed`, `needs-input`, or `not-applicable`. Simple conceptual explanations are excluded. If an exact version or runtime blocks an early workflow step, return the structured `needs-input` result instead of continuing to resolve landing details.
 
-1. Identify the project shape: single Maven module/application artifact, multi-module Maven app, or dedicated domain/application/infrastructure Maven modules. Prefer multi-module Maven for normal DDD projects, but do not turn every Hexagonal package role into a Maven module without a build, ownership, or deployment reason.
-2. Resolve one primary architecture style from a confirmed `Architecture Guidance Result`, project evidence, established conventions, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. Return `needs-input` only when a missing choice blocks responsible landing. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
+1. Identify whether a single Maven artifact, a balanced `domain` / `application` / `adapter` / `boot` module set, or a further adapter split is justified by a build, ownership, deployment, or dependency-isolation boundary. Do not turn transports or Hexagonal package directions into Maven modules by default.
+2. Resolve one primary architecture style from a confirmed `Architecture Guidance Result`, project evidence, established conventions, or an explicit user choice. Preserve an existing style. For simple CRUD, continue with established or explicitly simple conventions when no new architecture decision is required. In Hexagonal, one `adapter` module may contain both `adapter.in` and `adapter.out`; messaging and schedulers remain `adapter.in` alongside web. When a real boundary justifies splitting it, use `interface` for all inbound transports and `infrastructure` for `adapter.out`. In Onion, use the inward rings and an outer `infrastructure` module instead; do not import Hexagonal `adapter.in/out` semantics. Return `needs-input` only when a missing choice blocks responsible landing. Do not mix Hexagonal and Onion in the same ArchUnit analysis scope.
 3. When a runtime is selected, record the application runtime integration policy: framework-neutral contracts only, selected-runtime orchestration support at declared application boundaries, or a documented hybrid. Domain code remains runtime-free in every option. Do not block framework-neutral work while the runtime is undecided.
 4. Read `references/version-selection.md`. For an existing project, preserve its selected jfoundry version; for a new project, preserve a user-specified version or resolve an exact stable version as directed there.
 5. Read `references/dependencies.md`, choose the framework-neutral or runtime-specific BOM, and copy the matching Maven template snippets from `assets/templates/maven/`.
@@ -105,7 +105,7 @@ Replace placeholders such as `PACKAGE_NAME`. Replace `JFOUNDRY_VERSION` only aft
 
 ## Common First Prompt
 
-When guiding project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, external messaging needs, and the source of the architecture decision. Inspect an existing project before asking for information its ADRs, dependencies, packages, or architecture tests already establish. If no architecture is resolved and that choice materially changes the generated landing, recommend `domain-architecture-guidance` and ask the smallest blocking question.
+When guiding project scaffolding, start by asking for the base package, project/module shape, runtime stack, persistence choice, external messaging needs, and the source of the architecture decision. Explain that messaging and schedulers are inbound adapters, not evidence that a `web` module should be retained or that a separate Maven module is needed. Inspect an existing project before asking for information its ADRs, dependencies, packages, or architecture tests already establish. If no architecture is resolved and that choice materially changes the generated landing, recommend `domain-architecture-guidance` and ask the smallest blocking question.
 
 Architecture-neutral defaults may include:
 
@@ -122,7 +122,7 @@ Suggested user prompt for a new business project:
 ```text
 Use $using-jfoundry to create the initial architecture for a new Java business project.
 Base package: com.example.order
-Project shape: multi-module Maven
+Project shape: single module, Hexagonal domain/application/adapter/boot, a justified Hexagonal adapter split, or Onion domain/application/infrastructure/boot
 Runtime: undecided
 Persistence: MyBatis-Plus
 Messaging: Kafka later, not in the initial skeleton

@@ -74,26 +74,26 @@ JFoundry project convention, not an Onion concept or a Cockburn-mandated package
 
 For new Hexagonal projects, copy `assets/templates/structure/hexagonal-package-structure.txt`.
 
-The template package structure describes architectural roles, not mandatory Maven modules. Do not create separate Maven modules named `adapter-in` and `adapter-out` unless the project has a real build, ownership, or deployment reason.
+The template package structure describes architectural roles, not mandatory Maven modules. Do not create separate Maven modules named `adapter-in` and `adapter-out` merely because the selected Hexagonal package convention has those directions.
 
-For normal multi-module Maven business projects, prefer a small physical module set first:
+For a new non-trivial Maven business project, the balanced initial physical module set is usually:
 
 ```text
 PROJECT
   PROJECT-domain
   PROJECT-application
-  PROJECT-infrastructure
-  PROJECT-web          # or PROJECT-interface when the inbound surface is broader than HTTP
-  PROJECT-boot         # runtime assembly; name may differ outside Spring Boot projects
+  PROJECT-adapter        # contains both adapter.in and adapter.out
+  PROJECT-boot           # runtime assembly; name may differ outside Spring Boot projects
 ```
 
 Map Hexagonal roles inside those modules:
 
-- `PROJECT-web` or `PROJECT-interface`: physical module for primary adapters such as REST controllers, admin APIs, schedulers, CLI commands, or message listeners; package them below the selected `adapter.in` or `adapter.primary` root.
+- `PROJECT-adapter`: physical outer-adapter module. Put REST controllers, message listeners, schedulers, CLI commands, and other driving adapters below `adapter.in`; put persistence, lookup/query/projection, remote clients, broker senders, Redis, and file adapters below `adapter.out`. Use `lookup.<feature>` for read-only facts needed to execute commands or make domain decisions, and `query.<feature>` only for caller-facing pages, lists, reports, exports, or other read use cases. Reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. For an event- or state-change-driven read-model materialization flow, use the optional technical shape `projection.<feature>` rather than `query.<feature>`; it writes the read model and is not a query adapter. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `lookup.<feature>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
 - `PROJECT-application`: primary ports under `port.in`, application services, and application-owned secondary ports under `port.out`.
 - `PROJECT-domain`: aggregates, value objects, domain events, aggregate repository contracts, and optional narrow domain-facing secondary ports under `port.out`.
-- `PROJECT-infrastructure`: physical module for secondary adapter implementations such as persistence, query adapters, remote SDK/HTTP clients, broker senders, Redis, and file storage; package them below the selected `adapter.out` or `adapter.secondary` root. Use `lookup.<feature>` for read-only facts needed to execute commands or make domain decisions, and `query.<feature>` only for caller-facing pages, lists, reports, exports, or other read use cases. Reserve `readmodel` for projects that explicitly use read-model terminology or CQRS-style read models. For an event- or state-change-driven read-model materialization flow, use the optional technical shape `projection.<feature>` rather than `query.<feature>`; it writes the read model and is not a query adapter. Group adapters by technical shape first and business feature or external system second, such as `persistence.<aggregate>`, `lookup.<feature>`, `query.<feature>`, `projection.<feature>` when applicable, `client.<external-system>`, `messaging.<topic>`, `file.<feature>`, and `cache.<feature>`. Keep global runtime framework configuration out of this module when a runtime assembly module exists.
 - `PROJECT-boot`: runtime assembly, dependency wiring, runtime framework configuration, and selected runtime framework starters. The name `boot` is common for Spring Boot, but the role is runtime assembly, not a Spring-only rule.
+
+Keep `PROJECT-adapter` as one physical outer-adapter module unless a real build, ownership, deployment, or dependency-isolation boundary justifies a split. Web, messaging, scheduler, and CLI are package-level `adapter.in` variations; persistence, lookup, query, projection, and clients are package-level `adapter.out` variations. A split uses one inbound `PROJECT-interface` module for all `adapter.in` transports and one secondary `PROJECT-infrastructure` module for `adapter.out`; it never creates a Maven module per transport or per package subcategory.
 
 Recommended package shape:
 
@@ -113,7 +113,7 @@ PACKAGE_NAME
         service
   adapter
     in
-      web           # or interface for non-HTTP-heavy inbound surfaces
+      web           # HTTP primary adapters
         <feature>
           request   # HTTP/API DTOs, adapter-local
           response
@@ -151,7 +151,7 @@ the recommendation for non-trivial business applications, not a Cockburn-mandate
 
 For Spring projects, runtime configuration includes Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and auto-configuration customization. Read `references/spring-runtime.md` before adding those dependencies or configuration classes.
 
-For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
+For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. The Hexagonal `adapter` module and `adapter.in/out` package convention do not transfer to Onion. When physical modules are justified, begin with `domain` / `application` / `infrastructure` / `boot`; `infrastructure.web`, messaging, scheduling, persistence, and remote clients are outer-ring concerns. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
 
 For Onion CQRS flows, `infrastructure.query.<feature>` remains read-only. When an infrastructure
 component consumes an event or state change to materialize or refresh a query-optimized read model,
