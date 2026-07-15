@@ -11,11 +11,15 @@ PACKAGE_NAME
 ├── application
 │   ├── <capability-one>
 │   │   ├── command
-│   │   ├── query
-│   │   ├── port
-│   │   │   ├── in
-│   │   │   └── out
-│   │   └── service
+│   │   │   ├── port
+│   │   │   │   └── in
+│   │   │   └── service
+│   │   └── query
+│   │       ├── port
+│   │       │   ├── in
+│   │       │   └── out
+│   │       ├── view
+│   │       └── service
 │   └── <capability-two>
 ├── web
 │   ├── feature
@@ -41,6 +45,8 @@ Rules:
 - This is a package-role template, not a mandatory Maven module layout.
 - domain contains aggregates, entities, value objects, domain events, domain services, aggregate repository contracts, and optional narrow secondary ports consumed by domain policies/services.
 - application contains use cases, application services, primary ports, workflow/read secondary ports, commands, and query models, organized by business capability before architectural role.
+- Global application/port/in and application/port/out packages remain valid for small projects. JFoundry recognizes direction packages at any depth; the capability-first shape is a recommendation for non-trivial applications, not a Hexagonal Architecture mandate.
+- Primary ports do not depend on models owned by port/out, and secondary ports do not depend on models owned by port/in. Put shared query/view models in a neutral application capability package such as query/view.
 - Port and Adapter are Hexagonal roles, not the first source of domain names. Use ubiquitous language first, and use Port/Adapter suffixes only when they improve clarity.
 - if CQRS is selected, place command/query packages below the business capability rather than mixing top-level command/query/port/service organization axes.
 - web contains primary adapters that call primary ports or application services. Keep HTTP/API Request/Response DTOs adapter-local under feature request/response packages. If inbound adapters are not mainly HTTP, rename this package to interface.

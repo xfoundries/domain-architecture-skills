@@ -27,6 +27,18 @@ Use strong language only after identifying the source of the rule:
 
 Do not relax an explicit architecture constraint just because a simpler CRUD style would also be valid in another project.
 
+## Application-Owned Shared Models
+
+When multiple application contracts in one business capability use the same command, result, query,
+or view model, place that model in a neutral application package owned by the capability. For
+example, `application.claim.query.view` may serve both a query entry contract and a persistence
+query contract.
+
+Do not move an application query/view model into the domain merely to share it. Do not let
+infrastructure define a model that application contracts must import. Package ownership should
+follow the model's meaning and dependency direction, not whichever interface happened to need it
+first.
+
 ## Layered Architecture
 
 Common strict flow:
@@ -60,11 +72,14 @@ Typical constraints:
 - Application services depend inward and coordinate use cases.
 - Infrastructure depends on inner rings and implements outer concerns.
 - Persistence, web, messaging, serialization, and dependency injection details stay outside the domain model unless the project intentionally trades purity for framework integration.
+- Within each ring, organize non-trivial code by business capability before technical role when that improves cohesion. Shared application models remain owned by the application capability.
 
 Onion Architecture does not define Primary/Secondary Port or Adapter roles, and it does not prescribe
 `*Port`, `*Adapter`, or `*UseCase` class-name suffixes. Inner rings may define interfaces that outer
 rings implement, but name those interfaces from domain language and their actual responsibility.
 Calling such an interface a port is a Hexagonal or project-local interpretation, not an Onion rule.
+Do not introduce `port.in` / `port.out` ownership rules merely to organize Onion application
+contracts; use responsibility names and the ring dependency direction instead.
 
 The foundational Onion dependency rule also allows an outer ring to call any inner ring. Requiring
 controllers or message consumers to enter only through application services can be a useful DDD,
@@ -90,6 +105,8 @@ Typical constraints:
 - Application or domain core code should express outbound needs through secondary ports owned near the consumer.
 - Secondary adapters implement ports for databases, message brokers, external APIs, file systems, email, and other outside technologies.
 - Inside/core code should not depend on adapter implementations.
+- In non-trivial applications, organizing by business capability before port direction usually keeps use cases and their models cohesive. This is an implementation recommendation, not a package structure mandated by Hexagonal Architecture.
+- When direction packages are used, a primary port should not depend on models owned by `port.out`, and a secondary port should not depend on models owned by `port.in`. Put shared application models in a neutral capability package.
 
 Ports should represent meaningful boundaries. Avoid creating an interface for every class when no boundary value exists.
 

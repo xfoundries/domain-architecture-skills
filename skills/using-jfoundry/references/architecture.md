@@ -86,10 +86,13 @@ PACKAGE_NAME
   application
     <capability>
       command       # optional CQRS organization
+        port.in
+        service
       query         # optional CQRS organization
-      port.in
-      port.out      # workflow/read ports consumed by application services
-      service
+        port.in
+        port.out    # workflow/read ports consumed by application services
+        view        # neutral application-owned models shared by both directions
+        service
   web               # or interface for non-HTTP-heavy inbound surfaces
     <feature>
       request       # HTTP/API DTOs, adapter-local
@@ -113,6 +116,13 @@ PACKAGE_NAME
 
 Keep `domain` and `application` free of MyBatis, Spring MVC, broker clients, and persistence models. Primary adapters in `web` or `interface` call application services or primary ports. HTTP/API DTOs in primary adapters should use adapter-local names such as `*Request` and `*Response`; primary ports should use application-owned models such as `*Command` and `*Result` when that naming fits the project. Secondary adapters in `infrastructure` implement secondary ports from either the domain or application module. Put global runtime framework configuration, component scanning, and runtime bean wiring in the runtime assembly module/package, not in `infrastructure`.
 
+When Primary and Secondary Ports in the same capability share a query or view model, keep that
+model in a neutral application package such as `application.<capability>.query.view`. A Primary Port
+must not import a model owned by `port.out`, and a Secondary Port must not import a model owned by
+`port.in`. JFoundry's Hexagonal convention rules recognize `port.in` and `port.out` at any package
+depth, so both global and capability-oriented layouts are valid. Capability-first organization is
+the recommendation for non-trivial business applications, not a Cockburn-mandated package tree.
+
 For Spring projects, runtime configuration includes Spring `@Configuration`, `@ConfigurationProperties`, component scanning, and auto-configuration customization. Read `references/spring-runtime.md` before adding those dependencies or configuration classes.
 
 For Onion Simple package layouts, use the Onion template instead of the Hexagonal template. Its `infrastructure.web` package is expected because web delivery is an outer-ring concern. When a separate runtime assembly module/package exists, keep global runtime assembly and component scanning there; use infrastructure-local config only for adapter details that are not global runtime wiring.
@@ -121,6 +131,9 @@ Within a ring, prefer business capability as the first organization axis. If the
 place `command` and `query` below the capability they serve instead of creating peer top-level
 `command`, `query`, `port`, and `service` taxonomies. Package annotations work well for homogeneous
 role packages; use type annotations when a capability package intentionally contains mixed roles.
+For Onion projects, shared query/view models remain owned by their application capability, but do
+not add `port.in` / `port.out` packages to express that ownership: Onion has no directional Port
+taxonomy.
 
 ## Exception Boundaries
 

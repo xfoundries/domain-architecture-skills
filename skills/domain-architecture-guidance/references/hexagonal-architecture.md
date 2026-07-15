@@ -11,6 +11,24 @@ Application or Domain Core -> Secondary Port -> Secondary Adapter
 
 Inside/core code should not depend on adapter implementations. Adapters depend on ports or application services, not the other way around.
 
+Hexagonal Architecture defines port direction and inside/outside boundaries; it does not prescribe
+one package tree. For non-trivial business applications, prefer business capability as the first
+organization axis and place inbound/outbound role packages inside that capability. A small project
+may keep global `application.port.in` and `application.port.out` packages when they remain easy to
+navigate.
+
+Example capability-oriented shape:
+
+```text
+application.claim.command.port.in
+application.claim.query.port.in
+application.claim.query.port.out
+application.claim.query.view
+```
+
+The `port.in` / `port.out` package names are a project or framework convention for making direction
+locatable, not a structure mandated by Cockburn.
+
 ## Roles
 
 - Primary Adapter: inbound driver such as REST controller, RPC endpoint, CLI command, scheduler, or message listener.
@@ -98,9 +116,22 @@ Place a secondary port by consumer ownership:
 
 Aggregate repositories are DDD repository contracts for aggregate lifecycle and command-side loading. In Hexagonal implementations they are outbound contracts implemented by infrastructure, but do not duplicate them as generic application `port.out` interfaces.
 
+## Port Model Ownership
+
+A Primary Port should not import models owned by a Secondary Port package, and a Secondary Port
+should not import models owned by a Primary Port package. That creates a hidden dependency between
+two independently directed boundaries and makes whichever port owns the model accidentally more
+fundamental than the other.
+
+If both contracts share a query or view model, place it in a neutral application capability package,
+such as `application.claim.query.view`. Keep transport request/response DTOs in the primary adapter,
+and keep persistence/remote-system data models in the secondary adapter. Do not move application
+views into the domain merely to make them reusable.
+
 ## Boundary Checks
 
 - Primary adapters should not call secondary adapters or repositories directly.
 - Application services should not depend on concrete persistence, HTTP, broker, cache, SDK, or framework adapter types.
 - Secondary adapters should translate external DTOs, status codes, and persistence models before returning to core code.
 - Ports should represent meaningful variability, external dependency, test boundary, or model protection. Avoid one-interface-per-class abstractions.
+- Primary and Secondary Ports should depend on application- or domain-owned models, not on models owned by the opposite port direction.
