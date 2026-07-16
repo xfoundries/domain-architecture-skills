@@ -47,7 +47,11 @@ The specialists produce, and the coordinator consumes, `Domain Modeling Result`,
 
 `JFoundry: undecided` does not block framework-neutral Domain Modeling or Architecture Guidance and does not by itself invoke `using-jfoundry`. Preserve the uncertainty as a pending optional landing. Ask about it only when the next activity requires framework-specific implementation guidance and the choice materially changes that activity.
 
-`Domain Architecture Handoff` is the coordinator-owned composite interoperability result. It preserves phase states, specialist summaries or artifacts, confirmed decisions, constraints, open questions and blockers, framework landing or non-applicability, and the recommended next activity. It does not replace specialist payloads and does not require a fixed file format.
+`Domain Architecture Handoff` is the coordinator-owned composite interoperability result. It preserves phase states, specialist summaries or artifacts, confirmed decisions, constraints, open questions and blockers, framework landing or non-applicability, and the recommended next activity. It does not replace specialist payloads and does not require a fixed file format. When persisted, workflow artifacts use `docs/domain-architecture/`.
+
+Before detailed planning, identify the smallest independently verifiable increment, its non-goals,
+the phases it depends on, and its planning owner. Read
+[implementation-planning.md](implementation-planning.md) for the depth-selection and handoff rules.
 
 ## Process Companion Contract
 
@@ -56,9 +60,9 @@ A process companion is optional. Honor one explicitly selected by the user or al
 | Owner | Responsibilities |
 |---|---|
 | Process companion | Its requirements/specification lifecycle, planning, task generation, implementation, review, approval gates, files, directories, commands, and templates |
-| Domain Architecture plugin | Domain Modeling, Architecture Guidance, optional jfoundry landing, phase-local status, and `Domain Architecture Handoff` |
+| Domain Architecture plugin | Domain Modeling, Architecture Guidance, optional jfoundry landing, phase-local status, `Domain Architecture Handoff`, and its default `docs/domain-architecture/` artifacts |
 
-Use the companion's own mechanisms to persist or consume results. Do not assume, create, or reproduce its internal paths, commands, templates, or artifact layout unless that active workflow explicitly requires them.
+Use the companion's own mechanisms to persist or consume results. Do not assume, create, or reproduce its internal paths, commands, templates, or artifact layout unless that active workflow explicitly requires them. A companion may help produce initial requirement material, but it must consume the Domain Architecture Handoff before finalizing a detailed implementation plan or dependent tasks.
 
 The stable integration sequence is:
 
@@ -99,10 +103,21 @@ templates, and approval gates under that companion's control.
 
 When a domain or architecture blocker changes the specification, return the question and preserved interim handoff to the companion-owned requirements or specification activity. Do not generate dependent plans or tasks from guessed business meaning.
 
+## Later Companion Adoption
+
+If the plugin produced domain and architecture artifacts before a process companion was chosen,
+do not repeat completed phases merely to adopt the companion. Give it the persisted specialist
+results and handoff, including confirmed decisions, constraints, and open questions. It creates
+its own specification and plan artifacts from that input. Revisit a specialist only when current
+requirements contradict the existing evidence or the planned increment changes business meaning
+or architecture boundaries.
+
 ## Consuming And Revisiting The Handoff
 
 - When all required phases are `completed` or responsibly `not-applicable`, use the handoff as input to the selected next activity.
 - When a phase is `needs-input`, preserve completed results, return the blocker to the activity that owns the missing fact, and pause only dependent progression.
+- When no companion is selected, plugin-managed detailed planning is the next activity under
+  `docs/domain-architecture/plans/`.
 - When implementation exposes architecture drift, return to `domain-architecture-guidance` and revise affected downstream guidance.
 - When implementation changes business meaning, return to `domain-modeling` before revising architecture or framework landing.
 

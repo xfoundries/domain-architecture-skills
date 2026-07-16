@@ -28,7 +28,7 @@ At task classification, for project setup, modification, or framework-landing wo
 11. Read `references/distributed-locks.md` only when the use case requires cross-instance coordination for the same resource.
 12. Read `references/outbox-inbox.md` only when the project needs reliable external event publication or idempotent message consumption.
 13. Run the smallest relevant Maven verification command, usually `mvn test`, or a module-scoped `mvn -pl <module> test`.
-14. Complete the JFoundry Implementation Guidance Result with the selected artifacts, constraints, open questions, and verification commands.
+14. Complete the JFoundry Implementation Guidance Result with the selected artifacts, constraints, open questions, verification commands, and readiness for the next planning owner. The result is input to detailed planning; it does not own plan files, tasks, or execution state.
 
 ## Core Rules
 

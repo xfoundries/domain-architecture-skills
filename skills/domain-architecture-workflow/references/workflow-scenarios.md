@@ -137,3 +137,19 @@ Use these compact scenarios to review routing and result protocols. Each scenari
 **Expected:** Start from the bounded context's ubiquitous language and actual responsibilities. Names such as `ExpenseClaimViewReader`, `ApprovedExpenseAmountReader`, and `PaymentStatusProjectionStore` may be recommended as project-local Java conventions, with `Mybatis` added only to infrastructure implementations. Preserve `ExpenseClaimRepository` as a DDD aggregate Repository and state that `Reader` and `Store` are not official DDD, Onion, or jfoundry patterns.
 
 **Prohibited:** Renaming every dependency to `*Port`, every implementation to `*Adapter`, presenting `Reader` or `Store` as an Onion standard, or allowing architecture suffixes to replace domain language.
+
+## Scenario 18: Standalone Planning After New Domain Analysis
+
+**Input:** A new domain-heavy service supplies raw requirements, selects no process companion, and asks to begin development after the workflow completes.
+
+**Expected:** Complete the applicable specialist phases, select the smallest planning-ready increment, and route its detailed planning to `docs/domain-architecture/plans/`. State that no companion selection is required. Create only relevant workflow artifacts; do not create empty files or companion task formats.
+
+**Prohibited:** Requiring Superpowers/OpenSpec, treating the handoff as the detailed plan, or beginning an increment whose needed phase is `needs-input`.
+
+## Scenario 19: Companion Added To Existing Handoff
+
+**Input:** A project already has completed Domain Modeling, Architecture Guidance, and JFoundry Implementation Guidance artifacts. The user later selects OpenSpec for a Base resource-pool increment.
+
+**Expected:** OpenSpec consumes the existing handoff and owns its proposal, plan, tasks, and files. Preserve prior decisions and open questions; plugin artifacts remain under `docs/domain-architecture/`. Revisit only the phases affected by new or conflicting evidence.
+
+**Prohibited:** Recreating the plugin's artifacts inside OpenSpec, forcing an OpenSpec directory onto the plugin, or rerunning completed phases without changed evidence.

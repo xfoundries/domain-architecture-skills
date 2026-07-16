@@ -28,9 +28,12 @@ requirements
 -> Architecture Guidance Result
 -> optional JFoundry Implementation Guidance Result
 -> Domain Architecture Handoff
+-> detailed planning (`docs/domain-architecture/plans/` or a selected process companion)
 ```
 
-`Domain Architecture Handoff` is the coordinator's composite result for the next planning, implementation, or review activity. It preserves specialist results and phase status without replacing them or requiring a fixed file format.
+`Domain Architecture Handoff` is the coordinator's composite result for the next planning, implementation, or review activity. It preserves specialist results and phase status without replacing them or requiring a fixed file format. It identifies the smallest planning-ready increment, its dependent blockers, and the next planning owner; it is not a detailed implementation plan. When persisted for a new project, plugin artifacts use `docs/domain-architecture/` and standalone detailed plans use its `plans/` child directory.
+
+Every project should use a deliberate flow from requirements to planning and verification. The domain and architecture phases scale with the increment: new or domain-heavy behavior needs the full workflow, while simple CRUD and localized fixes reuse established evidence or record why a richer phase is unnecessary.
 
 ### Standalone
 
@@ -56,7 +59,7 @@ If jfoundry use is undecided, framework-neutral Domain Modeling and Architecture
 
 ### With A Process Companion
 
-Superpowers, SpecKit, OpenSpec, and similar workflows are optional companions. They own their specification, planning, tasks, implementation, review, files, and commands; this plugin owns the domain and architecture results, optional jfoundry landing, and handoff.
+Superpowers, SpecKit, OpenSpec, and similar workflows are optional companions. They own their specification, planning, tasks, implementation, review, files, and commands; this plugin owns the domain and architecture results, optional jfoundry landing, and handoff. A companion may help gather initial requirements, but it must consume the handoff before finalizing dependent plans or tasks.
 
 ```text
 Use <process companion> for the development process.
@@ -66,6 +69,8 @@ Domain Architecture Handoff into the companion's next activity.
 ```
 
 If a blocker changes business meaning or architecture, return it to the companion-owned requirements or specification activity instead of guessing. See the [first-use guide](skills/domain-architecture-workflow/references/first-use.md) for the complete input, ownership, status, and return rules.
+
+When no companion is selected, the handoff routes to plugin-managed detailed planning under `docs/domain-architecture/plans/`. A project can also adopt a companion later: it consumes the existing handoff without repeating completed phases unless evidence has changed. Existing documents outside that tree remain input evidence; they do not change the plugin output location.
 
 ## Scope And Limits
 

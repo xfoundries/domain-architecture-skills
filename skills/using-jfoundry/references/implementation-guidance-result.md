@@ -43,6 +43,11 @@ JFoundry Landing:
 
 The specialist owns the `JFoundry Landing` payload. Select its fields from the confirmed domain and architecture results, project evidence, and the relevant jfoundry references. Omit fields that do not apply rather than filling them speculatively. This result guides the next implementation activity; it does not claim that production code was written or verified.
 
+It is an input to detailed planning, not the detailed plan itself. When a process companion is selected,
+that companion owns its specification, plan, tasks, files, and execution state. Otherwise, detailed plans
+belong under the workflow's default `docs/domain-architecture/plans/` directory. Do not duplicate a
+companion's artifacts.
+
 ## Status And Applicability
 
 - Use `not-applicable` when the target does not use jfoundry and the user did not request it. Record why no framework landing is needed.

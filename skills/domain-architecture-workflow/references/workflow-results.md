@@ -26,10 +26,12 @@ Mark a phase `completed` when its usable result is ready. Mark it `needs-input` 
 Run phases in this order:
 
 1. Establish business context.
-2. Produce and consume the `Domain Modeling Result` from `domain-modeling`.
-3. Produce and consume the `Architecture Guidance Result` from `domain-architecture-guidance`.
-4. Produce and consume the `using-jfoundry` result only when jfoundry applies.
-5. Produce the `Domain Architecture Handoff`.
+2. Classify the required decision depth for the requested increment; do not force full DDD or
+   architecture work when existing evidence makes it unnecessary.
+3. Produce and consume the `Domain Modeling Result` from `domain-modeling` when needed.
+4. Produce and consume the `Architecture Guidance Result` from `domain-architecture-guidance` when needed.
+5. Produce and consume the `using-jfoundry` result only when jfoundry applies.
+6. Produce the `Domain Architecture Handoff` and route it to detailed planning.
 
 Move backward when later work invalidates earlier assumptions:
 
@@ -68,6 +70,10 @@ Honor an explicit process choice and cooperate with an already active workflow. 
 
 Treat Superpowers, OpenSpec, and SpecKit only as optional examples of process companions. Do not depend on them or reproduce their procedures.
 
+When no companion is selected, identify plugin-managed detailed planning under
+`docs/domain-architecture/plans/` as the next owner. When a companion is selected later, it consumes the persisted handoff and
+owns only its own planning artifacts; rerun a specialist only for stale or conflicting evidence.
+
 ## Domain Architecture Handoff
 
 Produce one composite handoff containing:
@@ -81,6 +87,8 @@ Produce one composite handoff containing:
 - open questions, including blockers;
 - the framework landing, or why none applies;
 - the application runtime integration policy when a runtime decision makes it relevant;
+- planning readiness for the selected increment, including its explicit non-goals and dependent blockers;
+- the next planning owner: plugin-managed planning or the selected process companion;
 - the recommended next activity.
 
 Keep distinctions explicit among domain-modeling decisions, architecture-style constraints, framework conventions, heuristics, and project policies.
