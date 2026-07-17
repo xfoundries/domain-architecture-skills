@@ -48,6 +48,7 @@ Desired next activity:
 For focused work, invoke `domain-modeling`, `domain-architecture-guidance`, or `using-jfoundry` directly.
 
 `using-jfoundry` translates a confirmed architecture into framework-specific guidance. It preserves Architecture Guidance results, existing project evidence, established conventions sufficient for simple changes, or an explicit user choice; it does not default an undecided project to Hexagonal Architecture.
+For Spring Boot and JPA, it also keeps entity scanning, application-owned migrations, and reliable-message retry semantics explicit.
 
 Its architecture-test templates use native ArchUnit `ArchTests`. Aggregate repositories retain their DDD identity: Hexagonal projects may also express them as secondary ports without moving them out of `domain.repository`, while Onion projects express the same dependency inversion through inner and infrastructure rings.
 

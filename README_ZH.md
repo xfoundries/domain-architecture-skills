@@ -48,6 +48,7 @@
 如果只处理单一问题，可以直接调用 `domain-modeling`、`domain-architecture-guidance` 或 `using-jfoundry`。
 
 `using-jfoundry` 负责把已确认的架构翻译为框架落地指导。它会保留架构指导结果（`Architecture Guidance Result`）、现有项目证据、足以支持简单变更的既有约定或用户明确选择；不会把尚未决定架构的项目默认设为 Hexagonal Architecture。
+对于 Spring Boot 与 JPA，它还会明确实体扫描、应用自有迁移以及可靠消息重试语义。
 
 其中的架构测试模板使用 ArchUnit 原生 `ArchTests`。聚合仓储（Repository）保持独立的 DDD 身份：Hexagonal 项目可以同时把它表达为次级端口（Secondary Port），而无需移出 `domain.repository`；Onion 项目则通过内环契约与基础设施环实现表达同一依赖倒置关系。
 

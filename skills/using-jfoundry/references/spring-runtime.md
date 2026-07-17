@@ -8,6 +8,7 @@ Use this reference only when a project explicitly selects Spring Framework, Spri
 - Keep domain code free of Spring. Keep application code free of HTTP, JPA, mapper, broker-record, and client-SDK types.
 - Choose `jfoundry-spring-dependencies` and copy the selected runtime template from `assets/templates/maven/`.
 - The business JPA or MyBatis-Plus starter does not imply Outbox, Inbox, a broker, or a distributed lock. Add those only when the use case selects them.
+- When JPA entities sit outside the package of the Spring Boot application class, register their package with `@EntityScan`. Entity registration is separate from schema management: keep Flyway or Liquibase as the application-owned schema authority and do not use Hibernate DDL creation for jfoundry tables.
 
 ## Application Boundaries
 

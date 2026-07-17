@@ -66,6 +66,10 @@ Outbox does not imply a production broker. Provide a real `MessageSender` throug
 or a custom adapter, and verify the selected runtime bean in a context or smoke test. Use Inbox at
 the consumer boundary whenever duplicate delivery or retry must be idempotent.
 
+With Spring transaction integration, `InboxTemplate` claims, processes, and records a handler failure
+in separate transactions. A failed handler leaves a durable `FAILED` Inbox row for a later retry;
+integration tests should verify that retry path rather than expect the row to disappear.
+
 Copy the supported Outbox or Inbox SQL template into the application's migration process; jfoundry
 does not create business tables automatically. Read the selected jfoundry version's capability and
 implementation documentation for dispatcher configuration, retries, cleanup, and store-specific
