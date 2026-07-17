@@ -80,8 +80,10 @@ Copy templates instead of rewriting them from memory:
 - `assets/templates/maven/lock-redisson-dependencies.xml`
 - `assets/templates/maven/outbox-dependencies.xml`
 - `assets/templates/maven/outbox-mybatis-plus-dependencies.xml`
+- `assets/templates/maven/outbox-jpa-dependencies.xml`
 - `assets/templates/maven/inbox-dependencies.xml`
 - `assets/templates/maven/inbox-mybatis-plus-dependencies.xml`
+- `assets/templates/maven/inbox-jpa-dependencies.xml`
 - `assets/templates/maven/broker-dependencies.xml`
 - `assets/templates/structure/hexagonal-package-structure.txt`
 - `assets/templates/structure/onion-simple-package-structure.txt`
@@ -124,7 +126,7 @@ Use $using-jfoundry to create the initial architecture for a new Java business p
 Base package: com.example.order
 Project shape: single module, Hexagonal domain/application/adapter/boot, a justified Hexagonal adapter split, or Onion domain/application/infrastructure/boot
 Runtime: undecided
-Persistence: MyBatis-Plus
+Persistence: JPA, MyBatis-Plus, or undecided
 Messaging: Kafka later, not in the initial skeleton
 Architecture: confirmed result, existing project style, explicit choice, or undecided
 ```

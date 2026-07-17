@@ -58,9 +58,11 @@ Spring-specific starters belong in the runtime assembly module/package:
 - RocketMQ sender adapter: `jfoundry-messaging-rocketmq-spring-boot-starter`
 - Outbox core + Spring transaction/scheduling integration: `jfoundry-outbox-spring-boot-starter`
 - Outbox MyBatis-Plus store: `jfoundry-outbox-mybatis-plus-spring-boot-starter`
+- Outbox JPA store: `jfoundry-outbox-jpa-spring-boot-starter`
 - Outbox JobRunr dispatcher: `jfoundry-outbox-jobrunr-spring-boot-starter`
 - Inbox core + `InboxTemplate`: `jfoundry-inbox-spring-boot-starter`
 - Inbox MyBatis-Plus store: `jfoundry-inbox-mybatis-plus-spring-boot-starter`
+- Inbox JPA store: `jfoundry-inbox-jpa-spring-boot-starter`
 
 When cross-instance coordination for the same resource is required, read `references/distributed-locks.md`. Add `jfoundry-lock-redisson-spring-boot-starter` to the runtime assembly only after choosing Redisson as the distributed-lock adapter; it is optional and managed by `jfoundry-spring-dependencies`.
 
@@ -83,8 +85,10 @@ For Spring Boot MVC applications, use `jfoundry-webmvc-spring-boot-starter` in t
 - Use `lock-redisson-dependencies.xml` only when cross-instance same-resource coordination is required and the Spring Boot runtime selects the Redisson lock adapter.
 - Use `outbox-dependencies.xml` only when reliable external publication is required and the runtime is Spring Boot.
 - Use `outbox-mybatis-plus-dependencies.xml` only when Outbox uses the MyBatis-Plus store in a Spring Boot runtime.
+- Use `outbox-jpa-dependencies.xml` only when Outbox uses the JPA store in a Spring Boot runtime.
 - Use `inbox-dependencies.xml` only when consumer idempotency is required and the runtime is Spring Boot.
 - Use `inbox-mybatis-plus-dependencies.xml` only when Inbox uses the MyBatis-Plus store in a Spring Boot runtime.
+- Use `inbox-jpa-dependencies.xml` only when Inbox uses the JPA store in a Spring Boot runtime.
 - Use `broker-dependencies.xml` only when selecting a real Spring Boot broker adapter. Pick one broker starter unless the application truly publishes to multiple brokers.
 
 ## Avoid

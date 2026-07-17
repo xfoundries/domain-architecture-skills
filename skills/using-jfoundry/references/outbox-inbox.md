@@ -1,4 +1,4 @@
-# Outbox And Inbox Guidance
+# Reliable Messaging Decision Guidance
 
 ## When To Use Outbox
 
@@ -11,78 +11,36 @@ Use Outbox only when domain events must be reliably published outside the proces
 
 If events only need in-process local listeners, use local event dispatch and do not configure Outbox.
 
-## Event Flow
+## Keep The External Contract At The Boundary
 
-The intended flow is:
+External publication is a business integration decision, not an automatic consequence of recording a
+domain event. Externalize a domain event directly only when it is deliberately a stable public
+contract. Otherwise translate it at the application boundary into a separately versioned integration
+contract. Keep wire payloads independent of Java implementation types.
 
-```text
-@ApplicationService
-  -> DomainEventContext
-  -> DomainEventDispatcher
-  -> DomainEventOutboxRecorder
-  -> OutboxMessageStore
-  -> jfoundry_outbox_event
-  -> OutboxDispatcher
-  -> MessageSender
-  -> broker / external system
-```
+Read the reliable-messaging capability documentation for the selected jfoundry version before using
+`@Externalized`, `@MessageRouting`, or `OutboxTemplate`; this skill does not duplicate those API and
+dispatch semantics.
 
-Mark only externally published events with `@Externalized`. Use `@MessageRouting` when topic or routing key must be explicit. `@MessageRouting` alone does not make an event externalized.
-
-## Choose The External Contract
-
-Use direct domain-event externalization only when that event is deliberately a stable public contract:
-
-```java
-@Externalized("orders.events.v1")
-@MessageRouting(topic = "orders.events.v1", key = "orderId")
-public final class OrderPlaced extends AbstractDomainEvent {
-    // Stable public event fields.
-}
-```
-
-When the internal domain event and public contract need different ownership or evolution, keep the domain event internal. Translate it at the application boundary and append the versioned integration event explicitly:
-
-```java
-OrderPlacedV1 integrationEvent = translator.translate(domainEvent);
-outboxTemplate.append(new OutboxAppendRequest(
-        eventId,
-        "orders.events.v1",
-        orderId,
-        "OrderPlacedV1",
-        integrationEvent,
-        occurredAt,
-        "Order",
-        orderId,
-        aggregateVersion));
-```
-
-`OutboxTemplate` uses the configured `PayloadSerializer` and `OutboxMessageStore` in the caller's transaction. It does not start a transaction, publish synchronously, or decide how a business event maps to an integration contract. Keep that translation in the business project, and do not make the domain model depend on an `integration-contracts` module.
-
-Keep the wire payload independent of Java implementation types. The default Jackson serializer
-writes ordinary JSON without Jackson default-typing metadata or Java class names. Use the envelope's
-event type/version and the Outbox `payloadType` as stable contract identifiers; each consumer should
-deserialize into its own versioned contract. Do not rely on `@class`, collection implementation
-names, or values such as `java.math.BigDecimal` being embedded in JSON.
-
-## Starter Selection
+## Select A Store
 
 The Outbox/Inbox concepts are framework-neutral, but the runtime/starters documented here are currently Spring Boot-specific. For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, do not copy these starter snippets unless jfoundry provides a matching runtime adapter.
 
-For Outbox with MyBatis-Plus storage:
+For Spring Boot, select the common capability starter and exactly one store implementation for each
+capability that is needed:
 
-- Add `jfoundry-outbox-spring-boot-starter`.
-- Add `jfoundry-outbox-mybatis-plus-spring-boot-starter`.
-- Add one real broker starter, such as `jfoundry-messaging-kafka-spring-boot-starter`, when production dispatch is enabled.
+| Capability | MyBatis-Plus | JPA |
+|---|---|---|
+| Outbox | `jfoundry-outbox-spring-boot-starter` + `jfoundry-outbox-mybatis-plus-spring-boot-starter` | `jfoundry-outbox-spring-boot-starter` + `jfoundry-outbox-jpa-spring-boot-starter` |
+| Inbox | `jfoundry-inbox-spring-boot-starter` + `jfoundry-inbox-mybatis-plus-spring-boot-starter` | `jfoundry-inbox-spring-boot-starter` + `jfoundry-inbox-jpa-spring-boot-starter` |
 
-The Outbox starter auto-configures `OutboxTemplate` when `OutboxMessageStore` and `PayloadSerializer` beans are available. Non-Spring runtimes can construct the framework-neutral template directly.
+The persistence starter for aggregate repositories (`jfoundry-mybatis-plus-spring-boot-starter` or
+`jfoundry-jpa-spring-boot-starter`) does not add Outbox or Inbox. Select the messaging capability
+explicitly. The specialized store starters already include their corresponding common starter, so
+projects may use the store template alone when it is the only required snippet.
 
-The messaging starter transitively supplies Spring Boot's JSON starter, so a non-web consumer or
-batch application receives the default Jackson `ObjectMapper` and `PayloadSerializer` without
-adding a WebMVC or WebFlux starter. Do not add a web runtime only to make Outbox serialization
-work. A project-defined `ObjectMapper` or `PayloadSerializer` still takes precedence.
-
-For JobRunr dispatching, add `jfoundry-outbox-jobrunr-spring-boot-starter` and set dispatcher mode accordingly.
+For a non-Spring runtime, assemble the framework-neutral contracts and adapters manually; do not copy
+Spring Boot templates unless jfoundry provides an explicit runtime adapter.
 
 ## MessageSender Rule
 
@@ -95,22 +53,20 @@ serializers because the jfoundry sender publishes the Outbox key and JSON body a
 listeners and automatic Outbox dispatch disabled by default in tests or partial local startup, then
 enable both explicitly in the integration profile that starts the broker.
 
-## Inbox
+## JPA Inbox Database Decision
 
-Use Inbox when a consumer must be idempotent under duplicate delivery or retry:
+JPA Inbox has built-in atomic claim support for PostgreSQL and MySQL. For another database product,
+the project must provide a `JpaInboxClaimStrategy`. When the database product is unknown, do not
+select the JPA Inbox store yet; record the database choice as `needs-input` instead of assuming a
+portable claim algorithm.
 
-```java
-inboxTemplate.executeOnce(eventId, "order-projection", () -> {
-    handler.handle(event);
-});
-```
+## Runtime And Operational Ownership
 
-For Spring Boot with MyBatis-Plus storage, add `jfoundry-inbox-spring-boot-starter` and `jfoundry-inbox-mybatis-plus-spring-boot-starter`.
+Outbox does not imply a production broker. Provide a real `MessageSender` through one broker starter
+or a custom adapter, and verify the selected runtime bean in a context or smoke test. Use Inbox at
+the consumer boundary whenever duplicate delivery or retry must be idempotent.
 
-## Operational Notes
-
-- Outbox messages move through `PENDING`, `DISPATCHING`, `PUBLISHED`, `FAILED`, and `DEAD_LETTERED`.
-- Dispatchers use atomic claim to avoid duplicate dispatch across instances.
-- Recovery moves stuck `DISPATCHING` messages back to retryable state.
-- Cleanup should only remove terminal records after the configured retention period.
-- Consumers still need idempotency because brokers and dispatchers can retry.
+Copy the supported Outbox or Inbox SQL template into the application's migration process; jfoundry
+does not create business tables automatically. Read the selected jfoundry version's capability and
+implementation documentation for dispatcher configuration, retries, cleanup, and store-specific
+operational behavior.

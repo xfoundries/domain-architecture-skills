@@ -1,0 +1,7 @@
+<dependencies>
+    <!-- Spring Boot runtime only. JPA InboxMessageStore adapter. -->
+    <dependency>
+        <groupId>io.github.xfoundries</groupId>
+        <artifactId>jfoundry-inbox-jpa-spring-boot-starter</artifactId>
+    </dependency>
+</dependencies>
