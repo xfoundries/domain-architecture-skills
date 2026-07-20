@@ -180,6 +180,31 @@ an object that represents an execution scope or contextual data, such as a reque
 security, or transaction context. This is a naming heuristic, not a DDD, CQRS, Hexagonal, or Onion
 architecture rule.
 
+## Helper And Shared Code Placement
+
+Do not create a cross-layer `utils`, `common`, or `shared` package by default. A helper's package
+ownership follows its responsibility and allowed dependencies, not its static-method shape or the
+number of callers.
+
+- Model a business concept, invariant, calculation, or policy in the domain. Prefer a value object,
+  domain service, or business-named policy over a `*Utils` type.
+- Put repeated use-case orchestration in the owning application's capability package, usually a
+  `support` package when that grouping improves clarity. It may load aggregates, coordinate clock
+  access, or apply application-level authorization, but must not take over domain behavior.
+- Keep HTTP, broker, persistence, serialization, remote-protocol, and client-SDK helpers in the
+  adapter or infrastructure package that owns that technology boundary. Application and domain code
+  must not depend on those helpers.
+- A small framework-neutral, business-free shared package is justified only when it has stable
+  ownership and cannot become a dependency sink. Keep it independent of application, adapter,
+  runtime, ORM, HTTP, broker, and SDK types; prefer a responsibility-specific name over a generic
+  `utils` package.
+
+Apply the same responsibility rule in every architecture style. In Hexagonal Architecture, place
+technology helpers in the matching primary or secondary adapter without inventing a port for each
+helper. In Onion Architecture, place them in the appropriate `infrastructure` concern and preserve
+inward dependencies; do not import Hexagonal `adapter.in/out` or port vocabulary merely to organize
+helpers.
+
 ## Domain Events And Integration Contracts
 
 Do not assume an internal domain event is automatically a suitable public integration contract.

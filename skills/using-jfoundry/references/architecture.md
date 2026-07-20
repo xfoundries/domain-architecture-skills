@@ -35,4 +35,22 @@ Use package annotations only for homogeneous role packages; otherwise annotate t
 - Do not mix Hexagonal and Onion annotations in one ArchUnit analysis scope.
 - Do not introduce CQRS, ports, or separate Maven modules for symmetry.
 
+## Helper And Support Code Placement
+
+Do not add a global `utils` package or Maven module. Classify Java helpers by responsibility and
+dependency direction, then place them in the owning business capability where practical.
+
+| Responsibility | Hexagonal placement | Onion placement | Prefer names such as |
+|---|---|---|---|
+| Domain concept, invariant, or calculation | `domain` | `domain` | `Money`, `SettlementPeriod`, `PricingPolicy` |
+| Repeated use-case orchestration | `application.<capability>.support` | `application.<capability>.support` | `OrderCommandOperations`, `ExpenseClaimCommandSupport` |
+| HTTP or message input mapping | matching primary adapter | `infrastructure.web` or `infrastructure.messaging` | `CreateOrderRequestMapper`, `MessagePayloadParser` |
+| Persistence mapping or external client protocol | matching secondary adapter | `infrastructure.persistence` or `infrastructure.client` | `OrderDataConverter`, `PaymentGatewaySigner` |
+| Spring, ORM, or runtime assembly support | runtime assembly or owning outer adapter | runtime assembly or owning `infrastructure` concern | `JacksonSupport`, `JpaTransactionSupport` |
+| Framework-neutral, business-free support | narrowly named shared package only when justified | narrowly named shared package only when justified | `Utf8`, `Checks` |
+
+Keep the optional shared package independent of Spring, ORM, HTTP, broker, and SDK types. It is not
+an escape hatch for code with unclear ownership. In particular, do not move a domain rule into it
+because multiple aggregates use it; model that rule as a domain concept or domain service instead.
+
 Read `references/upstream-documentation.md` for exact annotation semantics and architecture-rule entrypoints. Read `references/testing.md` after selecting the shape.
