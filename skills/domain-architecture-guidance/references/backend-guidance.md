@@ -2,7 +2,9 @@
 
 ## Scope
 
-This skill targets backend business systems first, and client applications only when they contain substantial domain behavior.
+This skill targets backend business systems first. It can guide client applications when they own
+substantial business rules, offline workflows, synchronization conflicts, or local persistence
+boundaries. It does not provide platform-specific mobile or frontend implementation templates.
 
 Primary backend targets:
 
@@ -11,13 +13,11 @@ Primary backend targets:
 - Go: HTTP/RPC services, package boundaries, interfaces at consumer side, persistence adapters, event/message integrations.
 - Python: FastAPI, Django, Flask, Celery, SQLAlchemy, Django ORM, service/application layers, domain modules.
 
-Conditional client targets:
-
-- Dart/Flutter and Swift/iOS: use only when there are complex local rules, offline-first workflows, sync conflict handling, local persistence, payments, booking, medical/finance/business workflows, or other domain-heavy client behavior.
-
 Prefer existing codebase conventions over textbook layouts.
 
-Before judging a dependency or call path, identify whether the project has explicitly chosen Layered, Onion, Hexagonal / Ports and Adapters, CQRS, or a simpler CRUD style. If an architecture has been chosen, enforce that architecture's boundary rules consistently. Simplicity is not a reason to silently bypass an explicit architectural constraint.
+Use `architecture-constraints.md` for architecture-style dependency and call-path rules. Use
+`hexagonal-architecture.md` for Hexagonal roles, port ownership, and adapter direction. This file
+translates confirmed decisions into ecosystem idioms; it does not define those rules.
 
 ## Java and jMolecules
 
@@ -72,71 +72,9 @@ Use DDD and ports/adapters selectively because Python frameworks often encourage
 - Use protocols, abstract base classes, or duck typing only when they clarify a boundary.
 - Avoid deep package trees for small services.
 
-## Dart/Flutter and Swift/iOS
+## Client Applications
 
-Use this skill carefully for mobile clients. Most mobile screens do not need backend-style DDD architecture.
-
-Apply DDD, ports/adapters, or CQRS-inspired separation when:
-
-- The app must work offline and later sync with conflict handling.
-- Local decisions enforce business rules, not just UI validation.
-- Local persistence is complex enough to need stable boundaries.
-- The client has task-based workflows with commands and derived read models.
-- The app is in a domain such as finance, healthcare, logistics, booking, field service, or enterprise operations.
-
-Do not introduce aggregates, repositories, or CQRS just to organize view models. Prefer idiomatic platform patterns such as Flutter state management, SwiftUI state, coordinators, services, and persistence wrappers unless domain complexity justifies more.
-
-## Pattern Selection
-
-### Layered Architecture
-
-Use when the system benefits from a conventional separation of interface/API, application/service, domain, and infrastructure/persistence concerns.
-
-Be careful: layer names alone do not guarantee dependency direction. Verify actual imports/references.
-
-In strict layered designs, controllers should usually call application services rather than repositories directly. This keeps use-case orchestration, transaction boundaries, authorization decisions, and domain interaction out of delivery adapters.
-
-### Onion Architecture
-
-Use when the team wants an explicit domain core surrounded by application and infrastructure rings. Dependencies should point inward.
-
-Avoid treating every ring as a physical project unless the codebase benefits from stronger compile-time boundaries.
-
-In Onion Architecture, infrastructure belongs outside the domain core. Domain model code should not depend on persistence frameworks, web frameworks, messaging frameworks, or adapter implementations.
-
-Onion Architecture does not supply Primary/Secondary Port or Adapter roles or mandatory class-name
-suffixes. Let DDD ubiquitous language name domain types, let application types describe business
-actions and orchestration responsibilities, and let infrastructure types add technology names only
-where they identify the implementation. An inner-ring interface implemented by infrastructure is a
-dependency-inversion contract; `*Port` is optional project vocabulary, not an Onion requirement.
-
-### Hexagonal Architecture / Ports and Adapters
-
-Use when the domain/application needs to be isolated from delivery mechanisms and external systems. Model primary adapters as inbound drivers and secondary adapters as outbound integrations.
-
-Prefer ports for real variability, testing value, or boundary protection. Avoid one-interface-per-class abstractions that only mirror a single implementation.
-
-In strict Hexagonal Architecture, primary adapters call primary ports or application services, not secondary adapters or repositories directly. Core code expresses outbound needs as secondary ports; place each port near the application or domain code that consumes it. Secondary adapters implement those ports.
-
-### CQRS
-
-Use when separating writes and reads reduces complexity or enables independent optimization. Common signals:
-
-- Read models differ substantially from write aggregates.
-- Query performance or data shape requirements conflict with the write model.
-- Commands represent business tasks with validation and invariants.
-- Different consistency or scaling needs exist for reads and writes.
-
-Do not equate CQRS with Event Sourcing. Do not split models just because the code uses methods named `Handle`.
-
-## Review Checklist
-
-When reviewing code:
-
-- Identify the chosen architectural style before judging violations.
-- Check dependency direction with imports, project references, package references, and framework dependencies.
-- Check whether aggregates protect invariants or merely wrap database rows.
-- Check whether repositories expose persistence-shaped queries that leak infrastructure concerns into the domain/application.
-- Check whether application services coordinate use cases without accumulating domain rules that belong in the model.
-- Check whether CQRS read models are justified by query shape or scaling needs.
-- Check whether added abstractions reduce coupling or only add ceremony.
+Apply the same domain-modeling and architecture decision discipline only when the client owns
+meaningful local business behavior. Keep UI state management, rendering, transport integration, and
+platform framework concerns outside the domain model. Prefer the host platform's conventions and
+retrieve current platform documentation when an implementation decision depends on a framework API.

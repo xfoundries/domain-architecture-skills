@@ -75,8 +75,8 @@ $domain-architecture-workflow 完成领域与架构决策。
 
 ## 适用范围与限制
 
-- 核心领域建模和架构指导方法与语言、框架无关，但 Java/Kotlin 的实现指导最深入。C#/.NET、Go、Python 提供映射和示例，但集成与模板较少；`using-jfoundry` 仅适用于 Java。
-- 主要面向业务后端软件。对于包含大量离线领域逻辑、同步流程、持久化边界或复杂规则的客户端应用，也可以按需使用。
+- 核心领域建模和架构指导方法与语言、框架无关，但 Java/Kotlin 的实现指导最深入。C#/.NET、Go、Python 提供生态映射而非代码模板；`using-jfoundry` 仅适用于 Java。
+- 主要面向业务后端软件。客户端在拥有实质业务行为、离线工作流、同步冲突或本地持久化边界时可按需使用；本插件不提供移动端或前端平台的专项实现模板。
 - 不要把 DDD、端口与适配器（Ports and Adapters）、CQRS、仓储（Repository）或分层架构（Layered Architecture）强行套到简单 CRUD、薄客户端或小脚本中。
 
 ## 资料来源策略

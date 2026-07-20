@@ -75,8 +75,8 @@ When no companion is selected, the handoff routes to plugin-managed detailed pla
 
 ## Scope And Limits
 
-- The core modeling and architecture methods are language and framework neutral, but implementation guidance is deepest for Java/Kotlin. C#/.NET, Go, and Python have mappings and examples with fewer integrations and templates; `using-jfoundry` is Java-only.
-- The primary target is business backend software. Client applications are a conditional fit when they contain substantial offline domain logic, synchronization, persistence boundaries, or complex rules.
+- The core modeling and architecture methods are language and framework neutral, but implementation guidance is deepest for Java/Kotlin. C#/.NET, Go, and Python receive ecosystem mapping rather than code templates; `using-jfoundry` is Java-only.
+- The primary target is business backend software. Client applications are a conditional fit when they own substantial domain behavior, offline workflows, synchronization conflicts, or local persistence boundaries; this plugin does not provide platform-specific mobile or frontend implementation templates.
 - Do not force DDD, Ports and Adapters, CQRS, repositories, or layered structures into simple CRUD applications, thin clients, or small scripts.
 
 ## Source Policy
