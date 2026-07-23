@@ -25,6 +25,6 @@ Do not override public lifecycle methods on jfoundry repository bases. Use their
 
 ## Business-Owned Decisions
 
-The project, not the persistence library, chooses full replacement, differential updates, append-only writes, child-delete ordering, audit mapping, and duplicate-key interpretation. Translate a database constraint to `ConflictException` only when it represents the intended business conflict.
+The project, not the persistence library, chooses full replacement, differential updates, append-only writes, child-delete ordering, audit mapping, and duplicate-key interpretation. Translate a database constraint to the selected release's documented application conflict outcome only when it represents the intended business conflict.
 
-Use `infrastructure-jpa-dependencies.xml` or `infrastructure-mybatis-plus-dependencies.xml` for a framework-neutral outer adapter. For Spring Boot runtime assembly, use the matching Spring Boot template. Read `references/upstream-documentation.md` for mapper signatures, helper methods, transaction integration, and provider-specific details.
+Resolve the selected release's supported persistence artifacts after choosing the outer adapter and runtime assembly. Read `references/upstream-documentation.md` for coordinates, mapper signatures, helper methods, transaction integration, and provider-specific details.

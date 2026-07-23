@@ -1,7 +1,0 @@
-<dependencies>
-    <!-- Spring Boot runtime only. JPA OutboxMessageStore adapter. -->
-    <dependency>
-        <groupId>io.github.xfoundries</groupId>
-        <artifactId>jfoundry-outbox-jpa-spring-boot-starter</artifactId>
-    </dependency>
-</dependencies>

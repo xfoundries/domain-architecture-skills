@@ -1,7 +1,0 @@
-<dependencies>
-    <!-- Spring Boot runtime only. MyBatis-Plus OutboxMessageStore adapter. -->
-    <dependency>
-        <groupId>io.github.xfoundries</groupId>
-        <artifactId>jfoundry-outbox-mybatis-plus-spring-boot-starter</artifactId>
-    </dependency>
-</dependencies>

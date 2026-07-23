@@ -47,14 +47,13 @@
 
 如果只处理单一问题，可以直接调用 `domain-modeling`、`domain-architecture-guidance` 或 `using-jfoundry`。
 
-`using-jfoundry` 负责把已确认的架构翻译为框架落地指导。它会保留架构指导结果（`Architecture Guidance Result`）、现有项目证据、足以支持简单变更的既有约定或用户明确选择；不会把尚未决定架构的项目默认设为 Hexagonal Architecture。
-对于 Spring Boot 与 JPA，它还会明确实体扫描、应用自有迁移以及可靠消息重试语义。
+`using-jfoundry` 负责把已确认的架构翻译为框架落地指导。它会保留架构指导结果（`Architecture Guidance Result`）、现有项目证据、足以支持简单变更的既有约定或用户明确选择；不会把尚未决定架构的项目默认设为 Hexagonal Architecture。精确的 Maven 坐标、API、配置项和运行时支持范围会从目标项目所选的 JFoundry 版本解析，不在技能中维护复制的框架目录。
 
-其中的架构测试模板使用 ArchUnit 原生 `ArchTests`。聚合仓储（Repository）保持独立的 DDD 身份：Hexagonal 项目可以同时把它表达为次级端口（Secondary Port），而无需移出 `domain.repository`；Onion 项目则通过内环契约与基础设施环实现表达同一依赖倒置关系。
+聚合仓储（Repository）保持独立的 DDD 身份：Hexagonal 项目可以同时把它表达为次级端口（Secondary Port），而无需移出 `domain.repository`；Onion 项目则通过内环契约与基础设施环实现表达同一依赖倒置关系。
 
 插件会区分命名规则的来源：Onion 不继承 Hexagonal 的主/次端口（Primary/Secondary Port）或适配器（Adapter）角色。Hexagonal 项目应在 `adapter.in/out` 与 `adapter.primary/secondary` 中选择一套，并作为适配器包约定守护；两套都不适用于 Onion。`Reader`、`Store`、`Finder`、`Provider` 等名称可以作为按职责表达的项目约定，但不是 DDD、Onion 或 jfoundry 官方模式；命名仍应首先来自通用语言。
 
-其中的可靠消息指导会区分版本化集成契约与内部领域事件，要求使用不携带 Java 类型元数据的可移植 JSON，并在运行时验证所选消息代理适配器（broker adapter）确实优先于日志回退实现（logging fallback）。
+其中的可靠消息指导会区分版本化集成契约与内部领域事件，并要求依据所选版本的文档确认传输、存储与运维行为。
 
 如果是否使用 jfoundry 尚未决定，框架中立的领域建模和架构指导会继续进行，不调用 `using-jfoundry`。只有后续框架相关活动实质依赖这一选择时，工作流才会询问。
 

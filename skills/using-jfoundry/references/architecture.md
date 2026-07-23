@@ -1,6 +1,6 @@
 # JFoundry Architecture Landing
 
-Use this reference only after the project has selected an architecture style through existing evidence, an explicit decision, or `domain-architecture-guidance`. JFoundry templates express that decision; they do not make it.
+Use this reference only after the project has selected an architecture style through existing evidence, an explicit decision, or `domain-architecture-guidance`. JFoundry annotations and rules express that decision; they do not make it.
 
 ## Choose The Matching Shape
 
@@ -14,17 +14,7 @@ Package roles are not Maven-module requirements. A balanced project may use `dom
 
 ## Hexagonal Landing
 
-Use the following annotations only in a selected Hexagonal analysis scope:
-
-| Role | JFoundry annotation | Placement |
-|---|---|---|
-| Application core | `@Application` | application services and use cases |
-| Inbound contract | `@PrimaryPort` | application `port.in` or business-named use-case package |
-| Inbound driver | `@PrimaryAdapter` | web, messaging, CLI, scheduler, or batch adapter |
-| Outbound contract | `@SecondaryPort` | application or narrow domain-owned contract |
-| Outbound implementation | `@SecondaryAdapter` | persistence, client, broker, cache, or file adapter |
-
-Use package annotations only for homogeneous role packages; otherwise annotate the relevant type. Aggregate repositories remain domain contracts and may also be secondary ports. Do not duplicate an aggregate repository merely to create an application `port.out` interface.
+In a selected Hexagonal analysis scope, express the application core, inbound contract and driver, and outbound contract and implementation using the selected release's annotations and architecture rules. Use package annotations only for homogeneous role packages; otherwise annotate the relevant type. Aggregate repositories remain domain contracts and may also be outbound contracts. Do not duplicate an aggregate repository merely to create an application interface.
 
 ## Project Constraints
 

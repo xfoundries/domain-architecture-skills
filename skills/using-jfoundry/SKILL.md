@@ -5,13 +5,13 @@ description: Guide AI agents and developers when starting or modifying Java busi
 
 # Using JFoundry
 
-Use this skill for downstream business projects, not for changing jfoundry itself. It turns an already selected architecture into jfoundry dependencies, package roles, templates, and verification.
+Use this skill for downstream business projects, not for changing jfoundry itself. It turns an already selected architecture into JFoundry capability decisions, package roles, version-aware lookup, and verification.
 
 ## Decision Flow
 
 1. Read `references/implementation-guidance-result.md` for setup, modification, or framework-landing work.
 2. Preserve the project's selected jfoundry version, runtime, architecture style, and conventions. Ask only when an unknown choice changes a required dependency, package role, or test.
-3. Read `references/dependencies.md`, then select the runtime before copying only its BOM and capability templates.
+3. Read `references/dependencies.md`, then resolve the selected version's release documentation, BOM, or source POM before adding any dependency.
 4. Read `references/architecture.md` for JFoundry's package and annotation landing after Hexagonal or Onion has already been selected.
 5. Read a specialized reference only when its concern applies: persistence, repository/read contracts, Spring runtime, Quarkus runtime, reliable messaging, locks, exceptions, or tests.
 6. Read `references/upstream-documentation.md` before using exact framework APIs, properties, auto-configuration behavior, or implementation-specific algorithms.
@@ -22,7 +22,7 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 - Keep domain code free of runtime, ORM, mapper, broker, HTTP, and client-SDK types.
 - Keep business orchestration in application code; primary adapters enter through an application boundary rather than calling persistence or clients directly.
 - Keep technology-specific persistence and messaging in outer adapters or infrastructure.
-- Do not select Hexagonal, Onion, CQRS, Spring Boot, Outbox, Inbox, locks, or a persistence provider merely because a template exists.
+- Do not select Hexagonal, Onion, CQRS, Spring Boot, Outbox, Inbox, locks, or a persistence provider merely because an implementation is available.
 - Keep aggregate repositories for aggregate lifecycle. Add read contracts or ports only when a read responsibility needs one.
 - Treat persistence base classes as optional support. A project-local adapter may implement its aggregate repository contract directly.
 
@@ -31,7 +31,7 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 | Need | Read |
 |---|---|
 | Result format, assumptions, and unresolved choices | `references/implementation-guidance-result.md` |
-| Version, BOM, starters, and Maven templates | `references/version-selection.md`, `references/dependencies.md` |
+| Version, BOM, and capability composition | `references/version-selection.md`, `references/dependencies.md` |
 | Architecture landing and package roles | `references/architecture.md` |
 | Aggregate repositories and read-side contracts | `references/repository-and-read-contracts.md` |
 | JPA, MyBatis-Plus, mappers, and optimistic locking | `references/persistence-data-mappers.md` |
@@ -43,4 +43,4 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 | Architecture tests and Maven verification | `references/testing.md` |
 | Exact framework behavior for the selected version | `references/upstream-documentation.md` |
 
-Copy templates from `assets/templates/` instead of recreating Maven dependencies, package trees, or ArchUnit skeletons from memory. Optional snippets remain optional.
+Use the selected release as the source of truth for Maven coordinates, configuration, APIs, and framework behavior. This skill deliberately does not maintain a dependency catalog or code skeletons for those versioned facts.

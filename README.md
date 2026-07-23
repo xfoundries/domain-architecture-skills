@@ -47,14 +47,13 @@ Desired next activity:
 
 For focused work, invoke `domain-modeling`, `domain-architecture-guidance`, or `using-jfoundry` directly.
 
-`using-jfoundry` translates a confirmed architecture into framework-specific guidance. It preserves Architecture Guidance results, existing project evidence, established conventions sufficient for simple changes, or an explicit user choice; it does not default an undecided project to Hexagonal Architecture.
-For Spring Boot and JPA, it also keeps entity scanning, application-owned migrations, and reliable-message retry semantics explicit.
+`using-jfoundry` translates a confirmed architecture into framework-specific guidance. It preserves Architecture Guidance results, existing project evidence, established conventions sufficient for simple changes, or an explicit user choice; it does not default an undecided project to Hexagonal Architecture. It resolves exact Maven coordinates, APIs, properties, and runtime support from the target project's selected JFoundry release rather than carrying a copied framework catalog.
 
-Its architecture-test templates use native ArchUnit `ArchTests`. Aggregate repositories retain their DDD identity: Hexagonal projects may also express them as secondary ports without moving them out of `domain.repository`, while Onion projects express the same dependency inversion through inner and infrastructure rings.
+Aggregate repositories retain their DDD identity: Hexagonal projects may also express them as secondary ports without moving them out of `domain.repository`, while Onion projects express the same dependency inversion through inner and infrastructure rings.
 
 The guidance keeps naming source-aware. Onion does not inherit Hexagonal Primary/Secondary Port or Adapter roles. Hexagonal projects choose either `adapter.in/out` or `adapter.primary/secondary` as one enforced adapter-package convention; neither pair applies to Onion. Names such as `Reader`, `Store`, `Finder`, and `Provider` are responsibility-oriented project conventions when useful, not official DDD, Onion, or jfoundry patterns; ubiquitous language remains the first naming source.
 
-Its reliable-messaging guidance keeps versioned integration contracts separate from internal domain events, uses portable JSON without Java type metadata, and verifies that a selected broker adapter wins over the logging fallback at runtime.
+Its reliable-messaging guidance keeps versioned integration contracts separate from internal domain events and requires the selected release's documentation to confirm transport, store, and operational behavior.
 
 If jfoundry use is undecided, framework-neutral Domain Modeling and Architecture Guidance continue without invoking `using-jfoundry`. The workflow asks for that choice only when a framework-specific next activity materially depends on it.
 

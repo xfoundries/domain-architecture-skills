@@ -6,7 +6,7 @@ Use this reference only when a project explicitly selects Spring Framework, Spri
 
 - Put Spring Boot starters, the main class, global configuration, component scanning, and runtime wiring in the runtime assembly module/package, commonly `boot`.
 - Keep domain code free of Spring. Keep application code free of HTTP, JPA, mapper, broker-record, and client-SDK types.
-- Choose `jfoundry-spring-dependencies` and copy the selected runtime template from `assets/templates/maven/`.
+- Resolve the selected release's Spring dependency-management entry and runtime artifacts from its documentation or BOM. Do not copy coordinates from this skill.
 - The business JPA or MyBatis-Plus persistence starter does not imply Outbox, Inbox, a broker, or a distributed lock. Add those only when the use case selects them.
 - When JPA entities sit outside the package of the Spring Boot application class, register their package with `@EntityScan`. Entity registration is separate from schema management: keep Flyway or Liquibase as the application-owned schema authority and do not use Hibernate DDL creation for jfoundry tables.
 
@@ -14,7 +14,7 @@ Use this reference only when a project explicitly selects Spring Framework, Spri
 
 Use a transaction boundary only for an application workflow that requires atomic changes. Keep it in application orchestration, whether the project uses a framework-neutral `TransactionRunner` or a selected Spring integration. Keep aggregate load and tracked modification in the same transaction.
 
-For Spring MVC, HTTP response mapping remains a primary-adapter concern. Domain and application code select domain/application exceptions, not HTTP status codes. Use the JFoundry WebMVC starter only when the project chooses its `ProblemDetail` integration.
+For Spring MVC, HTTP response mapping remains a primary-adapter concern. Domain and application code select domain/application outcomes, not HTTP status codes. Use the selected release's web integration only when the project chooses its problem-response mapping.
 
 Outbox, Inbox, broker, and lock decisions remain optional capabilities. Read their specialized references before selecting a starter. For non-Spring runtimes, do not reuse Spring Boot starters.
 

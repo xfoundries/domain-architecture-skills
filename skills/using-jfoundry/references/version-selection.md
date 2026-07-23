@@ -1,6 +1,6 @@
 # JFoundry Version Selection
 
-Resolve the jfoundry version before choosing a BOM or copying dependency templates.
+Resolve the JFoundry version before choosing a BOM or dependencies.
 
 ## Existing Projects
 
@@ -10,9 +10,9 @@ Preserve existing Java and runtime baselines unless the user asks to change them
 
 ## New Projects
 
-If the user specifies a jfoundry version, preserve it and let Maven resolve and validate it. Otherwise, query Maven Central for the canonical `io.github.xfoundries:jfoundry-dependencies` BOM and select its latest stable release. Exclude `SNAPSHOT`, alpha, beta, milestone, and release-candidate (`RC`) versions.
+If the user specifies a JFoundry version, preserve it and let Maven resolve and validate it. Otherwise, query Maven Central for the current stable JFoundry BOM identified by the official release documentation. Exclude `SNAPSHOT`, alpha, beta, milestone, and release-candidate (`RC`) versions.
 
-Show the selected version and pin that exact value wherever `JFOUNDRY_VERSION` is replaced. Never generate `LATEST`, `RELEASE`, version ranges, or other dynamic selectors.
+Show the selected version and pin that exact value in Maven configuration. Never generate `LATEST`, `RELEASE`, version ranges, or other dynamic selectors.
 
 If Maven Central is unavailable, explicitly ask the user for a version. If no stable release exists, ask before selecting a snapshot or other prerelease. Never guess a version from memory.
 

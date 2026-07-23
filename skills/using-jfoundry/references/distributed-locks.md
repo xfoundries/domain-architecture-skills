@@ -6,25 +6,24 @@ A distributed lock coordinates application instances; it is distinct from a data
 
 ## API Choice
 
-- Use `LockTemplate` in the application layer when a use case needs an explicit locked block and the lock scope should be visible in orchestration code.
-- Use `DistributedLockClient` when implementing a custom infrastructure adapter or advanced lock integration behind the application-facing mechanism.
-- Use `@DistributedLock` only on Spring-managed application-service methods when a declarative whole-method boundary is appropriate. It is Spring-specific and is not mandatory.
-- `jfoundry.lock.annotation.enabled` defaults to `true`; set it to `false` to disable the distributed-lock annotation advisor.
-- Add the BOM-managed `jfoundry-lock-core` dependency to every application module that compiles `LockTemplate`, `LockOptions`, `DistributedLockClient`, or `@DistributedLock`; copy `assets/templates/maven/lock-core-dependencies.xml`. `jfoundry-application-starter` does not include lock-core.
-- `@DistributedLock` applies only when a call enters a Spring-managed instance through its proxy. Self-invocation and unproxied instances bypass the advisor; use `LockTemplate` when proxy interception cannot be guaranteed.
+- Prefer the selected release's explicit application-layer lock API when the protected scope should be visible in orchestration code.
+- Use its client contract when implementing a custom infrastructure adapter or advanced integration.
+- Use a declarative lock boundary only on runtime-managed application-service methods when it is appropriate. It is runtime-specific and not mandatory.
+- Resolve the selected release's lock contract artifact and configuration before compiling lock APIs. Do not assume a general application dependency includes it.
+- Verify proxy and self-invocation constraints in the selected runtime guide; use the explicit API when interception cannot be guaranteed.
 
 Keep lock keys resource-specific and stable, so unrelated resources do not serialize. Keep the protected block no broader than the application workflow requires.
 
 ## Redisson Adapter
 
-When a Spring Boot runtime selects Redisson as the distributed-lock adapter, import `jfoundry-spring-dependencies` and copy `assets/templates/maven/lock-redisson-dependencies.xml` into the runtime assembly module. The BOM manages `jfoundry-lock-redisson-spring-boot-starter`; do not add a dependency version and do not add this optional starter to the default Spring Boot template.
+When a Spring Boot runtime selects Redisson as the distributed-lock adapter, resolve the selected release's supported runtime assembly from its BOM and implementation guide. Do not add a dependency version or add the optional adapter by default.
 
-For the Redisson Spring advisor composition, the distributed-lock advisor wraps the transaction advisor, so lock acquisition occurs before transaction start. Preserve this ordering when combining `@DistributedLock` with `@ApplicationTransactional`; it avoids opening a database transaction while waiting for the lock.
+Verify lock and transaction ordering in the selected release before combining declarative lock and transaction boundaries. Avoid opening a database transaction while waiting for a lock when the documented advisor ordering supports that arrangement.
 
-Advisor ordering does not guarantee mutual exclusion for the transaction's full lifetime. An empty lease delegates lifetime management to the backend default/watchdog. A finite lease can expire before the protected transaction completes, so set it longer than the worst-case protected duration with operational margin or avoid a finite lease when that bound is not reliable.
+Advisor ordering does not guarantee mutual exclusion for the transaction's full lifetime. Verify lease and backend lifetime behavior for the selected adapter. A finite lease can expire before the protected transaction completes, so set it longer than the worst-case protected duration with operational margin or avoid a finite lease when that bound is not reliable.
 
 ## Acquisition Failure
 
-The default acquisition-failure behavior throws. With `LockFailureMode.SKIP`, `LockTemplate` returns `null` and the annotation propagates that result. Use annotation-based `SKIP` only on `void` or explicitly nullable boundaries where `null` unambiguously means skipped; never use it on primitive or non-null return methods.
+Verify the selected release's acquisition-failure behavior. Use a skip result only on void or explicitly nullable boundaries where it is unambiguous; never overload a primitive or non-null return with skipped acquisition.
 
-When the caller requires an explicit outcome, keep the default throwing mode and map lock contention to an application-level result at the application boundary.
+When the caller requires an explicit outcome, map lock contention to an application-level result at the application boundary.
