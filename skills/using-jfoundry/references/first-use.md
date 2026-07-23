@@ -42,7 +42,7 @@ Use these defaults when the user asks for scaffolding and the choice is independ
 - no broker starter
 - no MyBatis-Plus unless persistence is explicitly requested
 
-If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. For other runtimes, use framework-neutral jfoundry dependencies unless an explicit runtime adapter exists.
+If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. If the user selects Quarkus, read `references/quarkus-runtime.md`. For other runtimes, use framework-neutral jfoundry dependencies unless an explicit runtime adapter exists.
 
 Select project modules, domain/application starters, package templates, annotations, and architecture tests only after the architecture and project roles are clear. A simple CRUD change may preserve established conventions without richer modeling or a new architecture decision. A new domain-heavy project should obtain Domain Modeling and Architecture Guidance before template selection.
 

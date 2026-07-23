@@ -10,10 +10,11 @@ Choose the BOM by runtime binding, not by architecture style:
 
 - Use `jfoundry-dependencies` for framework-neutral projects that need DDD, architecture annotations, application contracts, SPI, and non-Spring adapters.
 - Use `jfoundry-spring-dependencies` only when the project uses Spring Framework adapters, Spring Boot auto-configuration, or Spring Boot starters. It imports `jfoundry-dependencies` and adds Spring-related dependency management.
+- Use `jfoundry-quarkus-dependencies` only when the project selects the jfoundry Quarkus integration. It imports the framework-neutral dependency management and manages the paired Quarkus runtime/deployment extensions.
 
-Copy `assets/templates/maven/dependency-management-core.xml` or `assets/templates/maven/dependency-management-spring.xml` and replace `JFOUNDRY_VERSION`.
+Copy `assets/templates/maven/dependency-management-core.xml`, `assets/templates/maven/dependency-management-spring.xml`, or `assets/templates/maven/dependency-management-quarkus.xml` for the selected runtime, then replace `JFOUNDRY_VERSION`.
 
-For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, keep `jfoundry-dependencies` unless jfoundry provides a dedicated runtime BOM. Do not import Spring BOMs or Spring Boot starters just because the project uses jfoundry.
+For Micronaut, Helidon, CLI, or custom runtimes, keep `jfoundry-dependencies` unless jfoundry provides a dedicated runtime BOM. Quarkus projects select `jfoundry-quarkus-dependencies`; none of these runtimes may import Spring BOMs or Spring Boot starters merely because the project uses jfoundry.
 
 ## Framework-Neutral Starters
 
@@ -48,11 +49,11 @@ Spring-specific starters belong in the runtime assembly module/package:
 
 - Spring Boot runtime module: `jfoundry-spring-boot-starter`
 - Spring Boot MVC web/runtime module: `jfoundry-webmvc-spring-boot-starter`
-- Spring Boot runtime module with MyBatis-Plus business persistence: `jfoundry-mybatis-plus-spring-boot-starter`
-- Spring Boot runtime module with JPA business persistence: `jfoundry-jpa-spring-boot-starter`
+- Spring Boot runtime module with MyBatis-Plus business persistence: `jfoundry-persistence-mybatis-plus-spring-boot-starter`
+- Spring Boot runtime module with JPA business persistence: `jfoundry-persistence-jpa-spring-boot-starter`
 - Local Spring domain event dispatch: `jfoundry-event-spring-boot-starter`
-- Messaging transport contracts, Spring Boot JSON support, Jackson payload serialization, and the
-  default logging sender: `jfoundry-messaging-spring-boot-starter`
+- Messaging transport contracts, Spring Boot JSON support, and Jackson payload serialization:
+  `jfoundry-messaging-spring-boot-starter`
 - Kafka sender adapter: `jfoundry-messaging-kafka-spring-boot-starter`
 - RabbitMQ sender adapter: `jfoundry-messaging-rabbitmq-spring-boot-starter`
 - RocketMQ sender adapter: `jfoundry-messaging-rocketmq-spring-boot-starter`
@@ -72,6 +73,7 @@ For Spring Boot MVC applications, use `jfoundry-webmvc-spring-boot-starter` in t
 
 - Use `dependency-management-core.xml` unless the project selects Spring Framework or Spring Boot.
 - Use `dependency-management-spring.xml` when any selected starter is Spring-specific.
+- Use `dependency-management-quarkus.xml` and `quarkus-runtime-dependencies.xml` only when Quarkus is selected.
 - Use `domain-module-dependencies.xml` for a dedicated domain module.
 - Use `application-module-dependencies.xml` for a dedicated application module.
 - Use `lock-core-dependencies.xml` in an application module only when it compiles jfoundry lock APIs.
@@ -101,3 +103,4 @@ For Spring Boot MVC applications, use `jfoundry-webmvc-spring-boot-starter` in t
 - Do not depend directly on low-level adapter modules from business code unless the project is doing an advanced custom assembly.
 - Do not put Spring Boot starters into pure domain or application modules.
 - Do not copy Spring dependency templates into Quarkus, Micronaut, Helidon, CLI, or custom runtime projects.
+- Do not infer Quarkus support for MyBatis-Plus, RocketMQ, Redisson, or JobRunr from the corresponding framework-neutral or Spring modules; read `quarkus-runtime.md` for the supported composition.

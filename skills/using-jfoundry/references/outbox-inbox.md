@@ -24,7 +24,7 @@ dispatch semantics.
 
 ## Select A Store
 
-The Outbox/Inbox concepts are framework-neutral, but the runtime/starters documented here are currently Spring Boot-specific. For Quarkus, Micronaut, Helidon, CLI, or custom runtimes, do not copy these starter snippets unless jfoundry provides a matching runtime adapter.
+The Outbox/Inbox concepts are framework-neutral. Spring Boot uses capability starters. Quarkus has explicit JPA store and Outbox runtime extensions; read `quarkus-runtime.md` rather than copying Spring starter snippets. For Micronaut, Helidon, CLI, or custom runtimes, do not copy these snippets unless jfoundry provides a matching runtime adapter.
 
 For Spring Boot, select the common capability starter and exactly one store implementation for each
 capability that is needed:
@@ -34,8 +34,8 @@ capability that is needed:
 | Outbox | `jfoundry-outbox-spring-boot-starter` + `jfoundry-outbox-mybatis-plus-spring-boot-starter` | `jfoundry-outbox-spring-boot-starter` + `jfoundry-outbox-jpa-spring-boot-starter` |
 | Inbox | `jfoundry-inbox-spring-boot-starter` + `jfoundry-inbox-mybatis-plus-spring-boot-starter` | `jfoundry-inbox-spring-boot-starter` + `jfoundry-inbox-jpa-spring-boot-starter` |
 
-The persistence starter for aggregate repositories (`jfoundry-mybatis-plus-spring-boot-starter` or
-`jfoundry-jpa-spring-boot-starter`) does not add Outbox or Inbox. Select the messaging capability
+The persistence starter for aggregate repositories (`jfoundry-persistence-mybatis-plus-spring-boot-starter` or
+`jfoundry-persistence-jpa-spring-boot-starter`) does not add Outbox or Inbox. Select the messaging capability
 explicitly. The specialized store starters already include their corresponding common starter, so
 projects may use the store template alone when it is the only required snippet.
 
@@ -44,7 +44,7 @@ Spring Boot templates unless jfoundry provides an explicit runtime adapter.
 
 ## MessageSender Rule
 
-Outbox does not imply a broker. The default logging sender is not a production publisher. If production Outbox dispatch is enabled, provide a real `MessageSender` through one broker starter or a custom adapter.
+Outbox does not imply a broker, and jfoundry does not register a fallback sender. If production Outbox dispatch is enabled, provide a real `MessageSender` through one broker starter or a custom adapter.
 
 For Spring Boot broker starters, verify the selected runtime bean rather than only checking the
 dependency graph. A context or smoke test should assert that `MessageSender` is the expected Kafka,

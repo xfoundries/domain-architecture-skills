@@ -11,9 +11,9 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 
 1. Read `references/implementation-guidance-result.md` for setup, modification, or framework-landing work.
 2. Preserve the project's selected jfoundry version, runtime, architecture style, and conventions. Ask only when an unknown choice changes a required dependency, package role, or test.
-3. Read `references/dependencies.md`, then copy only the BOM and templates required by the chosen runtime and capabilities.
+3. Read `references/dependencies.md`, then select the runtime before copying only its BOM and capability templates.
 4. Read `references/architecture.md` for JFoundry's package and annotation landing after Hexagonal or Onion has already been selected.
-5. Read a specialized reference only when its concern applies: persistence, repository/read contracts, Spring runtime, reliable messaging, locks, exceptions, or tests.
+5. Read a specialized reference only when its concern applies: persistence, repository/read contracts, Spring runtime, Quarkus runtime, reliable messaging, locks, exceptions, or tests.
 6. Read `references/upstream-documentation.md` before using exact framework APIs, properties, auto-configuration behavior, or implementation-specific algorithms.
 7. Run the narrowest relevant Maven verification and return the JFoundry Implementation Guidance Result.
 
@@ -36,6 +36,7 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 | Aggregate repositories and read-side contracts | `references/repository-and-read-contracts.md` |
 | JPA, MyBatis-Plus, mappers, and optimistic locking | `references/persistence-data-mappers.md` |
 | Spring Framework or Spring Boot | `references/spring-runtime.md` |
+| Quarkus CDI, JTA, REST, JPA, Outbox, Inbox, or broker assembly | `references/quarkus-runtime.md` |
 | Outbox, Inbox, broker selection, and JPA Inbox database support | `references/outbox-inbox.md` |
 | Cross-instance locking | `references/distributed-locks.md` |
 | Exception ownership and boundary translation | `references/exception-handling.md` |

@@ -1,0 +1,6 @@
+<dependencies>
+    <dependency>
+        <groupId>io.github.xfoundries</groupId>
+        <artifactId>jfoundry-quarkus-runtime</artifactId>
+    </dependency>
+</dependencies>
