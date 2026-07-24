@@ -13,7 +13,7 @@ Read `references/version-selection.md`. For an existing project, inspect its eff
 | Maven BOM and artifacts | Release dependency-management POMs and the matching runtime assembly guide |
 | Aggregate repository contract and persistence boundary | Aggregate-persistence and selected persistence implementation guides |
 | Reliable publication and consumption | Reliable-messaging guide and selected store/transport implementation guide |
-| Spring or Quarkus assembly | Matching runtime implementation and configuration guide |
+| Spring, Quarkus, or Helidon assembly | Matching runtime implementation and configuration guide |
 | Properties, auto-configuration, APIs, and Native Image behavior | Matching release documentation and source |
 | Architecture annotations and ArchUnit rule semantics | Architecture-styles and architecture-rule guides |
 

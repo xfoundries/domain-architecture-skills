@@ -1,6 +1,6 @@
 ---
 name: using-jfoundry
-description: Guide AI agents and developers when starting or modifying Java business projects that use the jfoundry framework. Use for Maven dependency selection, JFoundry architecture landing, aggregate persistence, reliable messaging, Spring runtime assembly, and ArchUnit verification. Do not use for maintaining jfoundry internals.
+description: Guide AI agents and developers when starting or modifying Java business projects that use the jfoundry framework. Use for Maven dependency selection, JFoundry architecture landing, aggregate persistence, reliable messaging, Spring, Quarkus, or Helidon runtime assembly, and ArchUnit verification. Do not use for maintaining jfoundry internals.
 ---
 
 # Using JFoundry

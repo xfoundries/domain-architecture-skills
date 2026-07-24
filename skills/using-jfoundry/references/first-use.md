@@ -8,7 +8,7 @@ Use this prompt when starting a business project from scratch:
 Use $using-jfoundry to create the initial architecture for a new Java business project.
 Base package: PACKAGE_NAME
 Project shape: single app, Hexagonal domain/application/adapter/boot, a justified Hexagonal adapter split, or Onion domain/application/infrastructure/boot
-Runtime: none, Spring Boot, Spring Framework, Quarkus, Micronaut, Helidon, CLI/custom, or undecided
+Runtime: none, Spring Boot, Spring Framework, Quarkus, Helidon, CLI/custom, or undecided
 Persistence: none, MyBatis-Plus, JPA, or undecided
 Messaging: none, Kafka, RabbitMQ, RocketMQ, or undecided
 Architecture: confirmed result, existing project style, explicit choice, or undecided
@@ -42,7 +42,7 @@ Use these defaults when the user asks for scaffolding and the choice is independ
 - no broker starter
 - no MyBatis-Plus unless persistence is explicitly requested
 
-If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. If the user selects Quarkus, read `references/quarkus-runtime.md`. For other runtimes, use the selected release's framework-neutral dependency management unless that release documents an explicit runtime adapter.
+If the user selects Spring Framework or Spring Boot, read `references/spring-runtime.md`. If the user selects Quarkus, read `references/quarkus-runtime.md`. If the user selects Helidon MP, read `references/helidon-runtime.md`. For other runtimes, use the selected release's framework-neutral dependency management unless that release documents an explicit runtime adapter; do not imply a Micronaut runtime adapter is available.
 
 Select project modules, dependency capabilities, package sketches, annotations, and architecture tests only after the architecture and project roles are clear. A simple CRUD change may preserve established conventions without richer modeling or a new architecture decision. A new domain-heavy project should obtain Domain Modeling and Architecture Guidance before dependency selection.
 

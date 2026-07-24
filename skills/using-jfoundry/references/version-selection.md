@@ -8,6 +8,11 @@ Preserve the version the project already selects. Inspect the relevant `pom.xml`
 
 Preserve existing Java and runtime baselines unless the user asks to change them. Check that they remain compatible with the selected jfoundry release.
 
+Resolve the selected JFoundry line's compatibility documentation to determine its Java compile and
+runtime baseline. When the user requests a baseline migration, update compiler configuration, CI, and
+user-facing prerequisites together, then verify the complete consumer build on the selected baseline.
+Do not infer a baseline from a different JFoundry line or from the framework's development branch.
+
 ## New Projects
 
 If the user specifies a JFoundry version, preserve it and let Maven resolve and validate it. Otherwise, query Maven Central for the current stable JFoundry BOM identified by the official release documentation. Exclude `SNAPSHOT`, alpha, beta, milestone, and release-candidate (`RC`) versions.
