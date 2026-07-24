@@ -37,6 +37,7 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 | JPA, MyBatis-Plus, mappers, and optimistic locking | `references/persistence-data-mappers.md` |
 | Spring Framework or Spring Boot | `references/spring-runtime.md` |
 | Quarkus CDI, JTA, REST, JPA, Outbox, Inbox, or broker assembly | `references/quarkus-runtime.md` |
+| Helidon MP CDI, JTA, JAX-RS, JPA, Outbox, or Inbox assembly | `references/helidon-runtime.md` |
 | Outbox, Inbox, broker selection, and JPA Inbox database support | `references/outbox-inbox.md` |
 | Cross-instance locking | `references/distributed-locks.md` |
 | Exception ownership and boundary translation | `references/exception-handling.md` |
