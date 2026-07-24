@@ -19,6 +19,31 @@ Use `architecture-constraints.md` for architecture-style dependency and call-pat
 `hexagonal-architecture.md` for Hexagonal roles, port ownership, and adapter direction. This file
 translates confirmed decisions into ecosystem idioms; it does not define those rules.
 
+## Runtime Integration Boundary
+
+When a selected runtime introduces manual assembly or global cross-cutting behavior, record an
+**application runtime integration policy** before choosing packages. Decide whether a distinct
+composition-root package is useful, what it owns, and which outer packages it may depend on. Use
+names such as `boot`, `bootstrap`, or `runtime` only as project conventions; do not prescribe one
+name or create a cross-framework abstraction.
+
+Classify by scope and reason to change, not merely by framework annotations or HTTP imports:
+
+- Keep protocol-local entry mapping in the matching primary adapter: controllers, transport DTOs,
+  tool methods, message listeners, and their protocol-specific result mapping.
+- Put framework assembly and application-global cross-cutting behavior in the selected composition
+  root when that improves ownership: manual bean/service registration, global exception policy,
+  filters/interceptors, security chains, and global serialization configuration.
+- A global exception component may remain in a protocol adapter when it is deliberately owned and
+  versioned as that protocol's local contract. Record that exception rather than treating either
+  placement as universal.
+- Keep domain and application code independent of the composition root. The composition root may
+  depend outward on adapters and application services; no inner package may depend on it.
+
+Do not introduce a distinct composition-root package for one trivial configuration class unless
+the project already has that convention or the separation makes a real dependency boundary clearer.
+For a different runtime, replace only the outer assembly according to that runtime's conventions.
+
 ## Java and jMolecules
 
 Use jMolecules when the project wants architecture concepts to be explicit in Java/Kotlin code and validated by tools.

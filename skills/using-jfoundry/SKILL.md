@@ -12,8 +12,8 @@ Use this skill for downstream business projects, not for changing jfoundry itsel
 1. Read `references/implementation-guidance-result.md` for setup, modification, or framework-landing work.
 2. Preserve the project's selected jfoundry version, runtime, architecture style, and conventions. Ask only when an unknown choice changes a required dependency, package role, or test.
 3. Read `references/dependencies.md`, then resolve the selected version's release documentation, BOM, or source POM before adding any dependency.
-4. Read `references/architecture.md` for JFoundry's package and annotation landing after Hexagonal or Onion has already been selected.
-5. Read a specialized reference only when its concern applies: persistence, repository/read contracts, Spring runtime, Quarkus runtime, reliable messaging, locks, exceptions, or tests.
+4. Read `references/architecture.md` for JFoundry's package and annotation landing after Hexagonal or Onion has already been selected. Consume the confirmed Application Runtime Integration Policy from domain-architecture guidance; JFoundry templates do not replace project package ownership decisions.
+5. Read a specialized reference only when its concern applies: persistence, repository/read contracts, Spring, Quarkus, or Helidon runtime, reliable messaging, locks, exceptions, or tests.
 6. Read `references/upstream-documentation.md` before using exact framework APIs, properties, auto-configuration behavior, or implementation-specific algorithms.
 7. Run the narrowest relevant Maven verification and return the JFoundry Implementation Guidance Result.
 

@@ -43,6 +43,12 @@ The shared envelope fields are required. Include only applicable Architecture An
 
 The architecture specialist owns the `Architecture Analysis` payload. The coordinator may combine the result with other phase results but should not reinterpret its decisions.
 
+When an application runtime is selected, the **Application runtime integration policy** records only
+the decisions needed by the increment: composition-root ownership or its deliberate absence,
+global cross-cutting concerns, adapter-local protocol mappings, allowed dependency direction, and
+documented exceptions. Treat package names such as `boot`, `bootstrap`, and `runtime` as project
+conventions, not as architecture rules.
+
 Tie evidence to project artifacts, confirmed domain results, and applicable sources. Record affected boundaries and the practical consequence of each decision.
 
 ## Decision Discipline

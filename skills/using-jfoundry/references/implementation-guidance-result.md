@@ -66,3 +66,9 @@ boundaries, or follows a project-specific hybrid. Record that domain code remain
 and technology APIs, and name delivery, ORM, mapper, broker-record, cache-client, or SDK types
 that remain outside application. Do not make this field block framework-neutral architecture work
 when the runtime is undecided.
+
+Consume the upstream Application Runtime Integration Policy when it exists. JFoundry runtime
+guides, package templates, and annotations specify versioned landing mechanics; they do not
+override the project's decision about a composition root, global cross-cutting components, or
+adapter-local protocol mapping. Record a conflict and return to architecture guidance rather than
+silently applying a template's `boot` package.
